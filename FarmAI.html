@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmAI - Your DARAWAT Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="Css/Farm.AI.css">
+</head>
+<body>
+    <!-- ============================================================
+    BACK BAR WITH ENHANCED CONTROLS
+    ============================================================ -->
+    <div class="back-bar">
+        <div class="back-bar-content">
+            <button class="back-btn" onclick="goBack()" title="Go back to previous page">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+            <span class="back-bar-title">
+                <i class="fas fa-robot"></i> FarmAI Assistant
+                <span style="font-size:0.7rem; opacity:0.6; margin-left:8px;">
+                    <i class="fas fa-keyboard"></i> Ctrl+/ 
+                </span>
+            </span>
+            <div style="display:flex; gap:8px; align-items:center;">
+                
+                <button onclick="clearChatHistory()" class="back-btn" style="font-size:1.2rem;" title="Clear History">
+                    🗑️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="ai-section">
+        <div class="container">
+            <div class="chat-container">
+                <!-- ============================================================
+                CHAT HEADER
+                ============================================================ -->
+                <div class="chat-header">
+                    <div class="avatar">🤖</div>
+                    <div class="info">
+                        <h2>FarmAI</h2>
+                        <p>Your DARAWAT Assistant</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="status">
+                            <span class="status-dot"></span>
+                            <span>Online</span>
+                        </div>
+                        <button class="header-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode (Ctrl+D)">
+                            🌙
+                        </button>
+                        <button class="header-btn" onclick="downloadChat()" title="Export Chat (Ctrl+E)">
+                            📥
+                        </button>
+                        <button class="header-btn" onclick="showChatStats()" title="Chat Statistics">
+                            📊
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                CHAT MESSAGES
+                ============================================================ -->
+                <div class="chat-messages" id="chatMessages"></div>
+
+                <!-- ============================================================
+                QUICK ACTIONS
+                ============================================================ -->
+                <div class="quick-actions" id="quickActions">
+                    <span class="label"><i class="fas fa-bolt"></i> Quick Help</span>
+                    <button data-msg="What is FarmNet?">🌱 What is FarmNet?</button>
+                    <button data-msg="How do I list a product?">📦 List a product</button>
+                    <button data-msg="How do I place an order?">🛒 Place an order</button>
+                    <button data-msg="How does shipping work?">🚚 Shipping info</button>
+                    <button data-msg="Payment methods">💳 Payments</button>
+                    <button data-msg="Crop management">🌿 Crops</button>
+                    <button data-msg="/help" style="background:#e8f5e9; font-weight:700;">⌨️ Commands</button>
+                </div>
+
+                <!-- ============================================================
+                CHAT INPUT
+                ============================================================ -->
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type your question here... (Ctrl+/ to focus)" autofocus>
+                    <div class="input-actions">
+                        <button class="input-btn voice-btn" id="voiceBtn" title="Voice Input (Ctrl+V)">
+                            🎤
+                        </button>
+                        <button class="send-btn" id="sendBtn" title="Send Message (Enter)">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                KEYBOARD SHORTCUTS HINT
+                ============================================================ -->
+                <div class="shortcuts-hint">
+                    <i class="fas fa-keyboard"></i> 
+                    <kbd>Ctrl+/</kbd> Focus · 
+                    <kbd>Ctrl+D</kbd> Dark Mode · 
+                    <kbd>Ctrl+E</kbd> Export · 
+                    <kbd>Ctrl+V</kbd> Voice · 
+                    <kbd>Esc</kbd> Clear
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+    FOOTER
+    ============================================================ -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">🌾 DARAWAT</div>
+            <p class="footer-tagline">Let's make farming digital — and make digital feel like home.</p>
+            <p>© 2026 DARAWAT All rights reserved.</p>
+            <div class="footer-links">
+                <a href="About Us.html">About Us</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Private policy.html">Privacy Policy</a>
+                <a href="Terms of Service.html">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <!-- Main FarmAI JavaScript -->
+    <script src="Js/Farm.AI.js"></script>
+
+    <!-- ============================================================
+    ENHANCED FEATURES SCRIPT (Inline for quick integration)
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // ENHANCED FEATURES FOR FARMAI
+        // ============================================================
+
+        // --- Voice Recognition ---
+        let isListening = false;
+        let recognition = null;
+
+        function initVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    const input = document.getElementById('chatInput');
+                    input.value = transcript;
+                    handleSend();
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Voice recognition error:', event.error);
+                    addMessage('🎤 Sorry, I couldn\'t hear you. Please type your question instead.', 'bot');
+                };
+
+                recognition.onend = function() {
+                    isListening = false;
+                    const voiceBtn = document.getElementById('voiceBtn');
+                    voiceBtn.textContent = '🎤';
+                    voiceBtn.classList.remove('listening');
+                    voiceBtn.title = 'Voice Input (Ctrl+V)';
+                };
+
+                return true;
+            }
+            return false;
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                if (!initVoiceRecognition()) {
+                    addMessage('🎤 Voice input is not supported in your browser. Please type your question.', 'bot');
+                    return;
+                }
+            }
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+                isListening = true;
+                const voiceBtn = document.getElementById('voiceBtn');
+                voiceBtn.textContent = '⏹️';
+                voiceBtn.classList.add('listening');
+                voiceBtn.title = 'Stop Listening';
+                addMessage('🎤 Listening... Please speak your question.', 'bot');
+            }
+        }
+
+        // --- Dark Mode ---
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('farmai_dark_mode', isDark);
+            
+            const darkBtns = document.querySelectorAll('#darkModeBtn');
+            darkBtns.forEach(btn => {
+                btn.textContent = isDark ? '☀️' : '🌙';
+                btn.title = isDark ? 'Switch to Light Mode (Ctrl+D)' : 'Switch to Dark Mode (Ctrl+D)';
+            });
+        }
+
+        function loadDarkModePreference() {
+            const isDark = localStorage.getItem('farmai_dark_mode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                const darkBtns = document.querySelectorAll('#darkModeBtn');
+                darkBtns.forEach(btn => {
+                    btn.textContent = '☀️';
+                    btn.title = 'Switch to Light Mode (Ctrl+D)';
+                });
+            }
+        }
+
+        // --- Chat History ---
+        function saveChatHistory() {
+            const messages = document.querySelectorAll('.message');
+            const history = [];
+            messages.forEach(msg => {
+                const text = msg.textContent || msg.innerText;
+                const sender = msg.classList.contains('user') ? 'user' : 'bot';
+                history.push({ sender, text, timestamp: new Date().toISOString() });
+            });
+            try {
+                localStorage.setItem('farmai_chat_history', JSON.stringify(history));
+            } catch (e) {
+                console.warn('Could not save chat history:', e);
+            }
+        }
+
+        function loadChatHistory() {
+            try {
+                const history = JSON.parse(localStorage.getItem('farmai_chat_history') || '[]');
+                if (history.length > 1) {
+                    const chatMessages = document.getElementById('chatMessages');
+                    // Keep only the first welcome message if it exists
+                    const firstMsg = chatMessages.querySelector('.message');
+                    chatMessages.innerHTML = '';
+                    if (firstMsg) chatMessages.appendChild(firstMsg);
+                    
+                    history.forEach(entry => {
+                        if (entry.sender === 'user') {
+                            addMessage(entry.text, 'user');
+                        } else {
+                            addMessage(entry.text, 'bot');
+                        }
+                    });
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            } catch (e) {
+                console.warn('Could not load chat history:', e);
+            }
+        }
+
+        function clearChatHistory() {
+            if (confirm('🗑️ Clear all chat history?')) {
+                localStorage.removeItem('farmai_chat_history');
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = '';
+                // Re-add welcome message
+                addMessage(
+                    '👋 <strong>Hello!</strong> I\'m FarmAI, your intelligent farming assistant. I can help you with:\n\n' +
+                    '• 📦 **Listing products** — Learn how to sell on FarmNet\n' +
+                    '• 🛒 **Placing orders** — Guide to buying fresh produce\n' +
+                    '• 💳 **Payments and shipping** — Payment methods and delivery\n' +
+                    '• 🔐 **Account management** — Login, registration, security\n' +
+                    '• 🌱 **Crop management** — Planting, pest control, irrigation\n' +
+                    '• 🐄 **Livestock management** — Health, feeding, breeding\n' +
+                    '• 🌿 **Sustainability** — Organic farming, conservation\n' +
+                    '• 🌍 **FarmNet community** — Connect with other farmers\n\n' +
+                    'Just type your question or click a button below to get started!',
+                    'bot',
+                    [
+                        { label: '🌱 What is FarmNet?', msg: 'What is FarmNet?' },
+                        { label: '📦 List a product', msg: 'How to list a product?' },
+                        { label: '🛒 Place an order', msg: 'How to place an order?' },
+                        { label: '💳 Payment methods', msg: 'Payment methods' },
+                        { label: '🌿 Organic farming', msg: 'Organic farming' }
+                    ]
+                );
+                const input = document.getElementById('chatInput');
+                if (input) input.focus();
+            }
+        }
+
+        // --- Export Chat ---
+        function exportChatAsText() {
+            const messages = document.querySelectorAll('.message');
+            let text = '🌾 FarmAI Chat Export\n';
+            text += `📅 ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\n`;
+            text += '='.repeat(50) + '\n\n';
+            
+            messages.forEach(msg => {
+                const sender = msg.classList.contains('user') ? '👤 You' : '🌱 FarmAI';
+                const content = msg.textContent || msg.innerText;
+                const timestamp = msg.querySelector('.timestamp')?.textContent || '';
+                text += `${sender} ${timestamp}:\n${content.trim()}\n\n`;
+            });
+            
+            text += '='.repeat(50) + '\n';
+            text += '🌾 Generated by FarmAI Assistant';
+            
+            return text;
+        }
+
+        function downloadChat() {
+            const text = exportChatAsText();
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `farmai_chat_${new Date().toISOString().slice(0,10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // --- Chat Statistics ---
+        function getChatStats() {
+            const messages = document.querySelectorAll('.message');
+            const userMessages = document.querySelectorAll('.message.user');
+            const botMessages = document.querySelectorAll('.message.bot');
+            
+            return {
+                total: messages.length,
+                user: userMessages.length,
+                bot: botMessages.length,
+                ratio: userMessages.length > 0 ? (botMessages.length / userMessages.length).toFixed(1) : 0
+            };
+        }
+
+        function showChatStats() {
+            const stats = getChatStats();
+            const statsMsg = `
+📊 **Chat Statistics**
+
+• Total Messages: ${stats.total}
+• Your Messages: ${stats.user}
+• FarmAI Messages: ${stats.bot}
+• Bot/User Ratio: ${stats.ratio}x
+
+💡 You've had ${stats.total > 20 ? 'a great' : 'a good'} conversation with FarmAI!
+
+⌨️ Quick commands: /help, /clear, /export, /stats, /dark
+            `;
+            addMessage(statsMsg, 'bot');
+        }
+
+        // --- Keyboard Shortcuts ---
+        function initKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                const input = document.getElementById('chatInput');
+                
+                // Ctrl + / or Cmd + / to focus input
+                if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                    e.preventDefault();
+                    input.focus();
+                }
+                
+                // Escape to clear input
+                if (e.key === 'Escape' && document.activeElement === input) {
+                    input.value = '';
+                    const box = document.getElementById('suggestionBox');
+                    if (box) box.style.display = 'none';
+                }
+                
+                // Ctrl + D or Cmd + D for dark mode
+                if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+                    e.preventDefault();
+                    toggleDarkMode();
+                }
+                
+                // Ctrl + E or Cmd + E for export
+                if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                    e.preventDefault();
+                    downloadChat();
+                }
+                
+                // Ctrl + V or Cmd + V for voice input
+                if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                    e.preventDefault();
+                    toggleVoiceInput();
+                }
+            });
+        }
+
+        // --- Auto-resize input ---
+        function autoResizeInput() {
+            const input = document.getElementById('chatInput');
+            if (input) {
+                input.style.height = 'auto';
+                input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+            }
+        }
+
+        // --- Suggestion Box ---
+        function showSuggestions(input) {
+            const suggestions = getSmartSuggestions(input);
+            let box = document.getElementById('suggestionBox');
+            
+            if (!box) {
+                box = document.createElement('div');
+                box.id = 'suggestionBox';
+                const chatContainer = document.querySelector('.chat-container');
+                if (chatContainer) {
+                    chatContainer.style.position = 'relative';
+                    chatContainer.appendChild(box);
+                }
+            }
+            
+            if (input.length > 0 && suggestions.length > 0) {
+                box.innerHTML = '';
+                suggestions.forEach(suggestion => {
+                    const item = document.createElement('div');
+                    item.textContent = suggestion;
+                    item.onclick = () => {
+                        const input = document.getElementById('chatInput');
+                        input.value = suggestion;
+                        box.style.display = 'none';
+                        handleSend();
+                    };
+                    box.appendChild(item);
+                });
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        // --- Smart Suggestions ---
+        function getSmartSuggestions(input) {
+            const suggestions = [];
+            const lower = input.toLowerCase().trim();
+            
+            if (lower.length === 0) {
+                return [
+                    'What is FarmNet?',
+                    'How to list a product?',
+                    'Payment methods',
+                    'Organic farming',
+                    'Contact support'
+                ];
+            }
+            
+            const suggestionMap = {
+                'account': ['How to create an account?', 'How to reset password?', 'Login issues'],
+                'login': ['How to login?', 'Reset password', 'Account recovery'],
+                'product': ['How to list a product?', 'Product categories', 'Product pricing'],
+                'sell': ['How to list a product?', 'Seller requirements', 'Product management'],
+                'buy': ['How to place an order?', 'Buyer registration', 'Shopping cart'],
+                'order': ['How to place an order?', 'Track order', 'Order status'],
+                'pay': ['Payment methods', 'GCash payment', 'How to pay with COD'],
+                'ship': ['Shipping methods', 'Shipping fees', 'Delivery time'],
+                'crop': ['Crop management', 'Organic farming', 'Pest control'],
+                'plant': ['Crop management', 'Planting calendar', 'Irrigation'],
+                'livestock': ['Livestock management', 'Poultry management', 'Dairy management'],
+                'help': ['Contact support', 'FAQ', 'Report a problem'],
+                'price': ['Product pricing', 'Shipping fees', 'Transaction fees'],
+                'delivery': ['Shipping methods', 'Delivery time', 'Shipping fees'],
+                'farm': ['What is FarmNet?', 'FarmNet story', 'Farmnet features'],
+                'community': ['FarmNet community', 'Community events', 'Farmer stories'],
+                'security': ['Data security', 'Privacy policy', 'Account security'],
+                'tagalog': ['Tagalog support', 'Filipino language'],
+                'cebuano': ['Cebuano support', 'Bisaya'],
+                'waray': ['Waray support'],
+                'hiligaynon': ['Hiligaynon support', 'Ilonggo'],
+                'sustainable': ['Organic farming', 'Environmental sustainability', 'Water conservation'],
+                'organic': ['Organic farming', 'Certifications', 'Sustainable farming']
+            };
+            
+            for (const [keyword, suggestionsList] of Object.entries(suggestionMap)) {
+                if (lower.includes(keyword)) {
+                    suggestions.push(...suggestionsList);
+                    if (suggestions.length >= 3) break;
+                }
+            }
+            
+            if (suggestions.length === 0) {
+                suggestions.push('What is FarmNet?');
+                suggestions.push('How to list a product?');
+                suggestions.push('Payment methods');
+            }
+            
+            return suggestions.slice(0, 5);
+        }
+
+        // --- Override addMessage to save history ---
+        const originalAddMessage = window.addMessage;
+        if (originalAddMessage) {
+            window.addMessage = function(text, sender = 'bot', quickReplies = null) {
+                originalAddMessage(text, sender, quickReplies);
+                saveChatHistory();
+            };
+        }
+
+        // --- Override handleSend to process commands ---
+        const originalHandleSend = window.handleSend;
+        if (originalHandleSend) {
+            window.handleSend = function() {
+                const input = document.getElementById('chatInput');
+                const text = input.value.trim();
+                if (!text) return;
+
+                // Check for quick commands
+                if (text.startsWith('/')) {
+                    const command = text.toLowerCase();
+                    if (command === '/clear' || command === '/reset') {
+                        clearChatHistory();
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+                    if (command === '/export') {
+                        downloadChat();
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+                    if (command === '/stats') {
+                        showChatStats();
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+                    if (command === '/dark' || command === '/theme') {
+                        toggleDarkMode();
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+                    if (command === '/help' || command === '/commands') {
+                        const helpMsg = `
+📋 **Quick Commands**
+
+/clear or /reset - Clear chat history
+/export - Export chat as text file
+/stats - Show chat statistics
+/dark or /theme - Toggle dark mode
+/help or /commands - Show this help
+
+⌨️ **Keyboard Shortcuts**
+Ctrl+/ - Focus chat input
+Ctrl+D - Toggle dark mode
+Ctrl+E - Export chat
+Ctrl+V - Voice input
+Escape - Clear input
+                        `;
+                        addMessage(helpMsg, 'bot');
+                        input.value = '';
+                        input.focus();
+                        return;
+                    }
+                }
+
+                originalHandleSend();
+            };
+        }
+
+        // --- Initialize all features ---
+        function initializeEnhancedFeatures() {
+            // Load dark mode preference
+            loadDarkModePreference();
+            
+            // Initialize voice recognition
+            initVoiceRecognition();
+            
+            // Initialize keyboard shortcuts
+            initKeyboardShortcuts();
+            
+            // Load chat history
+            loadChatHistory();
+            
+            // Setup voice button
+            const voiceBtn = document.getElementById('voiceBtn');
+            if (voiceBtn) {
+                voiceBtn.addEventListener('click', toggleVoiceInput);
+            }
+            
+            // Setup input auto-resize and suggestions
+            const input = document.getElementById('chatInput');
+            if (input) {
+                input.addEventListener('input', function() {
+                    autoResizeInput();
+                    showSuggestions(this.value);
+                });
+                input.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        const box = document.getElementById('suggestionBox');
+                        if (box) box.style.display = 'none';
+                    }, 300);
+                });
+            }
+            
+            // Close suggestion box on click outside
+            document.addEventListener('click', function(e) {
+                const box = document.getElementById('suggestionBox');
+                const input = document.getElementById('chatInput');
+                if (box && input && !box.contains(e.target) && e.target !== input) {
+                    box.style.display = 'none';
+                }
+            });
+
+            // Log all features
+            console.log('🚀 FarmAI Enhanced Features Loaded:');
+            console.log('• Voice recognition support (Ctrl+V)');
+            console.log('• Chat history saving (auto-save)');
+            console.log('• Export chat as text (Ctrl+E)');
+            console.log('• Dark mode toggle (Ctrl+D)');
+            console.log('• Keyboard shortcuts (Ctrl+/, Ctrl+D, Ctrl+E, Ctrl+V)');
+            console.log('• Smart suggestions');
+            console.log('• Chat statistics (/stats)');
+            console.log('• Quick commands (/help, /clear, /export, /stats, /dark)');
+            console.log('• Auto-resize input');
+            console.log('• Response rating system');
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeEnhancedFeatures);
+
+        // Make functions globally accessible
+        window.toggleDarkMode = toggleDarkMode;
+        window.downloadChat = downloadChat;
+        window.clearChatHistory = clearChatHistory;
+        window.showChatStats = showChatStats;
+        window.toggleVoiceInput = toggleVoiceInput;
+        window.getChatStats = getChatStats;
+    </script>
+</body>
+</html>

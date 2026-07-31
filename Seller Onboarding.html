@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Onboarding - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Seller Onboarding.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Seller.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Seller.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Products.html" class="nav-link">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-rocket"></i> Onboarding
+                    </a>
+                    <a href="Seller Profile.html" class="nav-link">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Seller!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">S</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-rocket"></i> Get Started</h1>
+                <p>Complete these steps to set up your seller account</p>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Onboarding Progress</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Welcome Box -->
+            <div class="welcome-box">
+                <h2>🌾 Welcome to DARAWAT!</h2>
+                <p>Complete the steps below to set up your seller account and start selling your products. Each step you complete brings you closer to reaching more buyers.</p>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-container" id="stepsContainer">
+                <!-- Step 1: Complete Profile -->
+                <div class="step-card" id="step1" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Complete Your Profile</div>
+                        <div class="step-description">Add your farm name, description, location, and contact details so buyers can find you.</div>
+                        <div class="step-status pending" id="step1Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Profile.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-user-edit"></i> Complete Profile
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(1)" id="step1Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Add Product -->
+                <div class="step-card" id="step2" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Add Your First Product</div>
+                        <div class="step-description">List your first product with photos, price, quantity, and description to attract buyers.</div>
+                        <div class="step-status pending" id="step2Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Products.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Add Product
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(2)" id="step2Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Set Up Payment -->
+                <div class="step-card" id="step3" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Set Up Payment & Shipping</div>
+                        <div class="step-description">Configure your payment methods, shipping options, and delivery preferences.</div>
+                        <div class="step-status pending" id="step3Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Account Setting.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-cog"></i> Configure Settings
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(3)" id="step3Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Share Your Story -->
+                <div class="step-card" id="step4" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Share Your Farm Story</div>
+                        <div class="step-description">Tell buyers about your farm, your farming practices, and what makes your products special.</div>
+                        <div class="step-status pending" id="step4Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Profile.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-pen"></i> Write Your Story
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(4)" id="step4Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Explore Platform -->
+                <div class="step-card" id="step5" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Explore the Platform</div>
+                        <div class="step-description">Learn how to manage orders, respond to inquiries, and grow your business on FarmNet.</div>
+                        <div class="step-status pending" id="step5Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="How It Works.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-book"></i> Learn More
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(5)" id="step5Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Message -->
+            <div class="completion-message" id="completionMessage">
+                <i class="fas fa-trophy"></i>
+                <h2>🎉 All Steps Complete!</h2>
+                <p>You're all set! You can now start selling your products on FarmNet. We're excited to have you on board.</p>
+                <a href="Register as Seller.html" class="btn btn-primary">
+                    <i class="fas fa-th-large"></i> Go to Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Seller.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Products.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span>Products</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-rocket"></i></span>
+                <span>Get Started</span>
+            </a>
+            <a href="Seller Profile.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // SELLER ONBOARDING - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const completionMessage = document.getElementById('completionMessage');
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.farmName || user.name}!`;
+                const sellerAvatar = localStorage.getItem(`sellerAvatar_${user.email}`);
+                if (sellerAvatar && (sellerAvatar.startsWith('http') || sellerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${sellerAvatar}" alt="${user.farmName || user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.farmName || user.name}">`;
+                } else {
+                    userAvatar.textContent = (user.farmName || user.name || 'S').charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Seller!';
+                userAvatar.textContent = 'S';
+            }
+        }
+
+        // ============================================================
+        // LOAD ONBOARDING PROGRESS
+        // ============================================================
+        function loadProgress() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            // Check each step
+            for (let i = 1; i <= 5; i++) {
+                const stepCard = document.getElementById(`step${i}`);
+                const statusEl = document.getElementById(`step${i}Status`);
+                const completeBtn = document.getElementById(`step${i}Btn`);
+                
+                if (userProgress[`step${i}`]) {
+                    // Step is complete
+                    stepCard.classList.add('completed');
+                    stepCard.classList.remove('active', 'locked');
+                    statusEl.className = 'step-status completed';
+                    statusEl.innerHTML = '<span class="status-icon">✅</span> Complete';
+                    if (completeBtn) completeBtn.style.display = 'none';
+                } else {
+                    // Step is pending
+                    stepCard.classList.remove('completed', 'locked');
+                    stepCard.classList.add('active');
+                    statusEl.className = 'step-status pending';
+                    statusEl.innerHTML = '<span class="status-icon">⏳</span> Pending';
+                    if (completeBtn) completeBtn.style.display = 'inline-flex';
+                }
+            }
+
+            updateProgress();
+        }
+
+        // ============================================================
+        // MARK STEP COMPLETE
+        // ============================================================
+        function markStepComplete(step) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to save your progress.', 'error');
+                return;
+            }
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectOnboarding') || '{}');
+            if (!progress[user.email]) progress[user.email] = {};
+
+            progress[user.email][`step${step}`] = true;
+            localStorage.setItem('farmConnectOnboarding', JSON.stringify(progress));
+
+            // Update UI
+            const stepCard = document.getElementById(`step${step}`);
+            const statusEl = document.getElementById(`step${step}Status`);
+            const completeBtn = document.getElementById(`step${step}Btn`);
+
+            stepCard.classList.add('completed');
+            stepCard.classList.remove('active');
+            statusEl.className = 'step-status completed';
+            statusEl.innerHTML = '<span class="status-icon">✅</span> Complete';
+            if (completeBtn) completeBtn.style.display = 'none';
+
+            showToast(`Step ${step} completed! 🎉`, 'success');
+            updateProgress();
+            checkAllComplete();
+        }
+
+        // ============================================================
+        // UPDATE PROGRESS
+        // ============================================================
+        function updateProgress() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            let completed = 0;
+            for (let i = 1; i <= 5; i++) {
+                if (userProgress[`step${i}`]) completed++;
+            }
+
+            const percentage = Math.round((completed / 5) * 100);
+            progressFill.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}%`;
+        }
+
+        // ============================================================
+        // CHECK ALL COMPLETE
+        // ============================================================
+        function checkAllComplete() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            let allComplete = true;
+            for (let i = 1; i <= 5; i++) {
+                if (!userProgress[`step${i}`]) {
+                    allComplete = false;
+                    break;
+                }
+            }
+
+            if (allComplete) {
+                completionMessage.classList.add('show');
+                document.querySelector('.steps-container').style.opacity = '0.5';
+                showToast('🎉 All onboarding steps complete!', 'success');
+            } else {
+                completionMessage.classList.remove('show');
+                document.querySelector('.steps-container').style.opacity = '1';
+            }
+        }
+
+        // ============================================================
+        // RESET ONBOARDING (for testing/debug)
+        // ============================================================
+        function resetOnboarding() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            if (!confirm('Reset all onboarding progress?')) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectOnboarding') || '{}');
+            progress[user.email] = {};
+            localStorage.setItem('farmConnectOnboarding', JSON.stringify(progress));
+
+            loadProgress();
+            completionMessage.classList.remove('show');
+            document.querySelector('.steps-container').style.opacity = '1';
+            showToast('Onboarding progress reset.', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Seller Profile.html';
+                } else {
+                    window.location.href = 'Register as Seller.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectOnboarding') {
+                    loadProgress();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadProgress();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('🚀 Seller Onboarding loaded successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="Css/Shop.css">
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> All Sellers
+                    </a>
+                    <a href="Buyer Profile.html" class="nav-link">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                    <a href="Buyer Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                    <a href="Shopping Cart.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View your profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="shop">
+        <div class="container">
+            <!-- Dynamic Back Button -->
+            <button class="back-btn" id="dynamicBackBtn">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <div class="shop-header">
+                <h1 id="shopTitle">🏪 Shop</h1>
+                <p id="shopSubtitle">Browse products from this seller</p>
+            </div>
+
+            <!-- Shop Info Card -->
+            <div class="shop-info-card" id="shopInfoCard">
+                <div class="shop-avatar" id="shopAvatar">F</div>
+                <div class="shop-info-details">
+                    <h2 id="shopName">Farm Name</h2>
+                    <p class="shop-description" id="shopDescription">Farm description goes here.</p>
+                    <div class="shop-stats">
+                        <div class="shop-stat">
+                            <i class="fas fa-box"></i>
+                            <span class="stat-value" id="productCount">0</span>
+                            <span>Products</span>
+                        </div>
+                        <div class="shop-stat">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-value" id="ratingCount">0</span>
+                            <span>Rating</span>
+                        </div>
+                        <div class="shop-stat">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="stat-value" id="soldCount">0</span>
+                            <span>Sold</span>
+                        </div>
+                    </div>
+                    <!-- NEW: Shop Action Buttons -->
+                    <div class="shop-actions">
+                        <button class="btn-shop-action contact" id="contactSellerBtn">
+                            <i class="fas fa-comment"></i> Contact Seller
+                        </button>
+                        <button class="btn-shop-action save" id="saveSellerBtn">
+                            <i class="fas fa-heart"></i> <span id="saveBtnText">Save Seller</span>
+                        </button>
+                        <button class="btn-shop-action view-shop" id="viewSellerProfileBtn">
+                            <i class="fas fa-eye"></i> View Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically generated -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Product Details Modal -->
+    <div id="productModal" class="product-modal">
+        <div class="product-modal-content">
+            <button class="product-modal-close" id="productModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="product-modal-body" id="productModalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Buyer.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-th-large"></i></div>
+                <div class="mobile-nav-label">Dashboard</div>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-store"></i></div>
+                <div class="mobile-nav-label">Sellers</div>
+            </a>
+            <a href="Buyer Messages.html" class="mobile-nav-item active">
+                <div class="mobile-nav-icon"><i class="fas fa-envelope"></i></div>
+                <div class="mobile-nav-label">Messages</div>
+            </a>
+            <a href="Shopping Cart.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="mobile-nav-label">Cart</div>
+                <span class="cart-count-mobile" id="cartCountMobile">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <p>DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+                <a href="Help Center.html">Help</a>
+                <a href="Community Guidelines.html">Guidelines</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // SHOP PAGE - Full JavaScript with Contact, Inquire, Save
+        // ============================================================
+
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const cartCount = document.getElementById('cartCount');
+        const cartCountMobile = document.getElementById('cartCountMobile');
+        const productsGrid = document.getElementById('productsGrid');
+        const shopName = document.getElementById('shopName');
+        const shopAvatar = document.getElementById('shopAvatar');
+        const shopDescription = document.getElementById('shopDescription');
+        const productCount = document.getElementById('productCount');
+        const ratingCount = document.getElementById('ratingCount');
+        const soldCount = document.getElementById('soldCount');
+        const shopTitle = document.getElementById('shopTitle');
+        const shopSubtitle = document.getElementById('shopSubtitle');
+        const shopInfoCard = document.getElementById('shopInfoCard');
+        const dynamicBackBtn = document.getElementById('dynamicBackBtn');
+        const contactSellerBtn = document.getElementById('contactSellerBtn');
+        const saveSellerBtn = document.getElementById('saveSellerBtn');
+        const saveBtnText = document.getElementById('saveBtnText');
+        const viewSellerProfileBtn = document.getElementById('viewSellerProfileBtn');
+
+        const productModal = document.getElementById('productModal');
+        const productModalClose = document.getElementById('productModalClose');
+        const productModalBody = document.getElementById('productModalBody');
+
+        let sellerData = null;
+        let sellerProducts = [];
+        let sellerEmail = null;
+        let isSaved = false;
+
+        // ============================================================
+        // HELPER FUNCTIONS
+        // ============================================================
+        function safeStorageGet(key, defaultValue = []) {
+            try {
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : defaultValue;
+            } catch (error) {
+                console.error('Error reading from storage:', error);
+                return defaultValue;
+            }
+        }
+
+        function safeStorageSet(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+                return true;
+            } catch (error) {
+                console.error('Error writing to storage:', error);
+                return false;
+            }
+        }
+
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                if (userData) {
+                    return JSON.parse(userData);
+                }
+            } catch (e) {
+                console.error('Error getting current user:', e);
+            }
+            return null;
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR HTML
+        // ============================================================
+        function getSellerAvatarHTML(seller) {
+            if (!seller) return 'S';
+
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.name}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+
+            const initial = (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+            return initial;
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+            text.textContent = message;
+            toast.className = 'toast';
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // CHECK LOGIN STATUS ON PAGE LOAD
+        // ============================================================
+        function checkUserLoggedIn() {
+            try {
+                const currentUser = localStorage.getItem('currentUser');
+                const rememberMeStatus = localStorage.getItem('rememberMeStatus');
+
+                if (currentUser && rememberMeStatus === 'true') {
+                    const user = JSON.parse(currentUser);
+                    if (user.role === 'buyer') {
+                        console.log('✅ User is logged in as buyer:', user.name);
+                        return user;
+                    }
+                }
+                console.log('👤 No logged-in buyer found');
+                return null;
+            } catch (e) {
+                console.error('Error checking login status:', e);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // UPDATE WELCOME MESSAGE WITH LOGGED IN USER
+        // ============================================================
+        function updateUserInfo(user) {
+            if (!user) {
+                if (welcomeMessage) welcomeMessage.textContent = 'Welcome, Guest!';
+                if (userAvatar) userAvatar.textContent = 'G';
+                return;
+            }
+
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+            }
+
+            if (userAvatar) {
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            }
+        }
+
+        // ============================================================
+        // UPDATE CART COUNT
+        // ============================================================
+        function updateCartCount() {
+            const cartItems = safeStorageGet('farmConnectCartItems', []);
+            const currentUser = getCurrentUser();
+
+            if (currentUser) {
+                const userCartItems = cartItems.filter(item => item.buyerEmail === currentUser.email);
+                const totalItems = userCartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+                if (cartCount) {
+                    cartCount.textContent = totalItems;
+                    cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+                }
+                if (cartCountMobile) {
+                    cartCountMobile.textContent = totalItems;
+                    cartCountMobile.style.display = totalItems > 0 ? 'flex' : 'none';
+                }
+            } else {
+                if (cartCount) cartCount.style.display = 'none';
+                if (cartCountMobile) cartCountMobile.style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // CHECK IF SELLER IS SAVED
+        // ============================================================
+        function checkIfSellerSaved(sellerEmail) {
+            const user = getCurrentUser();
+            if (!user) return false;
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            return saved[user.email] && saved[user.email].includes(sellerEmail);
+        }
+
+        // ============================================================
+        // TOGGLE SAVE SELLER
+        // ============================================================
+        function toggleSaveSeller(sellerEmail, sellerName) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to save sellers.', 'error');
+                window.location.href = 'Register as Buyer.html';
+                return;
+            }
+
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            if (!saved[user.email]) saved[user.email] = [];
+
+            const index = saved[user.email].indexOf(sellerEmail);
+            if (index > -1) {
+                saved[user.email].splice(index, 1);
+                isSaved = false;
+                saveBtnText.textContent = 'Save Seller';
+                saveSellerBtn.classList.remove('saved');
+                showToast('Seller removed from saved list.', 'info');
+            } else {
+                saved[user.email].push(sellerEmail);
+                isSaved = true;
+                saveBtnText.textContent = 'Saved ✅';
+                saveSellerBtn.classList.add('saved');
+                showToast(`✅ ${sellerName || 'Seller'} saved!`, 'success');
+            }
+
+            localStorage.setItem('farmConnectSavedSellers', JSON.stringify(saved));
+        }
+
+        // ============================================================
+        // NAVIGATE TO SELLER PROFILE
+        // ============================================================
+        function goToSellerProfile(sellerEmail) {
+            if (!sellerEmail) {
+                showToast('Seller information not available', 'error');
+                return;
+            }
+            sessionStorage.setItem('viewedSellerEmail', sellerEmail);
+            window.location.href = 'Buyer View Seller.html?seller=' + encodeURIComponent(sellerEmail);
+        }
+
+        // ============================================================
+        // NAVIGATE TO CONTACT SELLER
+        // ============================================================
+        function goToContactSeller(sellerEmail) {
+            if (!sellerEmail) {
+                showToast('Seller information not available', 'error');
+                return;
+            }
+            window.location.href = 'Contact Seller.html?seller=' + encodeURIComponent(sellerEmail);
+        }
+
+        // ============================================================
+        // NAVIGATE TO PRODUCT INQUIRY
+        // ============================================================
+        function goToProductInquiry(productId) {
+            if (!productId) {
+                showToast('Product information not available', 'error');
+                return;
+            }
+            window.location.href = 'Product Inquiry.html?product=' + productId;
+        }
+
+        // ============================================================
+        // DYNAMIC BACK BUTTON
+        // ============================================================
+        function setupBackButton() {
+            dynamicBackBtn.addEventListener('click', function() {
+                if (document.referrer) {
+                    window.location.href = document.referrer;
+                } else {
+                    window.location.href = 'Nearby Farms.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // LOAD SELLER DATA
+        // ============================================================
+        function loadSellerData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            sellerEmail = urlParams.get('seller');
+
+            if (!sellerEmail) {
+                const storedSeller = sessionStorage.getItem('viewedSeller');
+                if (storedSeller) {
+                    try {
+                        sellerData = JSON.parse(storedSeller);
+                        sellerEmail = sellerData.email;
+                    } catch (e) {
+                        console.error('Error parsing seller data:', e);
+                    }
+                }
+            }
+
+            if (!sellerEmail) {
+                if (productsGrid) {
+                    productsGrid.innerHTML = `
+                            <div class="no-products">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <p>No seller selected. Please go back and select a shop.</p>
+                                <a href="Nearby Farms.html" style="color: #2e7d32; font-weight: 600; text-decoration: underline;">Go to Nearby Farms</a>
+                            </div>
+                        `;
+                }
+                return;
+            }
+
+            const users = safeStorageGet('farmConnectUsers', []);
+            const seller = users.find(u => u.email === sellerEmail && u.role === 'seller');
+
+            if (seller) {
+                sellerData = seller;
+            } else {
+                const products = safeStorageGet('farmConnectProducts', []);
+                const sellerProduct = products.find(p => p.sellerEmail === sellerEmail);
+                if (sellerProduct) {
+                    sellerData = {
+                        email: sellerEmail,
+                        name: sellerProduct.sellerName || 'Local Farmer',
+                        role: 'seller',
+                        farmName: sellerProduct.sellerName || 'Local Farm',
+                        farmDescription: sellerProduct.sellerDescription || '',
+                        isOnline: true
+                    };
+                } else {
+                    sellerData = {
+                        email: sellerEmail,
+                        name: 'Local Farmer',
+                        role: 'seller',
+                        farmName: 'Local Farm',
+                        farmDescription: 'Fresh farm products',
+                        isOnline: true
+                    };
+                }
+            }
+
+            sessionStorage.setItem('viewedSellerEmail', sellerEmail);
+
+            // Check if seller is saved
+            isSaved = checkIfSellerSaved(sellerEmail);
+            if (isSaved) {
+                saveBtnText.textContent = 'Saved ✅';
+                saveSellerBtn.classList.add('saved');
+            } else {
+                saveBtnText.textContent = 'Save Seller';
+                saveSellerBtn.classList.remove('saved');
+            }
+
+            loadSellerProducts(sellerEmail);
+            displaySellerInfo(sellerData);
+        }
+
+        function loadSellerProducts(sellerEmail) {
+            const allProducts = safeStorageGet('farmConnectProducts', []);
+            sellerProducts = allProducts.filter(p =>
+                p.sellerEmail === sellerEmail &&
+                p.quantity > 0
+            );
+
+            displayProducts(sellerProducts);
+        }
+
+        function displaySellerInfo(seller) {
+            const name = seller.farmName || seller.name || 'Local Farm';
+            const description = seller.farmDescription ||
+                seller.farmType ||
+                'Fresh farm products direct from the farm.';
+
+            const avatarHTML = getSellerAvatarHTML(seller);
+
+            if (shopName) shopName.textContent = name;
+            if (shopAvatar) shopAvatar.innerHTML = avatarHTML;
+            if (shopDescription) shopDescription.textContent = description;
+            if (shopTitle) shopTitle.textContent = `🏪 ${name}`;
+            if (shopSubtitle) shopSubtitle.textContent = `Browse ${sellerProducts.length} products from this seller`;
+
+            if (productCount) productCount.textContent = sellerProducts.length;
+
+            const reviews = safeStorageGet('farmConnectProductReviews', []);
+            const sellerProductIds = sellerProducts.map(p => p.id);
+            const sellerReviews = reviews.filter(r => sellerProductIds.includes(r.productId));
+
+            if (sellerReviews.length > 0 && ratingCount) {
+                const avgRating = (sellerReviews.reduce((sum, r) => sum + r.rating, 0) / sellerReviews.length).toFixed(1);
+                ratingCount.textContent = `⭐ ${avgRating}`;
+            } else if (ratingCount) {
+                ratingCount.textContent = '⭐ No ratings';
+            }
+
+            const orders = safeStorageGet('farmConnectOrders', []);
+            const sellerOrders = orders.filter(o => o.sellerEmail === seller.email ||
+                (o.items && o.items.some(item => item.sellerEmail === seller.email)));
+
+            let totalSold = 0;
+            sellerOrders.forEach(order => {
+                if (order.items) {
+                    order.items.forEach(item => {
+                        if (item.sellerEmail === seller.email) {
+                            totalSold += item.quantity || 1;
+                        }
+                    });
+                } else if (order.sellerEmail === seller.email) {
+                    totalSold += order.quantity || 1;
+                }
+            });
+
+            if (soldCount) soldCount.textContent = totalSold;
+        }
+
+        // ============================================================
+        // DISPLAY PRODUCTS
+        // ============================================================
+        function displayProducts(products) {
+            if (!productsGrid) return;
+            productsGrid.innerHTML = '';
+
+            if (products.length === 0) {
+                productsGrid.innerHTML = `
+                        <div class="no-products">
+                            <i class="fas fa-box-open"></i>
+                            <p>This seller has no products available at the moment.</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+
+                let imageContent = '';
+                if (product.imageUrl) {
+                    imageContent = `<img src="${product.imageUrl}" alt="${product.name}">`;
+                } else {
+                    imageContent = '<span><i class="fas fa-image" style="font-size:32px;"></i><br>No Image</span>';
+                }
+
+                const priceDisplay = typeof product.price === 'number' ?
+                    `₱${product.price.toFixed(2)}` :
+                    product.price;
+
+                const productReviews = getProductReviews(product.id);
+                const avgRating = getProductAverageRating(product.id);
+                const reviewCount = productReviews.length;
+
+                let starsHtml = '';
+                if (reviewCount > 0) {
+                    const fullStars = Math.floor(avgRating);
+                    const hasHalfStar = avgRating % 1 >= 0.5;
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= fullStars) {
+                            starsHtml += '<i class="fas fa-star"></i>';
+                        } else if (i === fullStars + 1 && hasHalfStar) {
+                            starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                        } else {
+                            starsHtml += '<i class="far fa-star"></i>';
+                        }
+                    }
+                } else {
+                    starsHtml = 'No ratings yet';
+                }
+
+                productCard.innerHTML = `
+                        <div class="product-image">${imageContent}</div>
+                        <div class="product-details">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description || 'Fresh farm product'}</p>
+                            <div class="product-price">${priceDisplay}</div>
+                            <div class="product-rating">
+                                <div class="product-stars">${starsHtml}</div>
+                                <span class="product-review-count">${reviewCount > 0 ? `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})` : ''}</span>
+                            </div>
+                            <div class="product-quantity"><i class="fas fa-boxes"></i> Available: ${product.quantity}</div>
+                            <!-- NEW: Product Actions with Contact and Inquire -->
+                            <div class="product-actions">
+                                <button class="btn-buy" data-product-id="${product.id}" ${product.quantity === 0 ? 'disabled' : ''}>
+                                    <i class="fas fa-shopping-bag"></i> Buy
+                                </button>
+                                <button class="btn-details" data-product-id="${product.id}">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </button>
+                            </div>
+                            <div class="product-extra-actions">
+                                <button class="btn-sm contact-sm" data-seller-email="${product.sellerEmail}" data-product-name="${product.name}">
+                                    <i class="fas fa-comment"></i> Contact
+                                </button>
+                                <button class="btn-sm inquire-sm" data-product-id="${product.id}">
+                                    <i class="fas fa-question"></i> Inquire
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                productsGrid.appendChild(productCard);
+            });
+
+            // Event Listeners for Product Buttons
+            document.querySelectorAll('.btn-buy').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const product = sellerProducts.find(p => p.id === productId);
+                    if (product) buyNow(product);
+                });
+            });
+
+            document.querySelectorAll('.btn-details').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = parseInt(this.getAttribute('data-product-id'));
+                    const product = sellerProducts.find(p => p.id === productId);
+                    if (product) showProductDetails(product);
+                });
+            });
+
+            // NEW: Contact button on product cards
+            document.querySelectorAll('.contact-sm').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const sellerEmail = this.getAttribute('data-seller-email');
+                    const productName = this.getAttribute('data-product-name');
+                    if (sellerEmail) {
+                        goToContactSeller(sellerEmail);
+                    } else {
+                        showToast('Seller information not available', 'error');
+                    }
+                });
+            });
+
+            // NEW: Inquire button on product cards
+            document.querySelectorAll('.inquire-sm').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = this.getAttribute('data-product-id');
+                    if (productId) {
+                        goToProductInquiry(productId);
+                    } else {
+                        showToast('Product information not available', 'error');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const btn = this.querySelector('.btn-details');
+                    const productId = parseInt(btn.getAttribute('data-product-id'));
+                    const product = sellerProducts.find(p => p.id === productId);
+                    if (product) showProductDetails(product);
+                });
+            });
+        }
+
+        // ============================================================
+        // PRODUCT REVIEWS
+        // ============================================================
+        function getProductReviews(productId) {
+            const reviews = safeStorageGet('farmConnectProductReviews', []);
+            return reviews.filter(review => review.productId === productId);
+        }
+
+        function getProductAverageRating(productId) {
+            const reviews = getProductReviews(productId);
+            if (reviews.length === 0) return 0;
+            const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+            return (totalRating / reviews.length).toFixed(1);
+        }
+
+        // ============================================================
+        // BUY NOW
+        // ============================================================
+        function buyNow(product) {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                alert('Please login to make a purchase.');
+                window.location.href = 'Register as Buyer.html';
+                return;
+            }
+            if (product.quantity <= 0) {
+                alert('Sorry, this product is out of stock.');
+                return;
+            }
+
+            const cartItems = safeStorageGet('farmConnectCartItems', []);
+            const existingItemIndex = cartItems.findIndex(item =>
+                item.productId === product.id && item.buyerEmail === currentUser.email
+            );
+
+            if (existingItemIndex !== -1) {
+                cartItems[existingItemIndex].quantity += 1;
+            } else {
+                cartItems.push({
+                    id: Date.now(),
+                    productId: product.id,
+                    productName: product.name,
+                    buyerEmail: currentUser.email,
+                    buyerName: currentUser.name,
+                    sellerEmail: product.sellerEmail,
+                    sellerName: product.sellerName,
+                    price: product.price,
+                    quantity: 1,
+                    date: new Date().toISOString()
+                });
+            }
+
+            safeStorageSet('farmConnectCartItems', cartItems);
+            window.location.href = 'Checkout.html';
+        }
+
+        // ============================================================
+        // ADD TO CART
+        // ============================================================
+        function addToCart(product) {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                alert('Please login to add items to your cart.');
+                window.location.href = 'Register as Buyer.html';
+                return;
+            }
+            if (product.quantity <= 0) {
+                alert('Sorry, this product is out of stock.');
+                return;
+            }
+
+            const cartItems = safeStorageGet('farmConnectCartItems', []);
+            const existingItemIndex = cartItems.findIndex(item =>
+                item.productId === product.id && item.buyerEmail === currentUser.email
+            );
+
+            if (existingItemIndex !== -1) {
+                cartItems[existingItemIndex].quantity += 1;
+            } else {
+                cartItems.push({
+                    id: Date.now(),
+                    productId: product.id,
+                    productName: product.name,
+                    buyerEmail: currentUser.email,
+                    buyerName: currentUser.name,
+                    sellerEmail: product.sellerEmail,
+                    sellerName: product.sellerName,
+                    price: product.price,
+                    quantity: 1,
+                    date: new Date().toISOString()
+                });
+            }
+
+            safeStorageSet('farmConnectCartItems', cartItems);
+            showToast(`${product.name} added to cart!`);
+            updateCartCount();
+        }
+
+        // ============================================================
+        // SHOW PRODUCT DETAILS
+        // ============================================================
+        function showProductDetails(product) {
+            const currentUser = getCurrentUser();
+            const productReviews = getProductReviews(product.id);
+            const avgRating = getProductAverageRating(product.id);
+
+            let imageContent = '';
+            if (product.imageUrl) {
+                imageContent = `<img src="${product.imageUrl}" alt="${product.name}" data-product-id="${product.id}">`;
+            } else {
+                imageContent = '<span><i class="fas fa-image" style="font-size:48px;"></i><br>No Image Available</span>';
+            }
+
+            const isInStock = product.quantity > 0;
+
+            const sellerAvatarHTML = getSellerAvatarHTML({
+                email: product.sellerEmail,
+                name: product.sellerName || 'Local Farmer',
+                farmName: product.sellerName || 'Local Farm'
+            });
+
+            productModalBody.innerHTML = `
+                    <div class="product-modal-header">
+                        <div class="product-modal-image">${imageContent}</div>
+                        <div class="product-modal-info">
+                            <h2><i class="fas fa-tag"></i> ${product.name}</h2>
+                            <div class="product-modal-price">${typeof product.price === 'number' ? `₱${product.price.toFixed(2)}` : product.price}</div>
+                            <div class="product-modal-seller">
+                                <div class="seller-avatar" data-seller-email="${product.sellerEmail}">
+                                    ${sellerAvatarHTML}
+                                </div>
+                                <div class="seller-info">
+                                    <h4>${product.sellerName || 'Local Farmer'}</h4>
+                                    <p><i class="fas fa-store"></i> Seller</p>
+                                </div>
+                            </div>
+                            <div class="product-modal-description"><p>${product.description}</p></div>
+                            <div class="product-modal-stats">
+                                <div class="stat-item"><div class="stat-value">${product.quantity}</div><div class="stat-label"><i class="fas fa-boxes"></i> Available</div></div>
+                                <div class="stat-item"><div class="stat-value">${productReviews.length}</div><div class="stat-label"><i class="fas fa-star"></i> Reviews</div></div>
+                                <div class="stat-item"><div class="stat-value">${avgRating > 0 ? avgRating : 'N/A'}</div><div class="stat-label"><i class="fas fa-chart-bar"></i> Avg Rating</div></div>
+                            </div>
+                            <!-- NEW: Purchase Buttons with Contact and Inquire -->
+                            <div class="purchase-buttons">
+                                <button class="add-to-cart-btn" ${!isInStock ? 'disabled' : ''}><i class="fas fa-shopping-cart"></i> ${isInStock ? 'Add to Cart' : 'Out of Stock'}</button>
+                                <button class="buy-now-btn" ${!isInStock ? 'disabled' : ''}><i class="fas fa-bolt"></i> ${isInStock ? 'Buy Now' : 'Out of Stock'}</button>
+                            </div>
+                            <div class="purchase-buttons">
+                                <button class="contact-seller-btn" data-seller-email="${product.sellerEmail}">
+                                    <i class="fas fa-comment"></i> Contact Seller
+                                </button>
+                                <button class="inquire-product-btn" data-product-id="${product.id}">
+                                    <i class="fas fa-question"></i> Inquire
+                                </button>
+                            </div>
+                            ${!isInStock ? '<div style="color: #ef4444; text-align: center; margin-top: 10px; font-weight: 600;"><i class="fas fa-exclamation-circle"></i> This product is currently out of stock.</div>' : ''}
+                        </div>
+                    </div>
+
+                    <div class="product-modal-tabs">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="reviews"><i class="fas fa-star"></i> Reviews & Ratings</button>
+                            <button class="tab-btn" data-tab="messages"><i class="fas fa-envelope"></i> Message Seller</button>
+                            <button class="tab-btn" data-tab="feedback"><i class="fas fa-comment"></i> Send Feedback</button>
+                        </div>
+
+                        <div class="tab-content active" id="reviews-tab">
+                            <div class="rating-section">
+                                <h3><i class="fas fa-star"></i> Rate this Product</h3>
+                                <div class="rating-stars" id="ratingStars">
+                                    <span class="star" data-rating="1"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="2"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="3"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="4"><i class="far fa-star"></i></span>
+                                    <span class="star" data-rating="5"><i class="far fa-star"></i></span>
+                                </div>
+                                <form class="rating-form" id="ratingForm">
+                                    <textarea placeholder="Write your review..." required></textarea>
+                                    <button type="submit" class="submit-rating"><i class="fas fa-paper-plane"></i> Submit Review</button>
+                                </form>
+                            </div>
+                            <div class="reviews-list">
+                                <h3><i class="fas fa-comments"></i> Customer Reviews (${productReviews.length})</h3>
+                                ${productReviews.length > 0 ? 
+                                    productReviews.map(review => `
+                                        <div class="review-item">
+                                            <div class="review-header">
+                                                <span class="reviewer-name"><i class="fas fa-user"></i> ${review.buyerName}</span>
+                                                <span class="review-date"><i class="far fa-calendar-alt"></i> ${new Date(review.date).toLocaleDateString()}</span>
+                                            </div>
+                                            <div class="review-rating">${'<i class="fas fa-star"></i>'.repeat(review.rating)}${'<i class="far fa-star"></i>'.repeat(5 - review.rating)}</div>
+                                            <p class="review-text">${review.comment}</p>
+                                        </div>
+                                    `).join('') : 
+                                    '<p><i class="fas fa-info-circle"></i> No reviews yet. Be the first to review this product!</p>'
+                                }
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="messages-tab">
+                            <div class="message-section">
+                                <h3><i class="fas fa-envelope"></i> Message ${product.sellerName}</h3>
+                                <form class="message-form" id="messageForm">
+                                    <textarea placeholder="Type your message to the seller..." required></textarea>
+                                    <button type="submit" class="send-message"><i class="fas fa-paper-plane"></i> Send Message</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="tab-content" id="feedback-tab">
+                            <div class="feedback-section">
+                                <h3><i class="fas fa-comment"></i> Send Feedback</h3>
+                                <form class="feedback-form" id="feedbackForm">
+                                    <div class="feedback-type">
+                                        <select required>
+                                            <option value="">Select Feedback Type</option>
+                                            <option value="suggestion">💡 Suggestion</option>
+                                            <option value="issue">⚠️ Report Issue</option>
+                                            <option value="compliment">❤️ Compliment</option>
+                                            <option value="other">💬 Other</option>
+                                        </select>
+                                    </div>
+                                    <textarea placeholder="Describe your feedback..." required></textarea>
+                                    <button type="submit" class="submit-feedback"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+            // Event Listeners for Modal Buttons
+            const addToCartBtn = productModalBody.querySelector('.add-to-cart-btn');
+            if (isInStock) {
+                addToCartBtn.addEventListener('click', function() {
+                    addToCart(product);
+                    closeModal();
+                });
+            }
+
+            const buyNowBtn = productModalBody.querySelector('.buy-now-btn');
+            if (isInStock) {
+                buyNowBtn.addEventListener('click', function() {
+                    buyNow(product);
+                });
+            }
+
+            // NEW: Contact Seller from modal
+            const contactSellerModalBtn = productModalBody.querySelector('.contact-seller-btn');
+            if (contactSellerModalBtn) {
+                contactSellerModalBtn.addEventListener('click', function() {
+                    const sellerEmail = this.getAttribute('data-seller-email');
+                    if (sellerEmail) {
+                        closeModal();
+                        goToContactSeller(sellerEmail);
+                    }
+                });
+            }
+
+            // NEW: Inquire from modal
+            const inquireModalBtn = productModalBody.querySelector('.inquire-product-btn');
+            if (inquireModalBtn) {
+                inquireModalBtn.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    if (productId) {
+                        closeModal();
+                        goToProductInquiry(productId);
+                    }
+                });
+            }
+
+            const productModalImage = productModalBody.querySelector('.product-modal-image img');
+            if (productModalImage) {
+                productModalImage.addEventListener('click', function() {
+                    window.open(this.src, '_blank');
+                });
+            }
+
+            const tabBtns = productModalBody.querySelectorAll('.tab-btn');
+            const tabContents = productModalBody.querySelectorAll('.tab-content');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            const stars = productModalBody.querySelectorAll('.star');
+            let selectedRating = 0;
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.getAttribute('data-rating'));
+                    stars.forEach(s => {
+                        const rating = parseInt(s.getAttribute('data-rating'));
+                        s.classList.toggle('active', rating <= selectedRating);
+                        s.innerHTML = rating <= selectedRating ? '<i class="fas fa-star"></i>' :
+                            '<i class="far fa-star"></i>';
+                    });
+                });
+                star.addEventListener('mouseover', function() {
+                    const hoverRating = parseInt(this.getAttribute('data-rating'));
+                    stars.forEach(s => {
+                        const rating = parseInt(s.getAttribute('data-rating'));
+                        s.innerHTML = rating <= hoverRating ? '<i class="fas fa-star"></i>' :
+                            '<i class="far fa-star"></i>';
+                    });
+                });
+                star.addEventListener('mouseout', function() {
+                    stars.forEach(s => {
+                        const rating = parseInt(s.getAttribute('data-rating'));
+                        s.innerHTML = rating <= selectedRating ? '<i class="fas fa-star"></i>' :
+                            '<i class="far fa-star"></i>';
+                    });
+                });
+            });
+
+            const ratingForm = productModalBody.querySelector('#ratingForm');
+            ratingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    alert('Please login to submit a review.');
+                    window.location.href = 'Register as Buyer.html';
+                    return;
+                }
+                if (selectedRating === 0) {
+                    alert('Please select a rating.');
+                    return;
+                }
+                const comment = this.querySelector('textarea').value;
+                if (!comment.trim()) {
+                    alert('Please write a review comment.');
+                    return;
+                }
+                const review = {
+                    id: Date.now(),
+                    productId: product.id,
+                    productName: product.name,
+                    buyerEmail: currentUser.email,
+                    buyerName: currentUser.name,
+                    sellerEmail: product.sellerEmail,
+                    rating: selectedRating,
+                    comment: comment,
+                    date: new Date().toISOString()
+                };
+                const reviews = safeStorageGet('farmConnectProductReviews', []);
+                reviews.push(review);
+                safeStorageSet('farmConnectProductReviews', reviews);
+                showToast('Thank you for your review!', 'success');
+                this.reset();
+                stars.forEach(s => {
+                    s.classList.remove('active');
+                    s.innerHTML = '<i class="far fa-star"></i>';
+                });
+                selectedRating = 0;
+                setTimeout(() => showProductDetails(product), 500);
+            });
+
+            const messageForm = productModalBody.querySelector('#messageForm');
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    alert('Please login to send a message.');
+                    window.location.href = 'Register as Buyer.html';
+                    return;
+                }
+                const messageText = this.querySelector('textarea').value;
+                if (!messageText.trim()) {
+                    alert('Please enter a message.');
+                    return;
+                }
+                messageSeller(product, product.sellerEmail, messageText);
+                this.reset();
+            });
+
+            const feedbackForm = productModalBody.querySelector('#feedbackForm');
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) {
+                    alert('Please login to submit feedback.');
+                    window.location.href = 'Register as Buyer.html';
+                    return;
+                }
+                const type = this.querySelector('select').value;
+                const feedback = this.querySelector('textarea').value;
+                if (!type) {
+                    alert('Please select a feedback type.');
+                    return;
+                }
+                if (!feedback.trim()) {
+                    alert('Please describe your feedback.');
+                    return;
+                }
+                const feedbackData = {
+                    id: Date.now(),
+                    productId: product.id,
+                    productName: product.name,
+                    buyerEmail: currentUser.email,
+                    buyerName: currentUser.name,
+                    type: type,
+                    feedback: feedback,
+                    date: new Date().toISOString()
+                };
+                const feedbacks = safeStorageGet('farmConnectFeedback', []);
+                feedbacks.push(feedbackData);
+                safeStorageSet('farmConnectFeedback', feedbacks);
+                showToast('Thank you for your feedback!', 'success');
+                this.reset();
+            });
+
+            productModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+        }
+
+        // ============================================================
+        // MESSAGE SELLER
+        // ============================================================
+        function messageSeller(product, sellerEmail, messageText) {
+            const currentUser = getCurrentUser();
+            if (!currentUser) {
+                alert('Please login to message sellers.');
+                window.location.href = 'Register as Buyer.html';
+                return;
+            }
+
+            const messages = safeStorageGet('farmConnectMessages', []);
+            messages.push({
+                id: Date.now(),
+                productId: product.id,
+                productName: product.name,
+                buyerEmail: currentUser.email,
+                buyerName: currentUser.name,
+                sellerEmail: sellerEmail,
+                sellerName: product.sellerName,
+                message: messageText,
+                date: new Date().toISOString(),
+                read: false,
+                direction: 'buyer_to_seller'
+            });
+            safeStorageSet('farmConnectMessages', messages);
+
+            alert(`Message sent to ${product.sellerName}!`);
+        }
+
+        // ============================================================
+        // CLOSE MODAL
+        // ============================================================
+        function closeModal() {
+            productModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+
+        // ============================================================
+        // SETUP EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            productModalClose.addEventListener('click', closeModal);
+            productModal.addEventListener('click', function(e) {
+                if (e.target === productModal) closeModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            // NEW: Contact Seller button on shop info card
+            if (contactSellerBtn) {
+                contactSellerBtn.addEventListener('click', function() {
+                    if (sellerEmail) {
+                        goToContactSeller(sellerEmail);
+                    } else {
+                        showToast('Seller information not available', 'error');
+                    }
+                });
+            }
+
+            // NEW: Save Seller button on shop info card
+            if (saveSellerBtn) {
+                saveSellerBtn.addEventListener('click', function() {
+                    if (sellerEmail) {
+                        toggleSaveSeller(sellerEmail, sellerData?.farmName || sellerData?.name || 'Seller');
+                    } else {
+                        showToast('Seller information not available', 'error');
+                    }
+                });
+            }
+
+            // NEW: View Seller Profile button
+            if (viewSellerProfileBtn) {
+                viewSellerProfileBtn.addEventListener('click', function() {
+                    if (sellerEmail) {
+                        goToSellerProfile(sellerEmail);
+                    } else {
+                        showToast('Seller information not available', 'error');
+                    }
+                });
+            }
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectCartItems') {
+                    updateCartCount();
+                }
+            });
+
+            if (shopInfoCard) {
+                shopInfoCard.addEventListener('click', function(e) {
+                    if (e.target.closest('button') || e.target.closest('a')) return;
+                    if (sellerEmail) {
+                        goToSellerProfile(sellerEmail);
+                    } else {
+                        showToast('Seller information not available', 'error');
+                    }
+                });
+            }
+
+            if (userAvatar) {
+                userAvatar.addEventListener('click', function() {
+                    const currentUser = getCurrentUser();
+                    if (currentUser) {
+                        window.location.href = 'Buyer Profile.html';
+                    } else {
+                        window.location.href = 'Register as Buyer.html';
+                    }
+                });
+            }
+
+            document.addEventListener('click', function(e) {
+                const sellerAvatar = e.target.closest('.seller-avatar');
+                if (sellerAvatar) {
+                    const sellerEmail = sellerAvatar.getAttribute('data-seller-email');
+                    if (sellerEmail) {
+                        goToSellerProfile(sellerEmail);
+                    }
+                }
+            });
+
+            setupBackButton();
+        }
+
+        // ============================================================
+        // UPDATE WELCOME MESSAGE
+        // ============================================================
+        function updateWelcomeMessage() {
+            const user = getCurrentUser();
+            if (user) {
+                if (welcomeMessage) welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                if (userAvatar) {
+                    const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                    if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                        userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                    } else if (user.profilePicture) {
+                        userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                    } else {
+                        userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                    }
+                }
+            } else {
+                if (welcomeMessage) welcomeMessage.textContent = 'Welcome, Guest!';
+                if (userAvatar) userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔄 Shop page loading...');
+            loadThemePreference();
+
+            const user = checkUserLoggedIn();
+            updateUserInfo(user);
+            updateWelcomeMessage();
+            updateCartCount();
+            loadSellerData();
+            setupEventListeners();
+
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectCartItems') {
+                    updateCartCount();
+                }
+                if (e.key === 'currentUser' || e.key === 'rememberMeStatus') {
+                    const updatedUser = checkUserLoggedIn();
+                    updateUserInfo(updatedUser);
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+
+            console.log('✅ Shop page loaded successfully');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Profile - DARAWAT</title>
+    <!-- ============================================================ -->
+    <!-- EXTERNAL LIBRARIES                                            -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ============================================================ -->
+    <!-- EXTERNAL CSS FILE - style-buyer-profile.css                  -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="Css/Buyer Profile.css">
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- SECTION: HEADER                                               -->
+    <!-- ============================================================ -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <a href="Register as Buyer.html" class="user-avatar" id="userAvatar">
+                        <!-- Avatar will be inserted here by JavaScript -->
+                    </a>
+                    <button class="logout-btn" id="logoutButton">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: TOP NAVIGATION                                       -->
+    <!-- ============================================================ -->
+    <div class="dashboard-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="Register as Buyer.html"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="#" class="active"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Buyer Account Setting.html"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="Buyer Order History.html"><i class="fas fa-box"></i> Order History</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MAIN CONTENT                                         -->
+    <!-- ============================================================ -->
+    <main class="dashboard">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+                <p>Manage your account settings and preferences</p>
+            </div>
+
+            <div class="profile-container">
+                <!-- SIDEBAR -->
+                <div class="profile-sidebar">
+                    <div class="profile-pic">
+                        <img id="profilePicture" src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Profile Picture">
+                        <div class="change-photo" onclick="openAvatarModal()">
+                            <i class="fas fa-camera"></i> Change Photo
+                        </div>
+                    </div>
+
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <h3 id="ordersCount">0</h3>
+                            <p><i class="fas fa-shopping-bag"></i> Orders</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 id="farmersCount">0</h3>
+                            <p><i class="fas fa-tractor"></i> Farmers</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3 id="ratingValue">0</h3>
+                            <p><i class="fas fa-star"></i> Rating</p>
+                        </div>
+                    </div>
+
+                    <ul class="profile-menu">
+                        <li><a href="#" class="active" onclick="showSection('personal-info', event)"><i class="fas fa-user-edit"></i> Personal Information</a></li>
+                        <li><a href="#" onclick="showSection('preferences', event)"><i class="fas fa-leaf"></i> Product Preferences</a></li>
+                        <li><a href="#" onclick="showSection('recent-orders', event)"><i class="fas fa-history"></i> Recent Orders</a></li>
+                        <li><a href="Saved Sellers.html" onclick="event.preventDefault(); window.location.href='Saved Sellers.html';"><i class="fas fa-heart"></i> Saved Sellers</a></li>
+                    </ul>
+
+                    <!-- Profile Action Buttons -->
+                    <div style="margin-top: 15px;">
+                        <a href="Seller Directory.html" class="profile-action-btn primary">
+                            <i class="fas fa-store"></i> Browse Sellers
+                        </a>
+                        <a href="Saved Sellers.html" class="profile-action-btn saved-sellers">
+                            <i class="fas fa-heart"></i> My Saved Sellers
+                        </a>
+                        <a href="Product Categories.html" class="profile-action-btn secondary">
+                            <i class="fas fa-tags"></i> Browse Categories
+                        </a>
+                    </div>
+
+                    <button class="sell-products-btn" onclick="goToSellerRegistration()">
+                        <i class="fas fa-store"></i> Sell Products
+                    </button>
+                </div>
+
+                <!-- CONTENT -->
+                <div class="profile-content">
+                    <!-- Personal Information Section -->
+                    <div id="personal-info-section" class="profile-section">
+                        <h2 class="section-title"><i class="fas fa-user-edit"></i> Personal Information</h2>
+
+                        <form id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName"><i class="fas fa-user"></i> First Name</label>
+                                    <input type="text" id="firstName" placeholder="Enter your first name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
+                                    <input type="text" id="lastName" placeholder="Enter your last name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="email" placeholder="Enter your email">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                                <input type="tel" id="phone" placeholder="Enter your phone number">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                                <textarea id="address" rows="3" placeholder="Enter your address"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bio"><i class="fas fa-pencil-alt"></i> Bio</label>
+                                <textarea id="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn"><i class="fas fa-save"></i> Save Changes</button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm()"><i class="fas fa-times"></i> Cancel</button>
+                        </form>
+                    </div>
+
+                    <!-- Product Preferences Section -->
+                    <div id="preferences-section" class="profile-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-leaf"></i> Product Preferences</h2>
+                        <p>Select the types of products you're most interested in</p>
+
+                        <div class="preferences-grid">
+                            <div class="preference-card" data-category="Vegetables">
+                                <div class="preference-icon">🥦</div>
+                                <h3>Vegetables</h3>
+                            </div>
+                            <div class="preference-card" data-category="Fruits">
+                                <div class="preference-icon">🍎</div>
+                                <h3>Fruits</h3>
+                            </div>
+                            <div class="preference-card" data-category="Grains">
+                                <div class="preference-icon">🌾</div>
+                                <h3>Grains</h3>
+                            </div>
+                            <div class="preference-card" data-category="Dairy">
+                                <div class="preference-icon">🥛</div>
+                                <h3>Dairy</h3>
+                            </div>
+                            <div class="preference-card" data-category="Livestock">
+                                <div class="preference-icon">🐔</div>
+                                <h3>Livestock</h3>
+                            </div>
+                            <div class="preference-card" data-category="Other">
+                                <div class="preference-icon">🥚</div>
+                                <h3>Other</h3>
+                            </div>
+                        </div>
+
+                        <button class="btn" onclick="savePreferences()"><i class="fas fa-save"></i> Update Preferences</button>
+                    </div>
+
+                    <!-- Recent Orders Section -->
+                    <div id="recent-orders-section" class="profile-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-history"></i> Recent Orders</h2>
+
+                        <div id="recent-orders-container">
+                            <!-- Orders will be dynamically generated here -->
+                        </div>
+
+                        <a href="Buyer Order History.html" class="btn btn-outline" style="margin-top: 1rem;"><i class="fas fa-list"></i> View All Orders</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MOBILE BOTTOM NAVIGATION                             -->
+    <!-- ============================================================ -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Buyer.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
+                <span class="mobile-nav-label">Back</span>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span class="mobile-nav-label">Profile</span>
+            </a>
+            <a href="Buyer Account Setting.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="mobile-nav-label">Settings</span>
+            </a>
+            <a href="Buyer Order History.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span class="mobile-nav-label">Orders</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span class="mobile-nav-label">Sellers</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: FOOTER                                               -->
+    <!-- ============================================================ -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+                    <a href="Help Center.html"><i class="fas fa-question-circle"></i> Help</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: AVATAR SELECTION MODAL                               -->
+    <!-- ============================================================ -->
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-image"></i> Choose Your Profile Picture</h3>
+                <button class="close-modal" onclick="closeAvatarModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="avatar-options" id="avatarOptionsContainer">
+                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 1" class="avatar-option" data-url="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 2" class="avatar-option" data-url="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 3" class="avatar-option" data-url="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 4" class="avatar-option" data-url="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 5" class="avatar-option" data-url="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 6" class="avatar-option" data-url="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
+                <div class="upload-option" onclick="triggerFileUpload()">
+                    <span class="upload-icon"><i class="fas fa-folder-open"></i></span>
+                    <span style="font-size: 0.7rem;">Upload</span>
+                </div>
+            </div>
+            <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(this)">
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeAvatarModal()"><i class="fas fa-times"></i> Cancel</button>
+                <button class="btn" onclick="saveAvatar()"><i class="fas fa-check"></i> Save Avatar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: COMPLETE JAVASCRIPT                                  -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // SESSION PERSISTENCE FIX - AUTO-LOGIN WITH SAVED CREDENTIALS
+        // ============================================================
+        function autoLoginWithSavedCredentials() {
+            // Check if user is already logged in
+            let currentUser = localStorage.getItem('currentUser');
+            
+            // If already logged in, return the user
+            if (currentUser) {
+                try {
+                    return JSON.parse(currentUser);
+                } catch(e) {
+                    console.error('Error parsing currentUser:', e);
+                    return null;
+                }
+            }
+            
+            // If not logged in, check for saved credentials
+            const savedCredentials = localStorage.getItem('farmConnectSavedCredentials');
+            if (savedCredentials) {
+                try {
+                    const creds = JSON.parse(savedCredentials);
+                    const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+                    
+                    // Try to find user by email
+                    let user = users.find(u => u.email === creds.email && u.role === 'buyer');
+                    
+                    // If not found by email, try to find by password
+                    if (!user && creds.password && creds.password !== 'saved_password') {
+                        user = users.find(u => u.password === creds.password && u.role === 'buyer');
+                    }
+                    
+                    if (user) {
+                        // Auto-login the user
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        localStorage.setItem('rememberMeStatus', 'true');
+                        
+                        // Also save the avatar if it exists
+                        const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                        if (buyerAvatar) {
+                            user.profilePicture = buyerAvatar;
+                        }
+                        
+                        return user;
+                    }
+                } catch(e) {
+                    console.error('Auto-login failed:', e);
+                }
+            }
+            
+            // Check session storage as backup
+            const profileSession = sessionStorage.getItem('profileSession');
+            if (profileSession) {
+                try {
+                    const user = JSON.parse(profileSession);
+                    // Only use if we don't have a current user
+                    if (!localStorage.getItem('currentUser')) {
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        return user;
+                    }
+                } catch(e) {
+                    console.error('Session restore failed:', e);
+                }
+            }
+            
+            return null;
+        }
+
+        // ============================================================
+        // THEME ENGINE - sync with Account Settings
+        // ============================================================
+        function applyTheme(theme) {
+            const body = document.body;
+            body.classList.remove('dark-mode');
+
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+            } else if (theme === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) body.classList.add('dark-mode');
+            }
+
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active-theme', btn.dataset.theme === theme);
+            });
+        }
+
+        function loadSavedTheme() {
+            const saved = localStorage.getItem('farmNetTheme') || 'light';
+            applyTheme(saved);
+        }
+
+        // ============================================================
+        // AUTHENTICATION - UPDATED WITH AUTO-LOGIN
+        // ============================================================
+        function checkAuthentication() {
+            // Try to auto-login first
+            const user = autoLoginWithSavedCredentials();
+            
+            if (user) {
+                // User was auto-logged in, update the welcome message
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${user.name}!`;
+                return true;
+            }
+            
+            // If still no user, redirect to login
+            alert('Please log in to access your profile.');
+            window.location.href = 'Register as Buyer.html';
+            return false;
+        }
+
+        // ============================================================
+        // GET CURRENT USER - UPDATED WITH AUTO-LOGIN
+        // ============================================================
+        function getCurrentUser() {
+            // First try to get from localStorage
+            let currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                try {
+                    return JSON.parse(currentUser);
+                } catch(e) {
+                    console.error('Error parsing currentUser:', e);
+                }
+            }
+            
+            // If not found, try auto-login
+            const user = autoLoginWithSavedCredentials();
+            if (user) {
+                // Save to localStorage for future use
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                return user;
+            }
+            
+            return null;
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${currentUser.name}!`;
+
+                loadBuyerAvatar(currentUser);
+
+                const names = currentUser.name ? currentUser.name.split(' ') : ['', ''];
+                document.getElementById('firstName').value = names[0] || '';
+                document.getElementById('lastName').value = names[1] || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('phone').value = currentUser.phone || '';
+                document.getElementById('address').value = currentUser.address || '';
+                document.getElementById('bio').value = currentUser.bio || '';
+            }
+        }
+
+        function loadBuyerAvatar(currentUser) {
+            const profilePicture = document.getElementById('profilePicture');
+            const userAvatar = document.getElementById('userAvatar');
+
+            const buyerAvatar = localStorage.getItem(`buyerAvatar_${currentUser.email}`);
+
+            if (buyerAvatar) {
+                profilePicture.src = buyerAvatar;
+                userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="Buyer Avatar">`;
+            } else if (currentUser.profilePicture) {
+                profilePicture.src = currentUser.profilePicture;
+                userAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
+            } else {
+                userAvatar.textContent = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'B';
+            }
+        }
+
+        function updateBuyerAvatar(avatarUrl, userName) {
+            const profilePicture = document.getElementById('profilePicture');
+            const userAvatar = document.getElementById('userAvatar');
+
+            if (avatarUrl) {
+                profilePicture.src = avatarUrl;
+                profilePicture.classList.add('fade-in');
+            }
+
+            userAvatar.innerHTML = '';
+
+            if (avatarUrl) {
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Buyer Avatar';
+                userAvatar.appendChild(img);
+            } else {
+                userAvatar.textContent = userName ? userName.charAt(0).toUpperCase() : 'B';
+            }
+
+            setTimeout(() => {
+                profilePicture.classList.remove('fade-in');
+            }, 500);
+        }
+
+        // ============================================================
+        // LOAD USER PREFERENCES
+        // ============================================================
+        function loadUserPreferences() {
+            const currentUser = getCurrentUser();
+            const preferredCategories = currentUser.preferredCategories || [];
+
+            document.querySelectorAll('.preference-card').forEach(card => {
+                const category = card.getAttribute('data-category');
+                if (preferredCategories.includes(category)) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+
+        // ============================================================
+        // SHOW SECTION
+        // ============================================================
+        function showSection(sectionName, event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            document.querySelectorAll('.profile-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            document.querySelectorAll('.profile-menu a').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            document.getElementById(sectionName + '-section').style.display = 'block';
+
+            if (event) {
+                event.target.classList.add('active');
+            }
+
+            if (sectionName === 'recent-orders') {
+                loadRecentOrders();
+            }
+        }
+
+        // ============================================================
+        // SAVE PROFILE
+        // ============================================================
+        function saveProfile() {
+            if (!checkAuthentication()) return;
+
+            const userData = {
+                name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                bio: document.getElementById('bio').value
+            };
+
+            const currentUser = getCurrentUser();
+            const updatedUser = { ...currentUser, ...userData };
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex] = { ...users[userIndex], ...userData };
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+            }
+
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${userData.name}!`;
+
+            alert('Profile updated successfully!');
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // ============================================================
+        // SAVE PREFERENCES
+        // ============================================================
+        function savePreferences() {
+            if (!checkAuthentication()) return;
+
+            const selectedCategories = [];
+            document.querySelectorAll('.preference-card.selected').forEach(card => {
+                selectedCategories.push(card.getAttribute('data-category'));
+            });
+
+            const currentUser = getCurrentUser();
+            currentUser.preferredCategories = selectedCategories;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex].preferredCategories = selectedCategories;
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+            }
+
+            alert('Preferences updated successfully!');
+        }
+
+        // ============================================================
+        // RESET FORM
+        // ============================================================
+        function resetForm() {
+            if (confirm('Are you sure you want to discard changes?')) {
+                loadUserData();
+            }
+        }
+
+        // ============================================================
+        // AVATAR MODAL
+        // ============================================================
+        let selectedAvatarUrl = null;
+        let tempAvatarElement = null;
+
+        function openAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'flex';
+            selectedAvatarUrl = null;
+            tempAvatarElement = null;
+
+            const container = document.getElementById('avatarOptionsContainer');
+
+            const existingUpload = container.querySelector('.upload-option');
+            if (!existingUpload) {
+                const uploadDiv = document.createElement('div');
+                uploadDiv.className = 'upload-option';
+                uploadDiv.onclick = function() { triggerFileUpload(); };
+                uploadDiv.innerHTML = `
+                    <span class="upload-icon"><i class="fas fa-folder-open"></i></span>
+                    <span style="font-size: 0.7rem;">Upload</span>
+                `;
+                container.appendChild(uploadDiv);
+            }
+
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'none';
+            selectedAvatarUrl = null;
+            tempAvatarElement = null;
+        }
+
+        function selectAvatar(element) {
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedAvatarUrl = element.getAttribute('data-url');
+        }
+
+        function triggerFileUpload() {
+            document.getElementById('avatarUpload').click();
+        }
+
+        function handleAvatarUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    selectedAvatarUrl = e.target.result;
+
+                    const uploadOption = document.querySelector('.upload-option');
+                    if (uploadOption) {
+                        uploadOption.remove();
+                    }
+
+                    if (tempAvatarElement) {
+                        tempAvatarElement.remove();
+                    }
+
+                    const img = document.createElement('img');
+                    img.src = selectedAvatarUrl;
+                    img.className = 'avatar-option selected';
+                    img.alt = 'Uploaded Avatar';
+                    img.setAttribute('data-url', selectedAvatarUrl);
+                    img.onclick = function() { selectAvatar(this); };
+
+                    const container = document.getElementById('avatarOptionsContainer');
+                    container.appendChild(img);
+
+                    tempAvatarElement = img;
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function saveAvatar() {
+            if (!selectedAvatarUrl) {
+                alert('Please select an avatar or upload an image.');
+                return;
+            }
+
+            if (!checkAuthentication()) return;
+
+            updateBuyerAvatar(selectedAvatarUrl);
+
+            const currentUser = getCurrentUser();
+            localStorage.setItem(`buyerAvatar_${currentUser.email}`, selectedAvatarUrl);
+
+            closeAvatarModal();
+            alert('Buyer profile picture updated successfully!');
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // ============================================================
+        // GO TO SELLER REGISTRATION
+        // ============================================================
+        function goToSellerRegistration() {
+            if (!checkAuthentication()) return;
+            window.location.href = 'Register as Seller.html';
+        }
+
+        // ============================================================
+        // UPDATE STATS
+        // ============================================================
+        function updateStats() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            const userOrders = orders.filter(order => order.buyerEmail === currentUser.email);
+            document.getElementById('ordersCount').textContent = userOrders.length;
+
+            const uniqueFarmers = [...new Set(userOrders.map(order => order.sellerEmail))];
+            document.getElementById('farmersCount').textContent = uniqueFarmers.length;
+
+            const reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]');
+            const userReviews = reviews.filter(review => review.buyerEmail === currentUser.email);
+            const avgRating = userReviews.length > 0
+                ? (userReviews.reduce((sum, review) => sum + review.rating, 0) / userReviews.length).toFixed(1)
+                : 0;
+            document.getElementById('ratingValue').textContent = avgRating;
+        }
+
+        // ============================================================
+        // LOAD RECENT ORDERS
+        // ============================================================
+        function loadRecentOrders() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return;
+
+            const orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            const userOrders = orders.filter(order => order.buyerEmail === currentUser.email)
+                                   .sort((a, b) => new Date(b.date) - new Date(a.date))
+                                   .slice(0, 5);
+
+            const ordersContainer = document.getElementById('recent-orders-container');
+
+            if (userOrders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i class="fas fa-box-open"></i></div>
+                        <p>You haven't placed any orders yet.</p>
+                        <p>Start shopping to see your order history here!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ordersContainer.innerHTML = userOrders.map(order => `
+                <div class="order-card">
+                    <div class="order-info">
+                        <h3><i class="fas fa-shopping-bag"></i> ${order.productName || (order.products && order.products[0]?.productName) || 'Product'}</h3>
+                        <p><i class="fas fa-hashtag"></i> Order #${order.id}</p>
+                        <p><i class="fas fa-calendar-alt"></i> Placed on: ${new Date(order.date).toLocaleDateString()}</p>
+                        <p><i class="fas fa-weight-hanging"></i> Quantity: ${order.quantity || (order.products && order.products[0]?.quantity) || 1}</p>
+                        <p><i class="fas fa-money-bill-wave"></i> Total: ${order.total || order.price}</p>
+                    </div>
+                    <div class="order-status ${getStatusClass(order.status)}">${order.status || 'Processing'}</div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Delivered': return 'status-delivered';
+                case 'Shipped': return 'status-shipped';
+                default: return 'status-pending';
+            }
+        }
+
+        // ============================================================
+        // SETUP EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            document.querySelectorAll('.preference-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                });
+            });
+
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveProfile();
+            });
+
+            document.getElementById('logoutButton').addEventListener('click', function() {
+                if (confirm('Are you sure you want to log out?')) {
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('farmConnectSavedCredentials');
+                    window.location.href = 'Welcome Screen.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // SETUP AVATAR CLICK HANDLERS
+        // ============================================================
+        function setupAvatarClickHandlers() {
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectAvatar(this);
+                });
+            });
+        }
+
+        // ============================================================
+        // SETUP MOBILE NAVIGATION
+        // ============================================================
+        function setupMobileNavigation() {
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileNavItems.forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // ============================================================
+        // SETUP REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                switch(e.key) {
+                    case 'currentUser':
+                        loadUserData();
+                        break;
+                    case 'farmConnectOrders':
+                        updateStats();
+                        loadRecentOrders();
+                        break;
+                    case `buyerAvatar_${getCurrentUser()?.email}`:
+                        loadUserData();
+                        break;
+                    case 'farmNetTheme':
+                        loadSavedTheme();
+                        break;
+                }
+            });
+
+            const originalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, value) {
+                const event = new Event('localStorageChanged');
+                event.key = key;
+                event.value = value;
+                window.dispatchEvent(event);
+                originalSetItem.apply(this, arguments);
+            };
+
+            window.addEventListener('localStorageChanged', function(e) {
+                switch(e.key) {
+                    case 'farmConnectOrders':
+                        updateStats();
+                        loadRecentOrders();
+                        break;
+                    case 'farmNetTheme':
+                        loadSavedTheme();
+                        break;
+                }
+            });
+        }
+
+        // ============================================================
+        // AUTO THEME LISTENER
+        // ============================================================
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+            if (localStorage.getItem('farmNetTheme') === 'auto') {
+                applyTheme('auto');
+            }
+        });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication with auto-login support
+            if (!checkAuthentication()) return;
+
+            // Load all user data
+            loadSavedTheme();
+            loadUserData();
+            loadUserPreferences();
+            setupEventListeners();
+            updateStats();
+            loadRecentOrders();
+            setupMobileNavigation();
+            setupRealTimeSync();
+            setupAvatarClickHandlers();
+        });
+    </script>
+</body>
+</html>

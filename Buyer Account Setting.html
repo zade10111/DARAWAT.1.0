@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Settings - DARAWAT</title>
+    <!-- ============================================================ -->
+    <!-- EXTERNAL LIBRARIES                                            -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- ============================================================ -->
+    <!-- EXTERNAL CSS FILE - style-account-settings.css               -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="Css/Buyer Account Setting.css" />
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- SECTION: HEADER                                               -->
+    <!-- ============================================================ -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <a href="Register as Buyer.html" class="user-avatar" id="userAvatar">B</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: TOP NAVIGATION                                       -->
+    <!-- ============================================================ -->
+    <div class="dashboard-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="Register as Buyer.html"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="Buyer Profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" class="active"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="Buyer Order History.html"><i class="fas fa-box"></i> Order History</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MAIN CONTENT                                         -->
+    <!-- ============================================================ -->
+    <main class="dashboard">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-sliders-h"></i> Account Settings</h1>
+                <p>Manage your account preferences and security settings</p>
+            </div>
+
+            <div class="settings-container">
+                <!-- SIDEBAR -->
+                <div class="settings-sidebar">
+                    <ul class="settings-menu">
+                        <li><a href="#account" class="active" onclick="showSection('account', event)"><i class="fas fa-user-edit"></i> Account Information</a></li>
+                        <li><a href="#notifications" onclick="showSection('notifications', event)"><i class="fas fa-bell"></i> Notifications</a></li>
+                        <li><a href="#privacy" onclick="showSection('privacy', event)"><i class="fas fa-lock"></i> Privacy &amp; Security</a></li>
+                        <li><a href="#preferences" onclick="showSection('preferences', event)"><i class="fas fa-sliders-h"></i> Preferences</a></li>
+                        <li><a href="#theme" onclick="showSection('theme', event)"><i class="fas fa-palette"></i> Theme</a></li>
+                    </ul>
+                </div>
+
+                <!-- CONTENT -->
+                <div class="settings-content">
+                    <!-- Messages -->
+                    <div id="successMessage" class="success-message"></div>
+                    <div id="errorMessage" class="error-message"></div>
+
+                    <!-- ========== ACCOUNT ========== -->
+                    <div id="account-section" class="settings-section">
+                        <h2 class="section-title"><i class="fas fa-user-edit"></i> Account Information</h2>
+                        <form id="accountForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="accountName"><i class="fas fa-user"></i> Full Name</label>
+                                    <input type="text" id="accountName" placeholder="Enter your full name" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="accountEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                                    <input type="email" id="accountEmail" placeholder="Enter your email" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountPhone"><i class="fas fa-phone"></i> Phone Number</label>
+                                <input type="tel" id="accountPhone" placeholder="Enter your phone number" />
+                            </div>
+                            <div class="form-group">
+                                <label for="language"><i class="fas fa-language"></i> Preferred Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timezone"><i class="fas fa-clock"></i> Timezone</label>
+                                <select id="timezone">
+                                    <option value="utc-8">Pacific Time (UTC-8)</option>
+                                    <option value="utc-5">Eastern Time (UTC-5)</option>
+                                    <option value="utc">GMT (UTC)</option>
+                                    <option value="utc+1">Central European Time (UTC+1)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn"><i class="fas fa-save"></i> Save Changes</button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm('accountForm')"><i class="fas fa-undo"></i> Reset</button>
+                        </form>
+                    </div>
+
+                    <!-- ========== NOTIFICATIONS ========== -->
+                    <div id="notifications-section" class="settings-section" style="display:none;">
+                        <h2 class="section-title"><i class="fas fa-bell"></i> Notification Preferences</h2>
+                        <p>Choose how you want to be notified about your orders and farm updates.</p>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-box"></i> Order Updates</h4>
+                                <p>Get notified when your order status changes</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="orderUpdates" /><span class="slider"></span></label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-plus-circle"></i> New Products</h4>
+                                <p>Receive notifications when new products are available</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="newProducts" /><span class="slider"></span></label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-gift"></i> Special Offers</h4>
+                                <p>Get notified about special discounts and offers</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="specialOffers" /><span class="slider"></span></label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-tractor"></i> Farm News</h4>
+                                <p>Updates from your favorite farms</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="farmNews" /><span class="slider"></span></label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-envelope"></i> Email Notifications</h4>
+                                <p>Receive notifications via email</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="emailNotifications" /><span class="slider"></span></label>
+                        </div>
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-sms"></i> SMS Notifications</h4>
+                                <p>Receive notifications via SMS</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="smsNotifications" /><span class="slider"></span></label>
+                        </div>
+                        <button class="btn" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> Save Notification Settings</button>
+                    </div>
+
+                    <!-- ========== PRIVACY & SECURITY ========== -->
+                    <div id="privacy-section" class="settings-section" style="display:none;">
+                        <h2 class="section-title"><i class="fas fa-lock"></i> Privacy &amp; Security</h2>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4><i class="fas fa-shield-alt"></i> Two-Factor Authentication</h4>
+                                <p>Add an extra layer of security to your account</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="twoFactorAuth" /><span class="slider"></span></label>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4><i class="fas fa-bell"></i> Login Notifications</h4>
+                                <p>Get notified when someone logs into your account</p>
+                            </div>
+                            <label class="switch"><input type="checkbox" id="loginNotifications" /><span class="slider"></span></label>
+                        </div>
+                        <div class="form-group">
+                            <label for="currentPassword"><i class="fas fa-key"></i> Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current password" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newPassword"><i class="fas fa-key"></i> New Password</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password" />
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword"><i class="fas fa-key"></i> Confirm New Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password" />
+                            </div>
+                        </div>
+                        <button class="btn" onclick="changePassword()"><i class="fas fa-key"></i> Change Password</button>
+                        <div class="danger-zone">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                            <p>Once you delete your account, there is no going back. Please be certain.</p>
+                            <button class="btn btn-danger" onclick="showDeleteConfirmation()"><i class="fas fa-trash-alt"></i> Delete Account</button>
+                        </div>
+                    </div>
+
+                    <!-- ========== PREFERENCES ========== -->
+                    <div id="preferences-section" class="settings-section" style="display:none;">
+                        <h2 class="section-title"><i class="fas fa-sliders-h"></i> Account Preferences</h2>
+                        <div class="form-group">
+                            <label for="currency"><i class="fas fa-money-bill-wave"></i> Preferred Currency</label>
+                            <select id="currency">
+                                <option value="PHP">Philippine Peso (₱)</option>
+                                <option value="USD">US Dollar ($)</option>
+                                <option value="EUR">Euro (€)</option>
+                                <option value="GBP">British Pound (£)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="measurement"><i class="fas fa-ruler"></i> Measurement System</label>
+                            <select id="measurement">
+                                <option value="metric">Metric (kg, liters)</option>
+                                <option value="imperial">Imperial (lbs, gallons)</option>
+                            </select>
+                        </div>
+
+                        <!-- Auto Login -->
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <h4><i class="fas fa-user-check"></i> Enable Auto Login</h4>
+                                <p>Stay logged in on this device</p>
+                            </div>
+                            <div class="preference-control">
+                                <span class="switch-label" id="autoLoginLabel">Off</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="autoLogin" onchange="updateSwitchLabel('autoLogin','autoLoginLabel')" />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Marketing Emails -->
+                        <div class="preference-item">
+                            <div class="preference-info">
+                                <h4><i class="fas fa-mail-bulk"></i> Receive Marketing Emails</h4>
+                                <p>Get updates about new features and promotions</p>
+                            </div>
+                            <div class="preference-control">
+                                <span class="switch-label" id="marketingEmailsLabel">Off</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="marketingEmails" onchange="updateSwitchLabel('marketingEmails','marketingEmailsLabel')" />
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="btn" onclick="savePreferences()"><i class="fas fa-save"></i> Save Preferences</button>
+                    </div>
+
+                    <!-- ========== THEME ========== -->
+                    <div id="theme-section" class="settings-section" style="display:none;">
+                        <h2 class="section-title"><i class="fas fa-palette"></i> Theme Preference</h2>
+                        <p>Choose your preferred visual appearance. The theme will be applied across the entire site.</p>
+                        <div style="height: 1.5rem;"></div>
+
+                        <div class="theme-card">
+                            <div class="theme-label">
+                                <i class="fas fa-paint-brush"></i>
+                                <span>Select Theme</span>
+                            </div>
+                            <div class="theme-options">
+                                <button class="theme-btn light-theme-btn" data-theme="light" onclick="setTheme('light'); event.stopPropagation();">
+                                    <i class="fas fa-sun"></i> Light
+                                </button>
+                                <button class="theme-btn dark-theme-btn" data-theme="dark" onclick="setTheme('dark'); event.stopPropagation();">
+                                    <i class="fas fa-moon"></i> Dark
+                                </button>
+                                <button class="theme-btn auto-theme-btn" data-theme="auto" onclick="setTheme('auto'); event.stopPropagation();">
+                                    <i class="fas fa-desktop"></i> Auto
+                                </button>
+                            </div>
+                            <p style="margin-top: 1.2rem; font-size: 0.9rem; color: #777;">
+                                <i class="fas fa-info-circle"></i> "Auto" follows your system's dark/light mode preference.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MOBILE BOTTOM NAVIGATION                             -->
+    <!-- ============================================================ -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Buyer.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
+                <span class="mobile-nav-label">Back</span>
+            </a>
+            <a href="Buyer Profile.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span class="mobile-nav-label">Profile</span>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="mobile-nav-label">Settings</span>
+            </a>
+            <a href="Buyer Order History.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span class="mobile-nav-label">Orders</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: FOOTER                                               -->
+    <!-- ============================================================ -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> DARAWAT 2026 – Connecting Farmers and Buyers</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: DELETE ACCOUNT MODAL                                 -->
+    <!-- ============================================================ -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Delete Account</h3>
+                <button class="close-modal" onclick="closeDeleteModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <p>Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeDeleteModal()"><i class="fas fa-times"></i> Cancel</button>
+                <button class="btn btn-danger" onclick="deleteAccount()"><i class="fas fa-trash-alt"></i> Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: COMPLETE JAVASCRIPT                                  -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // THEME ENGINE - COMPLETELY INDEPENDENT
+        // ============================================================
+        function applyTheme(theme) {
+            const body = document.body;
+            body.classList.remove('dark-mode');
+
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+            } else if (theme === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) body.classList.add('dark-mode');
+            }
+
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active-theme', btn.dataset.theme === theme);
+            });
+
+            localStorage.setItem('farmNetTheme', theme);
+        }
+
+        function setTheme(theme) {
+            applyTheme(theme);
+        }
+
+        function loadSavedTheme() {
+            const saved = localStorage.getItem('farmNetTheme') || 'light';
+            applyTheme(saved);
+        }
+
+        // ============================================================
+        // SWITCH LABEL UPDATER
+        // ============================================================
+        function updateSwitchLabel(checkboxId, labelId) {
+            const checkbox = document.getElementById(checkboxId);
+            const label = document.getElementById(labelId);
+            if (checkbox && label) {
+                label.textContent = checkbox.checked ? 'On' : 'Off';
+            }
+        }
+
+        // ============================================================
+        // AUTHENTICATION
+        // ============================================================
+        function checkAuthentication() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('Please log in to access account settings.');
+                window.location.href = 'Register as Buyer.html';
+                return false;
+            }
+            return true;
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + currentUser.name + '!';
+                updateUserAvatar(currentUser);
+                document.getElementById('accountName').value = currentUser.name || '';
+                document.getElementById('accountEmail').value = currentUser.email || '';
+                document.getElementById('accountPhone').value = currentUser.phone || '';
+            }
+        }
+
+        function updateUserAvatar(currentUser) {
+            const avatar = document.getElementById('userAvatar');
+            const buyerAvatar = localStorage.getItem('buyerAvatar_' + currentUser.email);
+            if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                avatar.innerHTML = '<img src="' + buyerAvatar + '" alt="' + currentUser.name + '" />';
+            } else if (currentUser.profilePicture) {
+                avatar.innerHTML = '<img src="' + currentUser.profilePicture + '" alt="' + currentUser.name + '" />';
+            } else {
+                avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+        }
+
+        // ============================================================
+        // LOAD USER PREFERENCES
+        // ============================================================
+        function loadUserPreferences() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+            const prefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            const s = prefs[currentUser.email] || {};
+
+            document.getElementById('orderUpdates').checked = s.orderUpdates !== false;
+            document.getElementById('newProducts').checked = s.newProducts !== false;
+            document.getElementById('specialOffers').checked = s.specialOffers || false;
+            document.getElementById('farmNews').checked = s.farmNews || false;
+            document.getElementById('emailNotifications').checked = s.emailNotifications !== false;
+            document.getElementById('smsNotifications').checked = s.smsNotifications || false;
+            document.getElementById('twoFactorAuth').checked = s.twoFactorAuth || false;
+            document.getElementById('loginNotifications').checked = s.loginNotifications !== false;
+            document.getElementById('currency').value = s.currency || 'PHP';
+            document.getElementById('measurement').value = s.measurement || 'metric';
+            document.getElementById('autoLogin').checked = s.autoLogin || false;
+            document.getElementById('marketingEmails').checked = s.marketingEmails !== false;
+            document.getElementById('language').value = s.language || 'en';
+            document.getElementById('timezone').value = s.timezone || 'utc-8';
+
+            updateSwitchLabel('autoLogin', 'autoLoginLabel');
+            updateSwitchLabel('marketingEmails', 'marketingEmailsLabel');
+        }
+
+        // ============================================================
+        // SHOW SECTION
+        // ============================================================
+        function showSection(sectionName, event) {
+            if (event) event.preventDefault();
+            document.querySelectorAll('.settings-section').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.settings-menu a').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            if (event) event.target.classList.add('active');
+        }
+
+        // ============================================================
+        // ACCOUNT FORM
+        // ============================================================
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!checkAuthentication()) return;
+            const data = {
+                name: document.getElementById('accountName').value,
+                email: document.getElementById('accountEmail').value,
+                phone: document.getElementById('accountPhone').value
+            };
+            const current = JSON.parse(localStorage.getItem('currentUser'));
+            const updated = { ...current, ...data };
+            localStorage.setItem('currentUser', JSON.stringify(updated));
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const idx = users.findIndex(u => u.email === current.email);
+            if (idx !== -1) { users[idx] = { ...users[idx], ...data };
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users)); }
+            showMessage('Account information updated successfully!', 'success');
+            loadUserData();
+            window.dispatchEvent(new Event('storage'));
+        });
+
+        // ============================================================
+        // NOTIFICATIONS
+        // ============================================================
+        function saveNotificationSettings() {
+            if (!checkAuthentication()) return;
+            const current = JSON.parse(localStorage.getItem('currentUser'));
+            if (!current) return;
+            const prefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            prefs[current.email] = {
+                ...prefs[current.email],
+                orderUpdates: document.getElementById('orderUpdates').checked,
+                newProducts: document.getElementById('newProducts').checked,
+                specialOffers: document.getElementById('specialOffers').checked,
+                farmNews: document.getElementById('farmNews').checked,
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                smsNotifications: document.getElementById('smsNotifications').checked
+            };
+            localStorage.setItem('userPreferences', JSON.stringify(prefs));
+            showMessage('Notification settings saved!', 'success');
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // ============================================================
+        // PASSWORD
+        // ============================================================
+        function changePassword() {
+            if (!checkAuthentication()) return;
+            const cur = document.getElementById('currentPassword').value;
+            const neu = document.getElementById('newPassword').value;
+            const con = document.getElementById('confirmPassword').value;
+            if (!cur || !neu || !con) { showMessage('Please fill in all password fields.', 'error'); return; }
+            if (neu.length < 6) { showMessage('New password must be at least 6 characters.', 'error'); return; }
+            if (neu !== con) { showMessage('New passwords do not match.', 'error'); return; }
+            const current = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const idx = users.findIndex(u => u.email === current.email);
+            if (idx !== -1 && users[idx].password === cur) {
+                users[idx].password = neu;
+                current.password = neu;
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(current));
+                showMessage('Password changed successfully!', 'success');
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+                window.dispatchEvent(new Event('storage'));
+            } else {
+                showMessage('Current password is incorrect.', 'error');
+            }
+        }
+
+        // ============================================================
+        // SAVE PREFERENCES
+        // ============================================================
+        function savePreferences() {
+            if (!checkAuthentication()) return;
+            const current = JSON.parse(localStorage.getItem('currentUser'));
+            if (!current) return;
+            
+            const prefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            
+            prefs[current.email] = {
+                ...prefs[current.email],
+                currency: document.getElementById('currency').value,
+                measurement: document.getElementById('measurement').value,
+                autoLogin: document.getElementById('autoLogin').checked,
+                marketingEmails: document.getElementById('marketingEmails').checked,
+                language: document.getElementById('language').value,
+                timezone: document.getElementById('timezone').value,
+                twoFactorAuth: document.getElementById('twoFactorAuth').checked,
+                loginNotifications: document.getElementById('loginNotifications').checked
+            };
+            
+            localStorage.setItem('userPreferences', JSON.stringify(prefs));
+            showMessage('Preferences saved successfully!', 'success');
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // ============================================================
+        // DELETE ACCOUNT
+        // ============================================================
+        function showDeleteConfirmation() { if (checkAuthentication()) document.getElementById('deleteModal').style.display = 'flex'; }
+
+        function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
+
+        function deleteAccount() {
+            if (!checkAuthentication()) return;
+            const current = JSON.parse(localStorage.getItem('currentUser'));
+            let users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            users = users.filter(u => u.email !== current.email);
+            const prefs = JSON.parse(localStorage.getItem('userPreferences') || '{}');
+            delete prefs[current.email];
+            localStorage.setItem('userPreferences', JSON.stringify(prefs));
+            let orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            orders = orders.filter(o => o.buyerEmail !== current.email);
+            localStorage.setItem('farmConnectOrders', JSON.stringify(orders));
+            let cart = JSON.parse(localStorage.getItem('farmConnectCartItems') || '[]');
+            cart = cart.filter(c => c.buyerEmail !== current.email);
+            localStorage.setItem('farmConnectCartItems', JSON.stringify(cart));
+            let reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]');
+            reviews = reviews.filter(r => r.buyerEmail !== current.email);
+            localStorage.setItem('farmConnectProductReviews', JSON.stringify(reviews));
+            localStorage.removeItem('buyerAvatar_' + current.email);
+            localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('farmNetTheme');
+            alert('Account deleted. Redirecting…');
+            window.location.href = 'Register as Buyer.html';
+        }
+
+        // ============================================================
+        // RESET FORM
+        // ============================================================
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            loadUserData();
+            loadUserPreferences();
+            showMessage('Form has been reset.', 'success');
+        }
+
+        // ============================================================
+        // MESSAGES
+        // ============================================================
+        function showMessage(msg, type) {
+            const el = document.getElementById(type === 'success' ? 'successMessage' : 'errorMessage');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentUser') loadUserData();
+                if (e.key === 'userPreferences') loadUserPreferences();
+                if (e.key === 'farmNetTheme') loadSavedTheme();
+            });
+        }
+
+        // ============================================================
+        // MOBILE NAVIGATION
+        // ============================================================
+        function setupMobileNavigation() {
+            const items = document.querySelectorAll('.mobile-nav-item');
+            items.forEach(item => {
+                item.addEventListener('click', function() {
+                    items.forEach(n => n.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // ============================================================
+        // AUTO THEME LISTENER
+        // ============================================================
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+            if (localStorage.getItem('farmNetTheme') === 'auto') applyTheme('auto');
+        });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuthentication()) return;
+            loadUserData();
+            loadUserPreferences();
+            setupMobileNavigation();
+            setupRealTimeSync();
+            loadSavedTheme();
+            updateSwitchLabel('autoLogin', 'autoLoginLabel');
+            updateSwitchLabel('marketingEmails', 'marketingEmailsLabel');
+        });
+    </script>
+</body>
+</html>

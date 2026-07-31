@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Order Confirmation.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="confirmation">
+        <div class="container">
+            <div class="confirmation-card">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                
+                <h1 class="confirmation-title">Order Confirmed! 🎉</h1>
+                <p class="confirmation-subtitle">Thank you for your purchase. Your order has been placed successfully.</p>
+
+                <!-- Order Details -->
+                <div class="order-details" id="orderDetails">
+                    <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+                    <div id="orderSummary">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Status Timeline -->
+                <div class="status-timeline" id="statusTimeline">
+                    <h3 style="color: #2e7d32; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-clock"></i> Order Status
+                    </h3>
+                    <div id="timelineItems">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
+                <!-- Blockchain Badge -->
+                <div class="blockchain-badge">
+                    <i class="fas fa-link"></i>
+                    <div style="flex: 1;">
+                        <strong>🔗 Blockchain Verified</strong>
+                        <p style="margin: 5px 0; font-size: 14px; color: #4a5568;">Your transaction has been recorded on the blockchain for security and transparency.</p>
+                        <div class="hash" id="blockchainHash">Loading blockchain hash...</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="Buyer Order History.html" class="btn btn-primary">
+                        <i class="fas fa-list"></i> View My Orders
+                    </a>
+                    <a href="Register as Buyer.html" class="btn btn-secondary">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </a>
+                    <a href="Buyer Profile.html" class="btn btn-outline">
+                        <i class="fas fa-user"></i> My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const orderSummary = document.getElementById('orderSummary');
+        const timelineItems = document.getElementById('timelineItems');
+        const blockchainHash = document.getElementById('blockchainHash');
+
+        // Load order data
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingLogin();
+            loadOrderData();
+        });
+
+        function checkExistingLogin() {
+            const currentUser = localStorage.getItem('currentUser');
+            
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                updateUserAvatar(user);
+            } else {
+                // Redirect to login if not logged in
+                window.location.href = 'Register as Buyer.html';
+            }
+        }
+
+        function updateUserAvatar(user) {
+            const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+            
+            if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+            } else if (user.profilePicture) {
+                userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+            } else {
+                userAvatar.textContent = user.name.charAt(0).toUpperCase();
+            }
+        }
+
+        function loadOrderData() {
+            // Get order ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId');
+            
+            if (!orderId) {
+                // If no order ID, get the most recent order
+                const orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+                if (orders.length > 0) {
+                    const latestOrder = orders[0];
+                    displayOrder(latestOrder);
+                } else {
+                    orderSummary.innerHTML = '<p style="text-align: center; color: #666;">No order found. <a href="Register as Buyer.html">Continue shopping</a></p>';
+                }
+                return;
+            }
+            
+            // Find order by ID
+            const orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            const order = orders.find(o => o.id === orderId);
+            
+            if (order) {
+                displayOrder(order);
+            } else {
+                orderSummary.innerHTML = '<p style="text-align: center; color: #666;">Order not found. <a href="Register as Buyer.html">Continue shopping</a></p>';
+            }
+        }
+
+        function displayOrder(order) {
+            // Display order summary
+            let itemsHtml = '';
+            let subtotal = 0;
+            
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    // Extract price
+                    let price = 0;
+                    const priceStr = item.price.toString();
+                    const priceMatch = priceStr.match(/(\d+(?:\.\d+)?)/);
+                    if (priceMatch) {
+                        price = parseFloat(priceMatch[1]);
+                    } else if (typeof item.price === 'number') {
+                        price = item.price;
+                    }
+                    const quantity = item.quantity || 1;
+                    const itemTotal = price * quantity;
+                    subtotal += itemTotal;
+                    
+                    itemsHtml += `
+                        <div class="order-item-row">
+                            <span>${item.productName} × ${quantity}</span>
+                            <span>₱${itemTotal.toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Calculate totals
+            const deliveryFee = order.deliveryInfo?.method === 'delivery' ? 50 : 0;
+            const tax = subtotal * 0.12;
+            const total = subtotal + deliveryFee + tax;
+
+            orderSummary.innerHTML = `
+                <div style="margin-bottom: 15px;">
+                    <div class="detail-row">
+                        <span class="detail-label">Order ID</span>
+                        <span class="detail-value">${order.id}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Order Date</span>
+                        <span class="detail-value">${new Date(order.date).toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" style="color: #f59e0b;">${order.status ? order.status.charAt(0).toUpperCase() + order.status.slice(1) : 'Pending'}</span>
+                    </div>
+                </div>
+                
+                <div style="margin: 15px 0; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+                    <strong style="display: block; margin-bottom: 10px; color: #2e7d32;">Items Ordered:</strong>
+                    ${itemsHtml}
+                </div>
+                
+                <div style="margin: 15px 0; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+                    <div class="detail-row">
+                        <span class="detail-label">Subtotal</span>
+                        <span class="detail-value">₱${subtotal.toFixed(2)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Delivery Fee</span>
+                        <span class="detail-value">₱${deliveryFee.toFixed(2)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tax (12%)</span>
+                        <span class="detail-value">₱${tax.toFixed(2)}</span>
+                    </div>
+                    <div class="detail-row" style="font-size: 18px; font-weight: 700; color: #2e7d32; border-top: 2px solid #2e7d32; padding-top: 12px; margin-top: 8px;">
+                        <span class="detail-label">Total</span>
+                        <span class="detail-value">₱${total.toFixed(2)}</span>
+                    </div>
+                </div>
+
+                ${order.deliveryInfo ? `
+                    <div style="margin: 15px 0; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+                        <strong style="display: block; margin-bottom: 10px; color: #2e7d32;">Delivery Information:</strong>
+                        <div class="detail-row">
+                            <span class="detail-label">Method</span>
+                            <span class="detail-value">${order.deliveryInfo.method === 'delivery' ? '🚚 Home Delivery' : '🏪 Farm Pickup'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Name</span>
+                            <span class="detail-value">${order.deliveryInfo.fullName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">${order.deliveryInfo.phoneNumber}</span>
+                        </div>
+                        ${order.deliveryInfo.method === 'delivery' ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Address</span>
+                                <span class="detail-value">${order.deliveryInfo.streetAddress}, ${order.deliveryInfo.city}, ${order.deliveryInfo.province}</span>
+                            </div>
+                            ${order.deliveryInfo.instructions ? `
+                                <div class="detail-row">
+                                    <span class="detail-label">Instructions</span>
+                                    <span class="detail-value">${order.deliveryInfo.instructions}</span>
+                                </div>
+                            ` : ''}
+                        ` : `
+                            <div class="detail-row">
+                                <span class="detail-label">Farm Location</span>
+                                <span class="detail-value">${order.deliveryInfo.farmLocation}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Pickup Date</span>
+                                <span class="detail-value">${order.deliveryInfo.pickupDate}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Pickup Time</span>
+                                <span class="detail-value">${order.deliveryInfo.pickupTime}</span>
+                            </div>
+                        `}
+                    </div>
+                ` : ''}
+
+                ${order.paymentInfo ? `
+                    <div style="margin: 15px 0; padding-top: 15px; border-top: 2px solid #e2e8f0;">
+                        <strong style="display: block; margin-bottom: 10px; color: #2e7d32;">Payment Information:</strong>
+                        <div class="detail-row">
+                            <span class="detail-label">Method</span>
+                            <span class="detail-value">${order.paymentInfo.method === 'creditCard' ? '💳 Credit Card' : 
+                                order.paymentInfo.method === 'gcash' ? '📱 GCash' : 
+                                order.paymentInfo.method === 'paypal' ? '🌐 PayPal' : 
+                                order.paymentInfo.method === 'bankTransfer' ? '🏦 Bank Transfer' : 
+                                '💰 Cash on Delivery'}</span>
+                        </div>
+                        ${order.paymentInfo.cardLastFour ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Card</span>
+                                <span class="detail-value">•••• ${order.paymentInfo.cardLastFour}</span>
+                            </div>
+                        ` : ''}
+                        ${order.paymentInfo.gcashNumber ? `
+                            <div class="detail-row">
+                                <span class="detail-label">GCash Number</span>
+                                <span class="detail-value">${order.paymentInfo.gcashNumber}</span>
+                            </div>
+                        ` : ''}
+                        ${order.paymentInfo.bankName ? `
+                            <div class="detail-row">
+                                <span class="detail-label">Bank</span>
+                                <span class="detail-value">${order.paymentInfo.bankName}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+            `;
+
+            // Display timeline
+            displayTimeline(order);
+
+            // Display blockchain hash
+            if (order.blockchainHash) {
+                blockchainHash.textContent = order.blockchainHash;
+            } else {
+                blockchainHash.textContent = '0x' + Math.random().toString(16).substr(2, 64);
+            }
+        }
+
+        function displayTimeline(order) {
+            const timeline = order.orderTimeline || [
+                { date: order.date || new Date().toISOString(), status: 'Order Placed' }
+            ];
+
+            // Add additional statuses for demo if only one exists
+            if (timeline.length === 1) {
+                const orderDate = new Date(timeline[0].date);
+                const processingDate = new Date(orderDate);
+                processingDate.setHours(processingDate.getHours() + 2);
+                const shippingDate = new Date(orderDate);
+                shippingDate.setHours(shippingDate.getHours() + 6);
+                const deliveredDate = new Date(orderDate);
+                deliveredDate.setHours(deliveredDate.getHours() + 24);
+
+                timeline.push(
+                    { date: processingDate.toISOString(), status: 'Processing' },
+                    { date: shippingDate.toISOString(), status: 'Shipped' },
+                    { date: deliveredDate.toISOString(), status: 'Out for Delivery' }
+                );
+            }
+
+            const statusIcons = {
+                'Order Placed': 'fa-check-circle',
+                'Processing': 'fa-spinner',
+                'Shipped': 'fa-truck',
+                'Out for Delivery': 'fa-shipping-fast',
+                'Delivered': 'fa-check-double'
+            };
+
+            timelineItems.innerHTML = '';
+            timeline.forEach((item, index) => {
+                const icon = statusIcons[item.status] || 'fa-circle';
+                const isActive = index === 0; // Latest status is active
+                
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.style.opacity = isActive ? '1' : '0.6';
+                timelineItem.innerHTML = `
+                    <div class="timeline-icon" style="${isActive ? 'background: #4caf50; color: white;' : ''}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-status">${item.status}</div>
+                        <div class="timeline-date">${new Date(item.date).toLocaleString()}</div>
+                    </div>
+                    ${isActive ? '<span style="color: #4caf50; font-weight: 600; font-size: 12px;">✓ Current</span>' : ''}
+                `;
+                timelineItems.appendChild(timelineItem);
+            });
+        }
+    </script>
+</body>
+</html>

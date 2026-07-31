@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Seller - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Contact Seller.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> Sellers
+                    </a>
+                    <a href="Buyer Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <a href="#" class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <div class="page-header">
+                <h1><i class="fas fa-comment"></i> Contact Seller</h1>
+                <p>Send a message directly to the seller</p>
+            </div>
+
+            <div class="contact-container">
+                <!-- Seller Info -->
+                <div class="seller-info-section" id="sellerInfoSection">
+                    <div class="seller-header-info">
+                        <div class="seller-avatar" id="sellerAvatar">S</div>
+                        <div class="seller-name" id="sellerName">Loading...</div>
+                        <div class="seller-farm-type" id="sellerFarmType">Loading...</div>
+                    </div>
+
+                    <div class="seller-details-list">
+                        <div class="seller-detail">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-text">
+                                <div class="info-label">Location</div>
+                                <div class="info-value" id="sellerLocation">Loading...</div>
+                            </div>
+                        </div>
+                        <div class="seller-detail">
+                            <div class="info-icon"><i class="fas fa-phone"></i></div>
+                            <div class="info-text">
+                                <div class="info-label">Phone</div>
+                                <div class="info-value" id="sellerPhone">Loading...</div>
+                            </div>
+                        </div>
+                        <div class="seller-detail">
+                            <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                            <div class="info-text">
+                                <div class="info-label">Email</div>
+                                <div class="info-value" id="sellerEmail">Loading...</div>
+                            </div>
+                        </div>
+                        <div class="seller-detail">
+                            <div class="info-icon"><i class="fas fa-clock"></i></div>
+                            <div class="info-text">
+                                <div class="info-label">Operating Hours</div>
+                                <div class="info-value" id="sellerHours">Mon-Sat, 8AM - 5PM</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; transition: border-color 0.3s;">
+                        <a href="#" id="viewSellerProfileBtn" class="btn btn-outline" style="width: 100%; justify-content: center;">
+                            <i class="fas fa-eye"></i> View Full Profile
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="contact-form-section">
+                    <h2><i class="fas fa-paper-plane"></i> Send Message</h2>
+
+                    <form id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Your Name <span class="required">*</span></label>
+                                <input type="text" id="senderName" placeholder="Enter your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Email <span class="required">*</span></label>
+                                <input type="email" id="senderEmail" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Subject <span class="required">*</span></label>
+                            <input type="text" id="messageSubject" placeholder="What is this about?" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Message <span class="required">*</span></label>
+                            <textarea id="messageContent" placeholder="Type your message here..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preferred Contact Method</label>
+                            <select id="contactMethod">
+                                <option value="email">Email</option>
+                                <option value="phone">Phone</option>
+                                <option value="text">Text Message</option>
+                                <option value="any">Any</option>
+                            </select>
+                        </div>
+
+                        <div class="message-preview" id="messagePreview">
+                            <div class="preview-label"><i class="fas fa-eye"></i> Preview</div>
+                            <div class="preview-text" id="previewText">Your message will appear here</div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+            <a href="Product Categories.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-tags"></i></span>
+                <span>Categories</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-comment"></i></span>
+                <span>Contact</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONTACT SELLER - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const sellerAvatar = document.getElementById('sellerAvatar');
+        const sellerName = document.getElementById('sellerName');
+        const sellerFarmType = document.getElementById('sellerFarmType');
+        const sellerLocation = document.getElementById('sellerLocation');
+        const sellerPhone = document.getElementById('sellerPhone');
+        const sellerEmail = document.getElementById('sellerEmail');
+        const sellerHours = document.getElementById('sellerHours');
+        const viewSellerProfileBtn = document.getElementById('viewSellerProfileBtn');
+        const backBtn = document.getElementById('backBtn');
+
+        const contactForm = document.getElementById('contactForm');
+        const senderName = document.getElementById('senderName');
+        const senderEmail = document.getElementById('senderEmail');
+        const messageSubject = document.getElementById('messageSubject');
+        const messageContent = document.getElementById('messageContent');
+        const contactMethod = document.getElementById('contactMethod');
+        const messagePreview = document.getElementById('messagePreview');
+        const previewText = document.getElementById('previewText');
+
+        let sellerData = null;
+        let sellerEmailAddress = null;
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+
+                // Auto-fill form with user data
+                if (senderName) senderName.value = user.name || '';
+                if (senderEmail) senderEmail.value = user.email || '';
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR
+        // ============================================================
+        function getSellerAvatar(seller) {
+            if (!seller) return 'S';
+
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.farmName || seller.name}">`;
+            }
+
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.farmName || seller.name}">`;
+            }
+
+            return (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+        }
+
+        // ============================================================
+        // LOAD SELLER DATA
+        // ============================================================
+        function loadSellerData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            sellerEmailAddress = urlParams.get('seller');
+
+            if (!sellerEmailAddress) {
+                // Check if seller was passed via sessionStorage
+                const storedSeller = sessionStorage.getItem('viewedSeller');
+                if (storedSeller) {
+                    try {
+                        const seller = JSON.parse(storedSeller);
+                        sellerEmailAddress = seller.email;
+                    } catch (e) {
+                        console.error('Error parsing seller data:', e);
+                    }
+                }
+            }
+
+            if (!sellerEmailAddress) {
+                sellerName.textContent = 'Seller not found';
+                sellerFarmType.textContent = 'Please go back and try again';
+                showToast('No seller selected', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const seller = users.find(u => u.email === sellerEmailAddress && u.role === 'seller');
+
+            if (seller) {
+                sellerData = seller;
+                displaySellerInfo(seller);
+            } else {
+                // Try to get seller from products
+                const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+                const sellerProduct = products.find(p => p.sellerEmail === sellerEmailAddress);
+                if (sellerProduct) {
+                    sellerData = {
+                        email: sellerEmailAddress,
+                        name: sellerProduct.sellerName || 'Local Farmer',
+                        farmName: sellerProduct.sellerName || 'Local Farm',
+                        farmType: sellerProduct.category || 'Mixed Farming',
+                        farmDescription: sellerProduct.sellerDescription || '',
+                        phone: sellerProduct.sellerPhone || '',
+                        address: sellerProduct.sellerAddress || ''
+                    };
+                    displaySellerInfo(sellerData);
+                } else {
+                    sellerName.textContent = 'Seller not found';
+                    sellerFarmType.textContent = 'Please go back and try again';
+                    showToast('Seller not found', 'error');
+                }
+            }
+        }
+
+        // ============================================================
+        // DISPLAY SELLER INFO
+        // ============================================================
+        function displaySellerInfo(seller) {
+            const displayName = seller.farmName || seller.name || 'Local Farmer';
+            const displayFarmType = seller.farmType || 'Mixed Farming';
+            const displayLocation = seller.address || 'Philippines';
+            const displayPhone = seller.phone || 'Not provided';
+            const displayEmail = seller.email || 'Not provided';
+
+            sellerName.textContent = displayName;
+            sellerFarmType.textContent = displayFarmType;
+            sellerLocation.textContent = displayLocation;
+            sellerPhone.textContent = displayPhone;
+            sellerEmail.textContent = displayEmail;
+
+            // Set avatar
+            const avatarHTML = getSellerAvatar(seller);
+            if (avatarHTML.startsWith('<img')) {
+                sellerAvatar.innerHTML = avatarHTML;
+            } else {
+                sellerAvatar.textContent = avatarHTML;
+                sellerAvatar.style.background = 'linear-gradient(135deg, #e8f5e9, #c8e6c9)';
+                sellerAvatar.style.color = '#2e7d32';
+                sellerAvatar.style.fontSize = '40px';
+                sellerAvatar.style.fontWeight = '700';
+                sellerAvatar.style.display = 'flex';
+                sellerAvatar.style.alignItems = 'center';
+                sellerAvatar.style.justifyContent = 'center';
+            }
+
+            // Set view profile button
+            viewSellerProfileBtn.href = `Buyer View Seller.html?seller=${encodeURIComponent(seller.email)}`;
+        }
+
+        // ============================================================
+        // MESSAGE PREVIEW
+        // ============================================================
+        function updatePreview() {
+            const name = senderName.value || 'Your Name';
+            const subject = messageSubject.value || 'Subject';
+            const message = messageContent.value || 'Your message will appear here...';
+
+            previewText.innerHTML = `
+                <strong>From:</strong> ${name}<br>
+                <strong>Subject:</strong> ${subject}<br><br>
+                ${message}
+            `;
+
+            if (messageContent.value.trim().length > 0 || messageSubject.value.trim().length > 0) {
+                messagePreview.classList.add('show');
+            } else {
+                messagePreview.classList.remove('show');
+            }
+        }
+
+        // ============================================================
+        // SEND MESSAGE
+        // ============================================================
+        function sendMessage(e) {
+            e.preventDefault();
+
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to send a message.', 'error');
+                return;
+            }
+
+            const name = senderName.value.trim();
+            const email = senderEmail.value.trim();
+            const subject = messageSubject.value.trim();
+            const message = messageContent.value.trim();
+            const method = contactMethod.value;
+
+            if (!name || !email || !subject || !message) {
+                showToast('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showToast('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (!sellerEmailAddress) {
+                showToast('Seller not found. Please try again.', 'error');
+                return;
+            }
+
+            // Create message object
+            const messageData = {
+                id: Date.now(),
+                productId: null,
+                productName: 'General Inquiry',
+                buyerEmail: user.email,
+                buyerName: name,
+                sellerEmail: sellerEmailAddress,
+                sellerName: sellerData?.name || sellerData?.farmName || 'Seller',
+                message: message,
+                subject: subject,
+                contactMethod: method,
+                date: new Date().toISOString(),
+                read: false,
+                direction: 'buyer_to_seller',
+                type: 'contact'
+            };
+
+            // Save to messages
+            const messages = JSON.parse(localStorage.getItem('farmConnectMessages') || '[]');
+            messages.push(messageData);
+            localStorage.setItem('farmConnectMessages', JSON.stringify(messages));
+
+            // Also save to chat system if available
+            try {
+                const chats = JSON.parse(localStorage.getItem('farmConnectChats') || '[]');
+                let chat = chats.find(c => 
+                    c.buyerEmail === user.email && 
+                    c.sellerEmail === sellerEmailAddress
+                );
+
+                if (!chat) {
+                    chat = {
+                        id: Date.now(),
+                        buyerEmail: user.email,
+                        buyerName: name,
+                        sellerEmail: sellerEmailAddress,
+                        sellerName: sellerData?.name || sellerData?.farmName || 'Seller',
+                        productId: null,
+                        productName: 'General Inquiry',
+                        messages: [],
+                        lastMessageTime: new Date().toISOString(),
+                        createdAt: new Date().toISOString()
+                    };
+                    chats.push(chat);
+                }
+
+                chat.messages.push({
+                    id: Date.now(),
+                    text: message,
+                    sender: 'buyer',
+                    senderEmail: user.email,
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    status: 'delivered'
+                });
+                chat.lastMessageTime = new Date().toISOString();
+                localStorage.setItem('farmConnectChats', JSON.stringify(chats));
+            } catch (e) {
+                console.log('Chat system not available');
+            }
+
+            // Trigger storage event for other pages
+            window.dispatchEvent(new Event('storage'));
+
+            showToast('Message sent successfully! The seller will be notified.', 'success');
+            contactForm.reset();
+            messagePreview.classList.remove('show');
+
+            // Redirect after delay
+            setTimeout(() => {
+                window.location.href = 'Buyer Messages.html';
+            }, 1500);
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // BACK BUTTON
+        // ============================================================
+        function setupBackButton() {
+            backBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const referrer = document.referrer;
+                if (referrer) {
+                    window.location.href = referrer;
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            contactForm.addEventListener('submit', sendMessage);
+            contactForm.addEventListener('reset', function() {
+                messagePreview.classList.remove('show');
+            });
+
+            messageContent.addEventListener('input', updatePreview);
+            messageSubject.addEventListener('input', updatePreview);
+            senderName.addEventListener('input', updatePreview);
+
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadSellerData();
+            setupBackButton();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('📧 Contact Seller loaded successfully!');
+        });
+    </script>
+</body>
+</html>

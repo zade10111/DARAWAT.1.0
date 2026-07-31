@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="Css/Help Center.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Welcome Screen.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Welcome Screen.html" class="nav-link">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i> Shop
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                    <a href="About Us.html" class="nav-link">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Guest!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">G</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-question-circle"></i> Help Center</h1>
+                <p>Find answers to common questions and learn how to make the most of FarmNet</p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" id="helpSearch" placeholder="Search for help topics..." oninput="searchHelp()">
+                <button onclick="searchHelp()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+
+            <!-- Categories -->
+            <div class="categories-section">
+                <h2><i class="fas fa-tags"></i> Browse by Category</h2>
+                <div class="categories-grid" id="categoriesGrid">
+                    <div class="category-tag active" data-category="all" onclick="filterCategory('all')">
+                        <i class="fas fa-th-large"></i> All Topics
+                    </div>
+                    <div class="category-tag" data-category="getting-started" onclick="filterCategory('getting-started')">
+                        <i class="fas fa-rocket"></i> Getting Started
+                    </div>
+                    <div class="category-tag" data-category="buying" onclick="filterCategory('buying')">
+                        <i class="fas fa-shopping-bag"></i> Buying
+                    </div>
+                    <div class="category-tag" data-category="selling" onclick="filterCategory('selling')">
+                        <i class="fas fa-store"></i> Selling
+                    </div>
+                    <div class="category-tag" data-category="account" onclick="filterCategory('account')">
+                        <i class="fas fa-user-cog"></i> Account
+                    </div>
+                    <div class="category-tag" data-category="security" onclick="filterCategory('security')">
+                        <i class="fas fa-shield-alt"></i> Security
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Cards -->
+            <div class="help-grid" id="helpGrid">
+                <!-- Help cards will be dynamically inserted -->
+            </div>
+
+           
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+                <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                <div id="faqContainer">
+                    <!-- FAQs will be dynamically inserted -->
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="contact-support-box">
+                <h3><i class="fas fa-headset"></i> Still Need Help?</h3>
+                <p>Our support team is here to assist you with any questions or issues you may have.</p>
+                <a href="Contact us.html" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i> Contact Support
+                </a>
+                <a href="FAQ.html" class="btn btn-outline" style="margin-left: 10px;">
+                    <i class="fas fa-book"></i> Visit FAQ
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Welcome Screen.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-home"></i></span>
+                <span>Home</span>
+            </a>
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-shopping-bag"></i></span>
+                <span>Shop</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-question-circle"></i></span>
+                <span>Help</span>
+            </a>
+            <a href="About Us.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-info-circle"></i></span>
+                <span>About</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // HELP CENTER - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const helpGrid = document.getElementById('helpGrid');
+        const faqContainer = document.getElementById('faqContainer');
+
+        // State
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        // ============================================================
+        // HELP DATA
+        // ============================================================
+        const helpData = [
+            {
+                id: 1,
+                category: 'getting-started',
+                icon: 'fa-rocket',
+                title: 'How to Create an Account',
+                text: 'Learn how to sign up as a buyer or seller on FarmNet. Step-by-step guide to creating your account.',
+                link: 'Register as Buyer.html'
+            },
+            {
+                id: 2,
+                category: 'buying',
+                icon: 'fa-shopping-bag',
+                title: 'How to Find Products',
+                text: 'Discover how to search for products, browse categories, and find the best sellers on FarmNet.',
+                link: 'Product Categories.html'
+            },
+            {
+                id: 3,
+                category: 'buying',
+                icon: 'fa-comment',
+                title: 'How to Contact a Seller',
+                text: 'Learn the best way to reach out to sellers, ask questions, and get the information you need.',
+                link: 'Contact Seller.html'
+            },
+            {
+                id: 4,
+                category: 'selling',
+                icon: 'fa-plus-circle',
+                title: 'How to List a Product',
+                text: 'A complete guide to adding your first product, including photos, descriptions, and pricing.',
+                link: 'Seller Products.html'
+            },
+            {
+                id: 5,
+                category: 'selling',
+                icon: 'fa-chart-line',
+                title: 'How to Track Performance',
+                text: 'Learn how to use analytics to track views, inquiries, and grow your business on FarmNet.',
+                link: 'Seller Analytics.html'
+            },
+            {
+                id: 6,
+                category: 'account',
+                icon: 'fa-user-edit',
+                title: 'How to Update Your Profile',
+                text: 'Step-by-step guide to updating your profile information, photos, and contact details.',
+                link: 'Buyer Profile.html'
+            },
+            {
+                id: 7,
+                category: 'security',
+                icon: 'fa-lock',
+                title: 'How to Keep Your Account Secure',
+                text: 'Tips and best practices for keeping your FarmNet account safe and secure.',
+                link: 'Private policy.html'
+            },
+            {
+                id: 8,
+                category: 'buying',
+                icon: 'fa-heart',
+                title: 'How to Save Favorite Sellers',
+                text: 'Learn how to save sellers you love so you can quickly find them again.',
+                link: 'Saved Sellers.html'
+            },
+            {
+                id: 9,
+                category: 'selling',
+                icon: 'fa-question-circle',
+                title: 'How to Handle Buyer Inquiries',
+                text: 'Best practices for responding to buyer questions and converting inquiries into sales.',
+                link: 'Buyer Inquiries.html'
+            }
+        ];
+
+        // ============================================================
+        // FAQ DATA
+        // ============================================================
+        const faqData = [
+            {
+                question: 'How do I create a FarmNet account?',
+                answer: 'Click the "Register" button on the welcome screen. Choose either "Register as Buyer" or "Register as Seller" and fill in the required information.'
+            },
+            {
+                question: 'Is FarmNet free to use?',
+                answer: 'Yes! FarmNet is completely free for both buyers and sellers. There are no hidden fees or charges.'
+            },
+            {
+                question: 'How do I contact a seller?',
+                answer: 'You can contact a seller by visiting their profile or product page and using the "Contact" or "Inquire" button.'
+            },
+            {
+                question: 'How do I list my products as a seller?',
+                answer: 'After registering as a seller, go to "My Products" and click "Add New Product". Fill in the details and publish your listing.'
+            },
+            {
+                question: 'Is my personal information safe?',
+                answer: 'Yes! FarmNet takes security seriously. We use encryption and follow best practices to protect your data.'
+            },
+            {
+                question: 'How do I save a seller?',
+                answer: 'Click the "Save" or "Heart" button on any seller\'s profile to add them to your saved list.'
+            },
+            {
+                question: 'What should I do if I have a problem?',
+                answer: 'Contact our support team through the "Contact Us" page or use the "Report" feature on the platform.'
+            },
+            {
+                question: 'Can I use FarmNet on my phone?',
+                answer: 'Yes! FarmNet is fully responsive and works on all devices including smartphones and tablets.'
+            }
+        ];
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name || user.farmName}!`;
+                const avatar = localStorage.getItem(`buyerAvatar_${user.email}`) || 
+                              localStorage.getItem(`sellerAvatar_${user.email}`);
+                if (avatar && (avatar.startsWith('http') || avatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${avatar}" alt="${user.name || user.farmName}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name || user.farmName}">`;
+                } else {
+                    userAvatar.textContent = (user.name || user.farmName || 'G').charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // RENDER HELP CARDS
+        // ============================================================
+        function renderHelpCards(category = 'all', search = '') {
+            let filtered = helpData;
+
+            if (category !== 'all') {
+                filtered = filtered.filter(item => item.category === category);
+            }
+
+            if (search.trim()) {
+                const term = search.toLowerCase().trim();
+                filtered = filtered.filter(item => 
+                    item.title.toLowerCase().includes(term) ||
+                    item.text.toLowerCase().includes(term)
+                );
+            }
+
+            if (filtered.length === 0) {
+                helpGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:40px; color:#666;">
+                        <i class="fas fa-search" style="font-size:48px; color:#bdc3c7; margin-bottom:15px; display:block;"></i>
+                        <p>No help topics found matching your search.</p>
+                        <button class="btn btn-outline" onclick="resetSearch()" style="margin-top:15px;">
+                            <i class="fas fa-undo"></i> Clear Search
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            helpGrid.innerHTML = filtered.map(item => `
+                <a href="${item.link}" class="help-card" style="text-decoration: none;">
+                    <div class="help-icon"><i class="fas ${item.icon}"></i></div>
+                    <div class="help-title">${item.title}</div>
+                    <div class="help-text">${item.text}</div>
+                </a>
+            `).join('');
+        }
+
+        // ============================================================
+        // RENDER FAQS
+        // ============================================================
+        function renderFAQs(search = '') {
+            let filtered = faqData;
+
+            if (search.trim()) {
+                const term = search.toLowerCase().trim();
+                filtered = filtered.filter(item => 
+                    item.question.toLowerCase().includes(term) ||
+                    item.answer.toLowerCase().includes(term)
+                );
+            }
+
+            if (filtered.length === 0) {
+                faqContainer.innerHTML = `
+                    <p style="text-align:center; padding:20px; color:#666;">
+                        <i class="fas fa-info-circle"></i> No FAQs found matching your search.
+                    </p>
+                `;
+                return;
+            }
+
+            faqContainer.innerHTML = filtered.map((faq, index) => `
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ${faq.question}
+                        <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer">${faq.answer}</div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // TOGGLE FAQ
+        // ============================================================
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const isOpen = answer.classList.contains('open');
+            
+            // Close all FAQs
+            document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+            document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('open'));
+            
+            if (!isOpen) {
+                answer.classList.add('open');
+                element.classList.add('open');
+            }
+        }
+
+        // ============================================================
+        // FILTER CATEGORY
+        // ============================================================
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update active state
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.classList.toggle('active', tag.dataset.category === category);
+            });
+            
+            renderHelpCards(category, searchTerm);
+        }
+
+        // ============================================================
+        // SEARCH HELP
+        // ============================================================
+        function searchHelp() {
+            const input = document.getElementById('helpSearch');
+            searchTerm = input.value;
+            renderHelpCards(currentCategory, searchTerm);
+            renderFAQs(searchTerm);
+        }
+
+        // ============================================================
+        // RESET SEARCH
+        // ============================================================
+        function resetSearch() {
+            document.getElementById('helpSearch').value = '';
+            searchTerm = '';
+            renderHelpCards(currentCategory, '');
+            renderFAQs('');
+            showToast('Search cleared!', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = user.role === 'seller' ? 'Seller Profile.html' : 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+
+            document.getElementById('helpSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchHelp();
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            renderHelpCards('all', '');
+            renderFAQs('');
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('❓ Help Center loaded successfully!');
+        });
+    </script>
+</body>
+</html>

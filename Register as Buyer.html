@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Buyer Dashboard - DARAWAT</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- External CSS (separate file) -->
+    <link rel="stylesheet" href="Css/Register as Buyer.css" />
+    <script>
+        // ============================================================
+        // IMMEDIATE CHECK - Runs BEFORE the page fully loads
+        // This prevents the login modal from showing if user is logged in
+        // ============================================================
+        (function() {
+            // Check if user is already logged in
+            const currentUser = localStorage.getItem('currentUser');
+            const rememberMe = localStorage.getItem('rememberMeStatus');
+            
+            // If user is logged in OR has saved credentials with remember me
+            if (currentUser && rememberMe === 'true') {
+                try {
+                    const user = JSON.parse(currentUser);
+                    if (user.role === 'buyer' && user.status !== 'suspended') {
+                        // User is logged in - we'll hide the login modal immediately
+                        // We'll set a flag that the page can use later
+                        window._userLoggedIn = true;
+                        window._userData = user;
+                    }
+                } catch(e) {
+                    // Ignore parse errors
+                }
+            }
+            
+            // Also check saved credentials for auto-login
+            if (!window._userLoggedIn) {
+                const savedCreds = localStorage.getItem('farmConnectSavedCredentials');
+                if (savedCreds && rememberMe === 'true') {
+                    try {
+                        const creds = JSON.parse(savedCreds);
+                        const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+                        const user = users.find(u => u.email === creds.email && u.role === 'buyer');
+                        if (user && user.status !== 'suspended') {
+                            // Save the user to currentUser
+                            localStorage.setItem('currentUser', JSON.stringify(user));
+                            window._userLoggedIn = true;
+                            window._userData = user;
+                        }
+                    } catch(e) {
+                        // Ignore errors
+                    }
+                }
+            }
+        })();
+    </script>
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- SUSPENDED ACCOUNT OVERLAY                                   -->
+    <!-- ============================================================ -->
+    <div id="suspendedOverlay" class="suspended-overlay">
+        <div class="suspended-card">
+            <div class="suspended-icon"><i class="fas fa-ban"></i></div>
+            <h2>Account Suspended</h2>
+            <div id="suspensionDetailsBox" class="suspension-details-box">
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-info-circle"></i> Reason</span>
+                    <span class="detail-value reason-text" id="suspReasonText">Not provided</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-clock"></i> Duration</span>
+                    <span class="detail-value" id="suspDurationText">Not specified</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-calendar-alt"></i> Suspended On</span>
+                    <span class="detail-value" id="suspDateText">N/A</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label"><i class="fas fa-hourglass-end"></i> Ends On</span>
+                    <span class="detail-value" id="suspEndText">N/A</span>
+                </div>
+                <div class="detail-row" id="suspNotesRow" style="display:none;">
+                    <span class="detail-label"><i class="fas fa-sticky-note"></i> Notes</span>
+                    <span class="detail-value" id="suspNotesText" style="font-size:13px; color:#64748b;">N/A</span>
+                </div>
+            </div>
+            <p>If you believe this is a mistake, please contact our support team.</p>
+            <div class="suspended-sub"><i class="fas fa-info-circle"></i> For more information, please reach out to support.</div>
+            <button class="logout-btn" onclick="handleSuspendedLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- LOGIN MODAL - Starts hidden                                 -->
+    <!-- ============================================================ -->
+    <div id="loginModal" class="login-modal" style="display: none;">
+        <div class="login-container">
+            <div class="leaf-decoration leaf-1"></div>
+            <div class="leaf-decoration leaf-2"></div>
+            <div class="form-container">
+                <!-- LOGIN SECTION -->
+                <div class="form-section active" id="login-section">
+                    <div class="login-header">
+                        <h2><i class="fas fa-lock"></i> Login</h2>
+                        <p>Access your buyer dashboard</p>
+                    </div>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Username or Email</label>
+                            <input type="text" id="login-email" placeholder="Enter your email" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> Password</label>
+                            <input type="password" id="login-password" placeholder="Enter your password" required />
+                            <span class="password-toggle" onclick="togglePassword('login-password')">Show</span>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe" />
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login to Dashboard</button>
+                    </form>
+                    <div class="toggle-form">
+                        <p>Don't have an account? <a href="#" id="showRegister"><i class="fas fa-user-plus"></i> Register here</a></p>
+                    </div>
+                </div>
+
+                <!-- REGISTER SECTION -->
+                <div class="form-section" id="register-section">
+                    <div class="login-header">
+                        <h2><i class="fas fa-user-plus"></i> Register as Buyer</h2>
+                        <p>Create your buyer account</p>
+                    </div>
+                    <form id="registerForm" class="register-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="register-name" placeholder="Enter your full name" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="register-email" placeholder="Enter your email" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> Password</label>
+                            <input type="password" id="register-password" placeholder="Create a password" required />
+                            <span class="password-toggle" onclick="togglePassword('register-password')">Show</span>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-home"></i> Address</label>
+                            <input type="text" id="register-address" placeholder="Enter your address" required />
+                        </div>
+                        <div class="terms-group">
+                            <div class="terms-checkbox">
+                                <input type="checkbox" id="terms-agreement" required />
+                                <label for="terms-agreement">
+                                    I agree to the <span class="terms-link" id="showTerms"><i class="fas fa-file-contract"></i> FarmNet Terms and Agreement</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="login-btn"><i class="fas fa-check-circle"></i> Register & Login</button>
+                    </form>
+                    <div class="toggle-form">
+                        <p>Already have an account? <a href="#" id="showLogin"><i class="fas fa-sign-in-alt"></i> Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- OTP VERIFICATION MODAL                                     -->
+    <!-- ============================================================ -->
+    <div id="otpModal" class="otp-modal">
+        <div class="otp-container">
+            <div class="otp-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>Verify Your Identity</h2>
+            <p>We've sent a 6-digit verification code to your email address.</p>
+            <div class="otp-email-display" id="otpEmailDisplay">your@email.com</div>
+            <div class="otp-code-display" id="otpCodeDisplay">
+                <div class="otp-code-label"><i class="fas fa-key"></i> Your verification code</div>
+                <div class="otp-code-value" id="otpCodeReveal">------</div>
+                <button class="otp-copy-btn" id="otpCopyCodeBtn"><i class="fas fa-copy"></i> Copy Code</button>
+            </div>
+            <div class="otp-error" id="otpError"></div>
+            <div class="otp-input-group" id="otpInputGroup">
+                <input type="text" maxlength="1" class="otp-digit" data-index="0" placeholder="•" autofocus />
+                <input type="text" maxlength="1" class="otp-digit" data-index="1" placeholder="•" />
+                <input type="text" maxlength="1" class="otp-digit" data-index="2" placeholder="•" />
+                <input type="text" maxlength="1" class="otp-digit" data-index="3" placeholder="•" />
+                <input type="text" maxlength="1" class="otp-digit" data-index="4" placeholder="•" />
+                <input type="text" maxlength="1" class="otp-digit" data-index="5" placeholder="•" />
+            </div>
+            <div class="otp-actions">
+                <button class="otp-verify-btn" id="otpVerifyBtn"><i class="fas fa-check-circle"></i> Verify</button>
+                <div>
+                    <button class="otp-resend-btn" id="otpResendBtn"><i class="fas fa-redo"></i> Resend Code</button>
+                    <span class="otp-timer">(<span id="otpTimerCount">60</span>s)</span>
+                </div>
+                <button class="otp-close-btn" id="otpCloseBtn"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TERMS MODAL                                                -->
+    <!-- ============================================================ -->
+    <div id="termsModal" class="terms-modal">
+        <div class="terms-modal-content">
+            <button class="terms-modal-close" id="termsModalClose"><i class="fas fa-times"></i></button>
+            <div class="terms-modal-body">
+                <div class="terms-header">
+                    <h2><i class="fas fa-file-contract"></i> FarmNet Terms and Agreement</h2>
+                    <p>Effective Date: [Insert Date] Last Updated: [Insert Date]</p>
+                </div>
+                <div class="terms-content">
+                    <div class="terms-section"><h3><i class="fas fa-check-circle"></i> 1. Acceptance of Terms</h3><p>By creating an account, browsing products, or using any FarmNet service, you agree to comply with these Terms and our Privacy Policy.</p></div>
+                    <div class="terms-section"><h3><i class="fas fa-seedling"></i> 2. Platform Purpose</h3><p>FarmNet connects farmers, buyers, and cooperatives to streamline agricultural commerce, promote local produce, and support inclusive, regionally authentic trade.</p></div>
+                    <div class="terms-section"><h3><i class="fas fa-user"></i> 3. User Responsibilities</h3><p>You agree to:</p><ul><li>Provide accurate and complete information during registration.</li><li>Use FarmNet only for lawful, agricultural-related purposes.</li><li>Respect other users and avoid fraudulent, abusive, or misleading behavior.</li></ul></div>
+                    <div class="terms-section"><h3><i class="fas fa-shopping-cart"></i> 4. Transactions and Payments</h3><p>All purchases, sales, and bookings are subject to confirmation and availability.</p><p>Prices, delivery terms, and payment methods are set by sellers and may vary.</p><p>FarmNet may facilitate payments but is not liable for disputes between buyers and sellers.</p></div>
+                    <div class="terms-section"><h3><i class="fas fa-box"></i> 5. Product Listings</h3><p>Sellers must:</p><ul><li>Ensure listings are accurate, up-to-date, and reflect actual availability.</li><li>Avoid misleading descriptions, counterfeit goods, or prohibited items.</li></ul></div>
+                    <div class="terms-section"><h3><i class="fas fa-mobile-alt"></i> 6. Platform Access</h3><p>FarmNet may:</p><ul><li>Update, suspend, or discontinue features without prior notice.</li><li>Restrict access for violations of these Terms or suspected misuse.</li></ul></div>
+                    <div class="terms-section"><h3><i class="fas fa-shield-alt"></i> 7. Data and Privacy</h3><p>We respect your privacy. FarmNet collects and uses data as described in our Privacy Policy. You retain ownership of your content but grant us permission to use it to operate the platform.</p></div>
+                    <div class="terms-section"><h3><i class="fas fa-balance-scale"></i> 8. Limitation of Liability</h3><p>FarmNet is not liable for:</p><ul><li>Losses due to inaccurate listings, delayed deliveries, or third-party actions.</li><li>Technical issues, outages, or data loss beyond our control.</li></ul></div>
+                    <div class="terms-section"><h3><i class="fas fa-edit"></i> 9. Changes to Terms</h3><p>We may revise these Terms from time to time. Continued use of FarmNet after updates means you accept the new terms.</p></div>
+                    <div class="terms-section"><h3><i class="fas fa-envelope"></i> 10. Contact</h3><p>For questions or concerns, reach out to us at [Insert Contact Email or Support Link].</p></div>
+                </div>
+                <div class="terms-actions">
+                    <button class="terms-accept-btn" id="termsAccept"><i class="fas fa-check"></i> I Accept</button>
+                    <button class="terms-close-btn" id="termsClose"><i class="fas fa-times"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- OTP TOAST NOTIFICATION                                     -->
+    <!-- ============================================================ -->
+    <div id="otpCodeToast">
+        <div style="font-size:13px; opacity:0.8;">Your OTP Code:</div>
+        <div style="font-size:28px; font-weight:700; letter-spacing:3px; color:#fdcc8a; padding:4px 0;" id="otpToastCode">------</div>
+        <div style="font-size:11px; opacity:0.6;">Enter this code in the fields above</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MAIN DASHBOARD CONTENT                                     -->
+    <!-- ============================================================ -->
+    <div class="dashboard-content">
+        <!-- HEADER -->
+        <header id="mainHeader">
+            <div class="container">
+                <div class="header-content">
+                    <a href="Welcome Screen.html" class="logo"></i> DARAWAT</a>
+                    <nav class="main-nav">
+                        <a href="Register as Buyer.html" class="nav-link active"><i class="fas fa-dashboard"></i> Dashboard</a>
+                        <a href="Seller Directory.html" class="nav-link"><i class="fas fa-handshake"></i> All Sellers</a>
+                        <a href="Buyer Messages.html" class="nav-link" id="messagesButton"><i class="fas fa-envelope"></i> Messages <span class="cart-count" id="messagesCount" style="display:none;">0</span></a>
+                        <a href="Buyer Profile.html" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+                    </nav>
+                    
+                    <div class="user-info">
+                        <div id="welcomeMessage">Welcome, Buyer!</div>
+                        <div class="user-avatar" id="userAvatar">B</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN -->
+        <main class="dashboard">
+            <div class="container">
+
+                <!-- ADMIN CUSTOMIZATIONS -->
+                <div id="adminCustomizations">
+                    <div id="adminBanner" class="admin-banner" style="display:none;">
+                        <h2 id="bannerTitle"></h2>
+                        <p id="bannerDesc"></p>
+                        <a href="#" id="bannerBtn" class="banner-btn">Shop Now</a>
+                    </div>
+                    <div id="adminHero" class="admin-hero">
+                        <div class="hero-content"><h1 id="heroTitle">Welcome to DARAWAT!</h1><p id="heroSubtitle">Fresh produce directly from local farms.</p></div>
+                    </div>
+                    <div id="adminFeaturedFarms" class="admin-featured-farms" style="display:none;">
+                        <h3><i class="fas fa-star"></i> Featured Farms</h3>
+                        <div class="farm-list" id="featuredFarmsList"></div>
+                    </div>
+                    <div id="adminDiscounts" class="admin-discounts" style="display:none;">
+                        <h4><i class="fas fa-tag"></i> Special Offers</h4>
+                        <div id="discountsList"></div>
+                    </div>
+                    <div id="adminAnnouncements" class="admin-announcements" style="display:none;">
+                        <h4><i class="fas fa-bullhorn"></i> Announcements</h4>
+                        <div id="announcementsList"></div>
+                    </div>
+                </div>
+
+                <!-- NEARBY FARMS BANNER -->
+                <div class="nearby-farms-banner" id="nearbyFarmsBanner">
+                    <div class="banner-text"><i class="fas fa-map-pin"></i><span><strong>Discover farms near you</strong> – find local produce and connect with farmers in your area</span></div>
+                    <div class="banner-buttons">
+                        <a href="Nearby Farms.html" class="btn-nearby"><i class="fas fa-map"></i> View Nearby Farms</a>
+                        <a href="Seller Directory.html" class="btn-nearby-outline"><i class="fas fa-store"></i> All Sellers</a>
+                    </div>
+                </div>
+
+                <!-- TRIGGER BUTTON FOR PROMOTIONS -->
+                <div style="margin-bottom: 20px;">
+                    <button id="showPromoBtn" onclick="togglePromotionsSection()" style="padding: 12px 24px; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-bullhorn"></i> View Latest Promotions & Updates
+                    </button>
+                </div>
+
+                <!-- EMAIL CAMPAIGNS (Now hidden via CSS) -->
+                <div id="emailCampaignsSection" class="email-campaigns-section">
+                    <h4><i class="fas fa-envelope"></i> Latest Promotions & Updates</h4>
+                    <div id="campaignsList" class="campaign-list"></div>
+                </div>
+
+                <!-- TRIGGER BUTTON -->
+                <div style="margin-bottom: 20px;">
+                    <button id="showDiscountBtn" onclick="toggleDiscountSection()" style="padding: 12px 24px; background: linear-gradient(135deg, #2e7d32, #4caf50); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3); display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-tags"></i> Have a discount code?
+                    </button>
+                </div>
+
+                <!-- DISCOUNT CODE SECTION (Now hidden via CSS) -->
+                <div class="discount-code-section" id="discountCodeSection">
+                    <div class="discount-input-group">
+                        <i class="fas fa-tags" style="color:#2e7d32; font-size:20px;"></i>
+                        <input type="text" id="discountCodeInput" placeholder="Enter discount code..." maxlength="20" />
+                        <button class="apply-btn" id="applyDiscountBtn"><i class="fas fa-check"></i> Apply Code</button>
+                        <span class="applied-discount-badge" id="appliedDiscountBadge">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="appliedDiscountText">20% OFF</span>
+                            <button class="remove-discount" id="removeDiscountBtn" title="Remove discount"><i class="fas fa-times"></i></button>
+                        </span>
+                    </div>
+                    <div class="discount-message" id="discountMessage"></div>
+                </div>
+
+                <!-- SEARCH & FILTER -->
+                <section class="search-filter-section">
+                    <div class="search-bar">
+                        <div class="search-bar-container"><input type="text" id="searchInput" placeholder="Search for products..." /></div>
+                        <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                    <div class="categories">
+                        <a href="#" class="category-btn active" data-category="all"><i class="fas fa-list"></i> All Products</a>
+                        <a href="#" class="category-btn" data-category="Vegetables"><i class="fas fa-carrot"></i> Vegetables</a>
+                        <a href="#" class="category-btn" data-category="Fruits"><i class="fas fa-apple-alt"></i> Fruits</a>
+                        <a href="#" class="category-btn" data-category="Grains"><i class="fas fa-wheat"></i> Grains</a>
+                        <a href="#" class="category-btn" data-category="Livestock"><i class="fas fa-cow"></i> Livestock</a>
+                        <a href="#" class="category-btn" data-category="Dairy"><i class="fas fa-cheese"></i> Dairy</a>
+                    </div>
+                </section>
+
+                <!-- PRODUCTS GRID -->
+                <section class="products-section">
+                    <h2><i class="fas fa-boxes"></i> Available Products</h2>
+                    <div class="products-grid" id="productsGrid"></div>
+                </section>
+
+                <!-- NEWSLETTER -->
+                <div class="newsletter-section" id="newsletterSection">
+                    <h4><i class="fas fa-envelope"></i> Subscribe to our Newsletter</h4>
+                    <p>Get updates on new products and special offers!</p>
+                    <div class="newsletter-input-group">
+                        <input type="email" id="newsletterEmail" placeholder="Enter your email address" />
+                        <button class="subscribe-btn" id="subscribeBtn"><i class="fas fa-paper-plane"></i> Subscribe</button>
+                    </div>
+                    <div class="subscribe-message" id="subscribeMessage"></div>
+                </div>
+
+                <!-- BLOCKCHAIN NOTICE -->
+                <div class="blockchain-notice">
+                    <i class="fas fa-shield-alt" style="font-size:24px;"></i>
+                    <p><strong>Note:</strong> All purchases will be processed through our secure blockchain system to ensure transparency and security for both buyers and farmers.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- MOBILE BOTTOM NAV -->
+        <nav class="mobile-bottom-nav">
+            <div class="mobile-nav-items">
+                <a href="Register as Buyer.html" class="mobile-nav-item active"><div class="mobile-nav-icon"><i class="fas fa-th-large"></i></div><div class="mobile-nav-label">Dashboard</div></a>
+                <a href="Seller Directory.html" class="mobile-nav-item"><div class="mobile-nav-icon"><i class="fas fa-store"></i></div><div class="mobile-nav-label">Sellers</div></a>
+                <a href="Saved Sellers.html" class="mobile-nav-item"><div class="mobile-nav-icon"><i class="fas fa-heart"></i></div><div class="mobile-nav-label">Saved</div></a>
+                <a href="Buyer Profile.html" class="mobile-nav-item"><div class="mobile-nav-icon"><i class="fas fa-user"></i></div><div class="mobile-nav-label">Profile</div></a>
+            </div>
+        </nav>
+
+        <!-- FOOTER -->
+        <footer id="mainFooter">
+            <div class="container">
+                <p>DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+                <div style="margin-top:10px;"><a href="FarmAI.html" style="color:white; text-decoration:none; opacity:0.8; display:inline-flex; align-items:center; gap:8px;"><i class="fas fa-robot"></i> Ask FarmAI for Help</a></div>
+                <div style="margin-top:10px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+                    <a href="Help Center.html" style="color:white; text-decoration:none; opacity:0.7; font-size:0.8rem;"><i class="fas fa-question-circle"></i> Help Center</a>
+                    <a href="Success Stories.html" style="color:white; text-decoration:none; opacity:0.7; font-size:0.8rem;"><i class="fas fa-star"></i> Success Stories</a>
+                    <a href="Community Guidelines.html" style="color:white; text-decoration:none; opacity:0.7; font-size:0.8rem;"><i class="fas fa-handshake"></i> Guidelines</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PRODUCT DETAILS MODAL                                       -->
+    <!-- ============================================================ -->
+    <div id="productModal" class="product-modal">
+        <div class="product-modal-content">
+            <button class="product-modal-close" id="productModalClose"><i class="fas fa-times"></i></button>
+            <div class="product-modal-body" id="productModalBody"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FULLSCREEN IMAGE MODAL                                      -->
+    <!-- ============================================================ -->
+    <div id="fullscreenImageModal" class="fullscreen-image-modal">
+        <button class="fullscreen-close" id="fullscreenClose"><i class="fas fa-times"></i></button>
+        <button class="fullscreen-nav fullscreen-prev" id="fullscreenPrev"><i class="fas fa-chevron-left"></i></button>
+        <div class="fullscreen-image-container"><img id="fullscreenImage" class="fullscreen-image" src="" alt="Fullscreen product image" /></div>
+        <button class="fullscreen-nav fullscreen-next" id="fullscreenNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="fullscreen-counter" id="fullscreenCounter">1 / 1</div>
+        <button class="fullscreen-zoom" id="fullscreenZoom"><i class="fas fa-search-plus"></i></button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FARMAI FLOATING BUTTON                                      -->
+    <!-- ============================================================ -->
+    <div id="farmAiFloatingBtn" style="position:fixed; bottom:100px; right:25px; z-index:9999;">
+        <a href="FarmAI.html" style="display:flex; align-items:center; justify-content:center; width:60px; height:60px; background:linear-gradient(135deg,#2e7d32,#4caf50); border-radius:50%; color:white; font-size:28px; box-shadow:0 4px 15px rgba(46,125,50,0.4); text-decoration:none; transition:all 0.3s ease;" 
+           onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 8px 30px rgba(46,125,50,0.6)'" 
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 15px rgba(46,125,50,0.4)'">
+            <i class="fas fa-robot"></i>
+        </a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT - ALL FUNCTIONALITY                              -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================ 
+        // COMPLETE BUYER DASHBOARD JAVASCRIPT WITH OTP - FIXED
+        // ============================================================
+
+        // ============================================================
+        // OTP SYSTEM - GENERATE, SEND, AND VERIFY
+        // ============================================================
+        let otpState = {
+            code: '',
+            email: '',
+            timer: 60,
+            timerInterval: null,
+            isVerified: false,
+            pendingUser: null,
+            pendingLogin: null,
+            actionType: null // 'login' or 'register'
+        };
+
+        function generateOTP() {
+            return String(Math.floor(100000 + Math.random() * 900000));
+        }
+
+        function sendOTP(email, userName) {
+            const code = generateOTP();
+            otpState.code = code;
+            otpState.email = email;
+
+            if (otpState.pendingUser) otpState.actionType = 'register';
+            else if (otpState.pendingLogin) otpState.actionType = 'login';
+
+            // Console log (debugging)
+            console.log('========================================');
+            console.log('🔐 OTP VERIFICATION CODE');
+            console.log(`📧 To: ${email}`);
+            console.log(`🔑 Code: ${code}`);
+            console.log(`📋 Action: ${otpState.actionType || 'unknown'}`);
+            console.log('========================================');
+
+            // Show code on screen
+            const codeDisplay = document.getElementById('otpCodeDisplay');
+            const codeReveal = document.getElementById('otpCodeReveal');
+            if (codeDisplay && codeReveal) {
+                codeDisplay.style.display = 'block';
+                codeReveal.textContent = code;
+                if (window._otpCodeTimeout) clearTimeout(window._otpCodeTimeout);
+                window._otpCodeTimeout = setTimeout(() => {
+                    if (codeReveal) codeReveal.textContent = '------';
+                    if (codeDisplay) codeDisplay.style.display = 'none';
+                }, 20000);
+            }
+
+            showOTPCodeToast(code);
+
+            const otpData = { code, email, timestamp: Date.now(), expiresAt: Date.now() + 60000, actionType: otpState.actionType };
+            localStorage.setItem('farmConnectOTPData', JSON.stringify(otpData));
+
+            showOTPModal(email);
+            startOTPTimer();
+            return code;
+        }
+
+        function verifyOTP(inputCode) {
+            const storedData = localStorage.getItem('farmConnectOTPData');
+            if (!storedData) { showOTPError('No OTP request found. Please request a new code.'); return false; }
+            try {
+                const data = JSON.parse(storedData);
+                if (Date.now() > data.expiresAt) { showOTPError('OTP has expired. Please request a new code.'); return false; }
+                if (inputCode === data.code) { otpState.isVerified = true; localStorage.removeItem('farmConnectOTPData'); return true; } 
+                else { showOTPError('Invalid OTP code. Please try again.'); return false; }
+            } catch (e) { showOTPError('Error verifying OTP. Please try again.'); return false; }
+        }
+
+        function showOTPModal(email) {
+            const modal = document.getElementById('otpModal');
+            const display = document.getElementById('otpEmailDisplay');
+            const errorEl = document.getElementById('otpError');
+            if (display) display.textContent = sanitizeHTML(email);
+            if (errorEl) errorEl.textContent = '';
+            document.querySelectorAll('.otp-digit').forEach(inp => inp.value = '');
+            setTimeout(() => document.querySelector('.otp-digit[data-index="0"]')?.focus(), 100);
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+
+        function hideOTPModal() {
+            document.getElementById('otpModal').classList.remove('active');
+            document.body.classList.remove('modal-open');
+            stopOTPTimer();
+            localStorage.removeItem('farmConnectOTPData');
+            otpState.code = '';
+            otpState.email = '';
+            otpState.isVerified = false;
+            document.getElementById('otpCodeDisplay').style.display = 'none';
+            document.getElementById('otpCodeToast').style.display = 'none';
+        }
+
+        function showOTPError(message) { const el = document.getElementById('otpError'); if (el) { el.textContent = message; el.className = 'otp-error'; } }
+        function showOTPSuccess(message) { const el = document.getElementById('otpError'); if (el) { el.textContent = message; el.className = 'otp-success'; } }
+
+        function showOTPCodeToast(code) {
+            const toast = document.getElementById('otpCodeToast');
+            const codeDisplay = document.getElementById('otpToastCode');
+            if (toast && codeDisplay) {
+                codeDisplay.textContent = code;
+                toast.style.display = 'block';
+                if (window._otpToastTimeout) clearTimeout(window._otpToastTimeout);
+                window._otpToastTimeout = setTimeout(() => { toast.style.display = 'none'; }, 15000);
+            }
+        }
+
+        function startOTPTimer() {
+            stopOTPTimer();
+            otpState.timer = 60;
+            const timerCount = document.getElementById('otpTimerCount');
+            const resendBtn = document.getElementById('otpResendBtn');
+            resendBtn.disabled = true;
+            otpState.timerInterval = setInterval(() => {
+                otpState.timer--;
+                if (timerCount) timerCount.textContent = otpState.timer;
+                if (otpState.timer <= 0) { stopOTPTimer(); resendBtn.disabled = false; if (timerCount) timerCount.textContent = '0'; showOTPError('OTP has expired. Please request a new code.'); }
+            }, 1000);
+        }
+
+        function stopOTPTimer() {
+            if (otpState.timerInterval) { clearInterval(otpState.timerInterval); otpState.timerInterval = null; }
+            document.getElementById('otpResendBtn').disabled = false;
+        }
+
+        // ============================================================
+        // OTP Event Listeners
+        // ============================================================
+        function initOTPEventListeners() {
+            document.querySelectorAll('.otp-digit').forEach((input, index, inputs) => {
+                input.addEventListener('input', function() {
+                    const value = this.value;
+                    if (value && !/^\d$/.test(value)) { this.value = ''; return; }
+                    if (value && index < inputs.length - 1) inputs[index + 1].focus();
+                    if (index === inputs.length - 1 && value) {
+                        if (Array.from(inputs).every(inp => inp.value !== '')) handleOTPVerify();
+                    }
+                });
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) inputs[index - 1].focus();
+                    if (e.key === 'ArrowLeft' && index > 0) inputs[index - 1].focus();
+                    if (e.key === 'ArrowRight' && index < inputs.length - 1) inputs[index + 1].focus();
+                    if (e.key === 'Enter') handleOTPVerify();
+                });
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    if (!paste) return;
+                    const digits = paste.replace(/\D/g, '').slice(0, 6);
+                    document.querySelectorAll('.otp-digit').forEach((inp, idx) => { inp.value = idx < digits.length ? digits[idx] : ''; });
+                    const emptyIndex = Array.from(document.querySelectorAll('.otp-digit')).findIndex(inp => inp.value === '');
+                    if (emptyIndex !== -1) document.querySelectorAll('.otp-digit')[emptyIndex].focus();
+                    else { document.querySelectorAll('.otp-digit')[5].focus(); if (Array.from(document.querySelectorAll('.otp-digit')).every(inp => inp.value !== '')) handleOTPVerify(); }
+                });
+            });
+
+            document.getElementById('otpVerifyBtn').addEventListener('click', handleOTPVerify);
+
+            document.getElementById('otpResendBtn').addEventListener('click', function() {
+                const email = otpState.email || document.getElementById('otpEmailDisplay').textContent;
+                if (email && email !== 'your@email.com') { sendOTP(email); showOTPSuccess('New OTP code sent to your email!'); } 
+                else showOTPError('Please provide a valid email address.');
+            });
+
+            // Cancel -> always return to login
+            document.getElementById('otpCloseBtn').addEventListener('click', function() {
+                hideOTPModal();
+                document.getElementById('login-section').classList.add('active');
+                document.getElementById('register-section').classList.remove('active');
+                otpState.pendingUser = null;
+                otpState.pendingLogin = null;
+                otpState.actionType = null;
+                localStorage.removeItem('farmConnectOTPData');
+                document.getElementById('loginModal').style.display = 'flex';
+                document.getElementById('login-password').value = '';
+                document.getElementById('otpError').textContent = '';
+            });
+
+            // Outside click -> always return to login
+            document.getElementById('otpModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideOTPModal();
+                    document.getElementById('login-section').classList.add('active');
+                    document.getElementById('register-section').classList.remove('active');
+                    otpState.pendingUser = null;
+                    otpState.pendingLogin = null;
+                    otpState.actionType = null;
+                    localStorage.removeItem('farmConnectOTPData');
+                    document.getElementById('loginModal').style.display = 'flex';
+                    document.getElementById('login-password').value = '';
+                }
+            });
+
+            // Copy OTP code
+            document.getElementById('otpCopyCodeBtn').addEventListener('click', function() {
+                const code = document.getElementById('otpCodeReveal').textContent;
+                if (code && code !== '------') {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(code).then(() => {
+                            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                            this.classList.add('copied');
+                            setTimeout(() => { this.innerHTML = '<i class="fas fa-copy"></i> Copy Code'; this.classList.remove('copied'); }, 2000);
+                        }).catch(() => copyTextToClipboard(code, this));
+                    } else copyTextToClipboard(code, this);
+                }
+            });
+        }
+
+        function copyTextToClipboard(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            textArea.style.top = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                if (button) { button.innerHTML = '<i class="fas fa-check"></i> Copied!'; button.classList.add('copied'); setTimeout(() => { button.innerHTML = '<i class="fas fa-copy"></i> Copy Code'; button.classList.remove('copied'); }, 2000); }
+            } catch (err) { console.error('Copy failed:', err); }
+            document.body.removeChild(textArea);
+        }
+
+        function handleOTPVerify() {
+            const inputs = document.querySelectorAll('.otp-digit');
+            const code = Array.from(inputs).map(inp => inp.value).join('');
+            if (code.length !== 6) { showOTPError('Please enter all 6 digits.'); return; }
+            const btn = document.getElementById('otpVerifyBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="otp-spinner"></span> Verifying...';
+            setTimeout(() => {
+                const verified = verifyOTP(code);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Verify';
+                if (verified) {
+                    showOTPSuccess('✅ Verification successful!');
+                    setTimeout(() => {
+                        hideOTPModal();
+                        if (otpState.pendingUser) { completeRegistration(otpState.pendingUser); otpState.pendingUser = null; } 
+                        else if (otpState.pendingLogin) { completeLogin(otpState.pendingLogin); otpState.pendingLogin = null; }
+                    }, 800);
+                }
+            }, 1000);
+        }
+
+        // ============================================================
+        // LOGIN & REGISTER WITH OTP
+        // ============================================================
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            if (!username || !password) { alert('Please fill in all fields.'); return; }
+            if (username === 'admin' && password === 'admin123') { window.location.href = 'Admin.html'; return; }
+            if (!username.includes('@')) { alert('Please enter a valid email address.'); return; }
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const user = users.find(u => u.email === username && u.password === password && u.role === 'buyer');
+            if (user) {
+                if (isUserSuspended(user)) { showSuspendedOverlay(user); localStorage.removeItem('farmConnectSavedCredentials'); localStorage.setItem('rememberMeStatus', 'false'); loginForm.reset(); return; }
+                if (user.status === 'inactive') { alert('ℹ️ Your account is inactive. Please contact support for assistance.'); return; }
+                otpState.pendingLogin = { user, rememberMe };
+                sendOTP(user.email, user.name);
+                document.getElementById('loginModal').style.display = 'none';
+            } else alert('Invalid email or password, or account is not a buyer account.');
+        }
+
+        function completeLogin(data) {
+            const { user, rememberMe } = data;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            saveCredentials(user.email, user.password, rememberMe);
+            showDashboard(user.name);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            if (!document.getElementById('terms-agreement').checked) { alert('Please accept the Terms and Agreement to continue.'); return; }
+            const userData = {
+                name: document.getElementById('register-name').value,
+                email: document.getElementById('register-email').value,
+                password: document.getElementById('register-password').value,
+                address: document.getElementById('register-address').value,
+                role: 'buyer',
+                status: 'active',
+                registrationDate: new Date().toISOString()
+            };
+            if (!userData.name || !userData.email || !userData.password || !userData.address) { alert('Please fill in all fields.'); return; }
+            if (userData.password.length < 6) { alert('Password must be at least 6 characters long.'); return; }
+            if (!userData.email.includes('@')) { alert('Please enter a valid email address.'); return; }
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            if (users.find(u => u.email === userData.email)) { alert('Email already registered.'); return; }
+            otpState.pendingUser = userData;
+            sendOTP(userData.email, userData.name);
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function completeRegistration(userData) {
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            users.push(userData);
+            localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            saveCredentials(userData.email, userData.password, true);
+            showDashboard(userData.name);
+        }
+
+        // ============================================================
+        // SECURITY: HTML Sanitization
+        // ============================================================
+        function sanitizeHTML(text) { if (!text) return ''; text = String(text); const temp = document.createElement('div'); temp.textContent = text; return temp.innerHTML; }
+        function sanitizeURL(url) { if (!url) return '#'; url = String(url).trim(); const dangerous = ['javascript:', 'data:text/html', 'vbscript:', 'file:']; for (let p of dangerous) { if (url.toLowerCase().startsWith(p)) return '#'; } return url; }
+
+        // ============================================================
+        // GLOBAL VARIABLES
+        // ============================================================
+        let currentSessionRemembered = false;
+        let appliedDiscount = null;
+        let currentProductImages = [];
+        let currentImageIndex = 0;
+        let isZoomed = false;
+
+        // ============================================================
+        // ADMIN CUSTOMIZATIONS
+        // ============================================================
+        function loadAdminCustomizations() {
+            try {
+                const customizations = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations'));
+                if (!customizations) return;
+                const s = customizations;
+
+                if (s.banner && s.banner.enabled) {
+                    const banner = document.getElementById('adminBanner');
+                    if (banner) { banner.style.display = 'block'; banner.style.background = s.banner.color || '#2e7d32'; banner.style.color = '#ffffff'; }
+                    document.getElementById('bannerTitle').textContent = sanitizeHTML(s.banner.title || 'Special Offer!');
+                    document.getElementById('bannerDesc').textContent = sanitizeHTML(s.banner.desc || '');
+                    const btn = document.getElementById('bannerBtn');
+                    if (btn) { btn.textContent = sanitizeHTML(s.banner.btnText || 'Shop Now'); btn.href = sanitizeURL(s.banner.btnLink || '#'); btn.style.color = s.banner.color || '#2e7d32'; }
+                }
+
+                if (s.hero) {
+                    document.getElementById('heroTitle').textContent = sanitizeHTML(s.hero.title || 'Welcome to FarmNet!');
+                    document.getElementById('heroSubtitle').textContent = sanitizeHTML(s.hero.subtitle || 'Fresh produce directly from local farms.');
+                    const hero = document.getElementById('adminHero');
+                    hero.style.backgroundImage = '';
+                    hero.style.background = '';
+                    hero.style.backgroundSize = '';
+                    hero.style.backgroundPosition = '';
+                    const existingOverlay = hero.querySelector('.hero-overlay');
+                    if (existingOverlay) existingOverlay.remove();
+                    if (s.hero.image && s.hero.image.trim() !== '') {
+                        const safeImageUrl = sanitizeURL(s.hero.image);
+                        hero.style.backgroundImage = `url('${safeImageUrl}')`;
+                        hero.style.backgroundSize = 'cover';
+                        hero.style.backgroundPosition = 'center';
+                        const overlay = document.createElement('div');
+                        overlay.className = 'hero-overlay';
+                        overlay.style.cssText = 'position:absolute;inset:0;background:rgba(0,0,0,0.4);border-radius:20px;z-index:0;';
+                        const content = hero.querySelector('.hero-content');
+                        if (content) { hero.insertBefore(overlay, content); content.style.position = 'relative'; content.style.zIndex = '1'; }
+                    } else {
+                        const primary = s.theme?.primary || '#2e7d32';
+                        const secondary = s.theme?.secondary || '#4caf50';
+                        hero.style.background = `linear-gradient(135deg, ${primary}, ${secondary})`;
+                    }
+                }
+
+                if (s.theme) {
+                    const root = document.documentElement;
+                    const primary = s.theme.primary || '#2e7d32';
+                    const secondary = s.theme.secondary || '#4caf50';
+                    const accent = s.theme.accent || '#ff9800';
+                    root.style.setProperty('--primary-color', primary);
+                    root.style.setProperty('--secondary-color', secondary);
+                    root.style.setProperty('--accent-color', accent);
+                    const header = document.getElementById('mainHeader');
+                    const footer = document.getElementById('mainFooter');
+                    const gradient = `linear-gradient(135deg, ${primary}, ${secondary})`;
+                    if (header) header.style.background = gradient;
+                    if (footer) footer.style.background = gradient;
+                    document.querySelectorAll('.category-btn.active').forEach(btn => { btn.style.background = `linear-gradient(135deg, ${primary}, ${secondary})`; btn.style.borderColor = primary; });
+                    const searchBtn = document.querySelector('.search-bar button');
+                    if (searchBtn) searchBtn.style.background = `linear-gradient(135deg, ${primary}, ${secondary})`;
+                    document.querySelectorAll('.product-price').forEach(el => el.style.color = primary);
+                }
+
+                const featuredContainer = document.getElementById('adminFeaturedFarms');
+                const featuredList = document.getElementById('featuredFarmsList');
+                if (s.featuredFarms && s.featuredFarms.length > 0) {
+                    if (featuredContainer) featuredContainer.style.display = 'block';
+                    if (featuredList) {
+                        featuredList.innerHTML = s.featuredFarms.map(farm => {
+                            const safeName = sanitizeHTML(farm.name);
+                            const safeEmail = sanitizeHTML(farm.email || farm.name.toLowerCase().replace(/\s/g, '') + '@example.com');
+                            return `<span class="farm-tag" data-seller-email="${safeEmail}" style="cursor:pointer; transition: all 0.3s ease;">🌾 ${safeName}</span>`;
+                        }).join('');
+                        featuredList.querySelectorAll('.farm-tag').forEach(tag => {
+                            tag.addEventListener('click', function() { const sellerEmail = this.getAttribute('data-seller-email'); if (sellerEmail) viewFeaturedFarm(sellerEmail); });
+                        });
+                    }
+                } else { if (featuredContainer) featuredContainer.style.display = 'none'; if (featuredList) featuredList.innerHTML = ''; }
+
+                const discountsContainer = document.getElementById('adminDiscounts');
+                const discountsList = document.getElementById('discountsList');
+                if (s.discounts && s.discounts.length > 0) {
+                    if (discountsContainer) discountsContainer.style.display = 'block';
+                    if (discountsList) {
+                        discountsList.innerHTML = s.discounts.map(d => {
+                            const safeValue = sanitizeHTML(d.value);
+                            const safeTarget = sanitizeHTML(d.target === 'all' ? 'All Products' : d.target);
+                            const symbol = d.type === 'percentage' ? '%' : '₱';
+                            return `<div class="discount-item"><i class="fas fa-tag"></i> <strong>${safeValue}${symbol}</strong> off → ${safeTarget}</div>`;
+                        }).join('');
+                    }
+                } else { if (discountsContainer) discountsContainer.style.display = 'none'; if (discountsList) discountsList.innerHTML = ''; }
+
+                const announcementsContainer = document.getElementById('adminAnnouncements');
+                const announcementsList = document.getElementById('announcementsList');
+                if (s.announcements && s.announcements.length > 0) {
+                    if (announcementsContainer) announcementsContainer.style.display = 'block';
+                    if (announcementsList) {
+                        announcementsList.innerHTML = s.announcements.map(a => {
+                            const safeText = sanitizeHTML(a.text);
+                            const safeDate = new Date(a.date).toLocaleDateString();
+                            return `<div class="announce-item"><span><i class="fas fa-bullhorn"></i> ${safeText}</span><span class="announce-date">${safeDate}</span></div>`;
+                        }).join('');
+                    }
+                } else { if (announcementsContainer) announcementsContainer.style.display = 'none'; if (announcementsList) announcementsList.innerHTML = ''; }
+
+                loadEmailCampaigns();
+            } catch (e) { console.log('No admin customizations found.'); }
+        }
+
+        // ============================================================
+        // EMAIL CAMPAIGNS
+        // ============================================================
+        function loadEmailCampaigns() {
+            const container = document.getElementById('campaignsList');
+            if (!container) return;
+            let allCampaigns = [];
+            try {
+                const customizations = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations'));
+                if (customizations && customizations.announcements && customizations.announcements.length > 0) {
+                    const announcementCampaigns = customizations.announcements.map(announce => ({ id: Date.now() + Math.random(), subject: '📢 Announcement', message: announce.text, audience: 'all', sentAt: announce.date, status: 'sent', type: 'announcement' }));
+                    allCampaigns = allCampaigns.concat(announcementCampaigns);
+                }
+            } catch (e) {}
+            try {
+                let settings = JSON.parse(localStorage.getItem('farmConnectAdminSettings') || '{}');
+                if (settings.marketing && settings.marketing.campaigns && settings.marketing.campaigns.length > 0) {
+                    const emailCampaigns = settings.marketing.campaigns.map(campaign => ({ ...campaign, type: 'email' }));
+                    allCampaigns = allCampaigns.concat(emailCampaigns);
+                }
+            } catch (e) {}
+            try {
+                const buyerCustomizations = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations') || '{}');
+                if (buyerCustomizations.marketing && buyerCustomizations.marketing.campaigns && buyerCustomizations.marketing.campaigns.length > 0) {
+                    const buyerCampaigns = buyerCustomizations.marketing.campaigns.map(campaign => ({ ...campaign, type: 'email' }));
+                    buyerCampaigns.forEach(c => { if (!allCampaigns.some(existing => existing.id === c.id)) allCampaigns.push(c); });
+                }
+            } catch (e) {}
+            allCampaigns.sort((a, b) => new Date(b.sentAt) - new Date(a.sentAt));
+            if (allCampaigns.length === 0) {
+                container.innerHTML = `<div class="no-campaigns"><i class="fas fa-envelope-open-text"></i><span>No promotions or announcements available at the moment. Check back later!</span></div>`;
+                return;
+            }
+            container.innerHTML = allCampaigns.map(campaign => {
+                const audienceLabels = { 'all': 'All Users', 'buyers': 'Buyers Only', 'sellers': 'Sellers Only', 'inactive': 'Inactive Users' };
+                const audienceLabel = audienceLabels[campaign.audience] || campaign.audience || 'All Users';
+                const sentDate = new Date(campaign.sentAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const isAnnouncement = campaign.type === 'announcement';
+                const icon = isAnnouncement ? '📢' : '📧';
+                const bgColor = isAnnouncement ? '#f0fdf4' : '#eff6ff';
+                const borderColor = isAnnouncement ? '#86efac' : '#93c5fd';
+                return `<div class="campaign-item" style="background:${bgColor}; border-color:${borderColor};">
+                    <div class="campaign-subject">${icon} ${sanitizeHTML(campaign.subject)}</div>
+                    <div class="campaign-message">${sanitizeHTML(campaign.message)}</div>
+                    <div class="campaign-meta">
+                        <span><span class="campaign-audience"><i class="fas fa-users"></i> ${sanitizeHTML(audienceLabel)}</span>
+                        <span class="campaign-status"><i class="fas fa-check-circle"></i> ${isAnnouncement ? 'Announcement' : 'Sent'}</span></span>
+                        <span><i class="far fa-calendar-alt"></i> ${sentDate}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ============================================================
+        // DISCOUNT CODE FUNCTIONS
+        // ============================================================
+        function applyDiscountCode() {
+            const input = document.getElementById('discountCodeInput');
+            const messageEl = document.getElementById('discountMessage');
+            const badge = document.getElementById('appliedDiscountBadge');
+            const badgeText = document.getElementById('appliedDiscountText');
+            const code = input.value.trim().toUpperCase();
+            if (!code) { messageEl.textContent = 'Please enter a discount code.'; messageEl.className = 'discount-message warning'; return; }
+            let settings = JSON.parse(localStorage.getItem('farmConnectAdminSettings') || '{}');
+            if (!settings.marketing) settings.marketing = { campaigns: [], discountCodes: [], newsletter: [] };
+            if (!settings.marketing.discountCodes) settings.marketing.discountCodes = [];
+            let buyerSettings = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations') || '{}');
+            if (!buyerSettings.marketing) buyerSettings.marketing = { campaigns: [], discountCodes: [], newsletter: [] };
+            if (!buyerSettings.marketing.discountCodes) buyerSettings.marketing.discountCodes = [];
+            let allDiscountCodes = [...settings.marketing.discountCodes];
+            buyerSettings.marketing.discountCodes.forEach(c => { if (!allDiscountCodes.some(existing => existing.code === c.code)) allDiscountCodes.push(c); });
+            const found = allDiscountCodes.find(d => d.code === code);
+            if (found) {
+                if (found.expiry && new Date(found.expiry) < new Date()) { messageEl.textContent = '❌ This discount code has expired.'; messageEl.className = 'discount-message error'; return; }
+                if (found.limit && found.used >= found.limit) { messageEl.textContent = '❌ This code has reached its usage limit.'; messageEl.className = 'discount-message error'; return; }
+                appliedDiscount = found;
+                const discountText = found.type === 'percentage' ? `${found.value}% OFF` : `₱${found.value} OFF`;
+                badgeText.textContent = sanitizeHTML(discountText);
+                badge.classList.add('show');
+                messageEl.textContent = `✅ Code applied! ${discountText}`;
+                messageEl.className = 'discount-message success';
+                input.value = '';
+                sessionStorage.setItem('appliedDiscount', JSON.stringify(found));
+                found.used = (found.used || 0) + 1;
+                const adminUpdate = JSON.parse(localStorage.getItem('farmConnectAdminSettings') || '{}');
+                if (adminUpdate.marketing && adminUpdate.marketing.discountCodes) {
+                    const idx = adminUpdate.marketing.discountCodes.findIndex(c => c.code === code);
+                    if (idx !== -1) { adminUpdate.marketing.discountCodes[idx].used = found.used; localStorage.setItem('farmConnectAdminSettings', JSON.stringify(adminUpdate)); }
+                }
+                const buyerUpdate = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations') || '{}');
+                if (buyerUpdate.marketing && buyerUpdate.marketing.discountCodes) {
+                    const idx = buyerUpdate.marketing.discountCodes.findIndex(c => c.code === code);
+                    if (idx !== -1) { buyerUpdate.marketing.discountCodes[idx].used = found.used; localStorage.setItem('farmConnectBuyerCustomizations', JSON.stringify(buyerUpdate)); }
+                }
+                showToast('🎉 Discount code applied successfully!', 'success');
+            } else { messageEl.textContent = '❌ Invalid discount code. Please check and try again.'; messageEl.className = 'discount-message error'; }
+        }
+
+        function removeDiscount() {
+            appliedDiscount = null;
+            document.getElementById('appliedDiscountBadge').classList.remove('show');
+            document.getElementById('discountMessage').textContent = '';
+            document.getElementById('discountMessage').className = 'discount-message';
+            sessionStorage.removeItem('appliedDiscount');
+            showToast('Discount code removed.', 'info');
+        }
+
+        // ============================================================
+        // NEWSLETTER FUNCTIONS
+        // ============================================================
+        function subscribeToNewsletter() {
+            const emailInput = document.getElementById('newsletterEmail');
+            const messageEl = document.getElementById('subscribeMessage');
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) { messageEl.textContent = '❌ Please enter a valid email address.'; messageEl.style.color = '#dc2626'; return; }
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            let settings = JSON.parse(localStorage.getItem('farmConnectAdminSettings') || '{}');
+            if (!settings.marketing) settings.marketing = { campaigns: [], discountCodes: [], newsletter: [] };
+            if (!settings.marketing.newsletter) settings.marketing.newsletter = [];
+            let buyerSettings = JSON.parse(localStorage.getItem('farmConnectBuyerCustomizations') || '{}');
+            if (!buyerSettings.marketing) buyerSettings.marketing = { campaigns: [], discountCodes: [], newsletter: [] };
+            if (!buyerSettings.marketing.newsletter) buyerSettings.marketing.newsletter = [];
+            const exists = settings.marketing.newsletter.some(s => s.email === email) || buyerSettings.marketing.newsletter.some(s => s.email === email);
+            if (exists) { messageEl.textContent = 'ℹ️ You are already subscribed to our newsletter!'; messageEl.style.color = '#f59e0b'; return; }
+            const subscriber = { email: sanitizeHTML(email), name: sanitizeHTML(currentUser?.name || 'Subscriber'), subscribedAt: new Date().toISOString(), status: 'active' };
+            settings.marketing.newsletter.push(subscriber);
+            localStorage.setItem('farmConnectAdminSettings', JSON.stringify(settings));
+            buyerSettings.marketing.newsletter.push(subscriber);
+            localStorage.setItem('farmConnectBuyerCustomizations', JSON.stringify(buyerSettings));
+            messageEl.textContent = '✅ Successfully subscribed to our newsletter!';
+            messageEl.style.color = '#2e7d32';
+            emailInput.value = '';
+            window.dispatchEvent(new Event('storage'));
+            window.dispatchEvent(new CustomEvent('adminCustomizationsUpdated'));
+            showToast('📧 Successfully subscribed to newsletter!', 'success');
+        }
+
+        // ============================================================
+        // SUSPENDED ACCOUNT OVERLAY FUNCTIONS
+        // ============================================================
+        function showSuspendedOverlay(user) {
+            const overlay = document.getElementById('suspendedOverlay');
+            if (!overlay) return;
+            const details = user?.suspensionDetails || {};
+            document.getElementById('suspReasonText').textContent = sanitizeHTML(details.reason || 'No reason provided');
+            const durationEl = document.getElementById('suspDurationText');
+            const duration = details.duration || 'Permanent';
+            durationEl.textContent = sanitizeHTML(duration);
+            if (duration.toLowerCase() === 'permanent') durationEl.className = 'detail-value permanent';
+            const dateEl = document.getElementById('suspDateText');
+            if (details.suspendedAt) dateEl.textContent = new Date(details.suspendedAt).toLocaleString();
+            else dateEl.textContent = 'N/A';
+            const endEl = document.getElementById('suspEndText');
+            if (details.endDate) {
+                const endDate = new Date(details.endDate);
+                const now = new Date();
+                const daysRemaining = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+                endEl.textContent = endDate.toLocaleString();
+                if (daysRemaining <= 0) endEl.className = 'detail-value permanent';
+                else if (daysRemaining <= 3) endEl.className = 'detail-value ends-soon';
+                else endEl.className = 'detail-value ends-far';
+            } else { endEl.textContent = 'Permanent (No end date)'; endEl.className = 'detail-value permanent'; }
+            const notesEl = document.getElementById('suspNotesText');
+            const notesRow = document.getElementById('suspNotesRow');
+            if (details.notes) { notesEl.textContent = sanitizeHTML(details.notes); if (notesRow) notesRow.style.display = 'flex'; } 
+            else if (notesRow) notesRow.style.display = 'none';
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('loginModal').style.display = 'none';
+            document.querySelector('.dashboard-content').style.display = 'none';
+        }
+
+        function hideSuspendedOverlay() { const overlay = document.getElementById('suspendedOverlay'); if (overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; } }
+        function handleSuspendedLogout() { localStorage.removeItem('currentUser'); localStorage.removeItem('farmConnectSavedCredentials'); localStorage.setItem('rememberMeStatus', 'false'); currentSessionRemembered = false; hideSuspendedOverlay(); document.getElementById('loginModal').style.display = 'flex'; document.querySelector('.dashboard-content').style.display = 'none'; document.getElementById('loginForm').reset(); prefillLoginForm(); }
+        function isUserSuspended(user) { return user && user.status === 'suspended'; }
+
+        // ============================================================
+        // AUTO LOGIN FUNCTIONS - SIMPLIFIED
+        // ============================================================
+        function checkUserLoggedIn() {
+            // First check if we have a currentUser
+            let currentUser = localStorage.getItem('currentUser');
+            let rememberMe = localStorage.getItem('rememberMeStatus');
+            
+            // If we have a current user with remember me
+            if (currentUser && rememberMe === 'true') {
+                try {
+                    const user = JSON.parse(currentUser);
+                    if (user.role === 'buyer' && user.status !== 'suspended') {
+                        return user;
+                    }
+                } catch(e) {}
+            }
+            
+            // Check for saved credentials
+            const savedCreds = localStorage.getItem('farmConnectSavedCredentials');
+            if (savedCreds && rememberMe === 'true') {
+                try {
+                    const creds = JSON.parse(savedCreds);
+                    const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+                    const user = users.find(u => u.email === creds.email && u.role === 'buyer');
+                    if (user && user.status !== 'suspended') {
+                        // Save to currentUser
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        return user;
+                    }
+                } catch(e) {}
+            }
+            
+            return null;
+        }
+
+        function saveCredentials(email, password, rememberMe) {
+            if (rememberMe) { 
+                localStorage.setItem('farmConnectSavedCredentials', JSON.stringify({ email, password, timestamp: new Date().getTime() })); 
+                localStorage.setItem('rememberMeStatus', 'true'); 
+                currentSessionRemembered = true; 
+            } else { 
+                localStorage.removeItem('farmConnectSavedCredentials'); 
+                localStorage.setItem('rememberMeStatus', 'false'); 
+                currentSessionRemembered = false; 
+            }
+        }
+
+        function prefillLoginForm() {
+            const savedCredentials = localStorage.getItem('farmConnectSavedCredentials');
+            const rememberMeStatus = localStorage.getItem('rememberMeStatus');
+            if (savedCredentials && rememberMeStatus === 'true') {
+                try {
+                    const credentials = JSON.parse(savedCredentials);
+                    document.getElementById('login-email').value = credentials.email;
+                    document.getElementById('rememberMe').checked = true;
+                } catch (error) { localStorage.removeItem('farmConnectSavedCredentials'); localStorage.removeItem('rememberMeStatus'); }
+            }
+        }
+
+        // ============================================================
+        // DOM Elements
+        // ============================================================
+        const loginModal = document.getElementById('loginModal');
+        const dashboardContent = document.querySelector('.dashboard-content');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const productModal = document.getElementById('productModal');
+        const productModalClose = document.getElementById('productModalClose');
+        const productModalBody = document.getElementById('productModalBody');
+        const cartCount = document.getElementById('cartCount');
+        const cartCountMobile = document.getElementById('cartCountMobile');
+        const loginSection = document.getElementById('login-section');
+        const registerSection = document.getElementById('register-section');
+        const userAvatar = document.getElementById('userAvatar');
+        const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+        const termsModal = document.getElementById('termsModal');
+        const showTerms = document.getElementById('showTerms');
+        const termsModalClose = document.getElementById('termsModalClose');
+        const termsAccept = document.getElementById('termsAccept');
+        const termsClose = document.getElementById('termsClose');
+        const termsAgreement = document.getElementById('terms-agreement');
+        const fullscreenImageModal = document.getElementById('fullscreenImageModal');
+        const fullscreenImage = document.getElementById('fullscreenImage');
+        const fullscreenClose = document.getElementById('fullscreenClose');
+        const fullscreenPrev = document.getElementById('fullscreenPrev');
+        const fullscreenNext = document.getElementById('fullscreenNext');
+        const fullscreenCounter = document.getElementById('fullscreenCounter');
+        const fullscreenZoom = document.getElementById('fullscreenZoom');
+
+        // ============================================================
+        // GET SELLER AVATAR
+        // ============================================================
+        function getSellerAvatar(sellerEmail) {
+            if (!sellerEmail) return null;
+            const savedAvatar = localStorage.getItem(`sellerAvatar_${sellerEmail}`);
+            if (savedAvatar && (savedAvatar.startsWith('http') || savedAvatar.startsWith('data:'))) return savedAvatar;
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const seller = users.find(u => u.email === sellerEmail && u.role === 'seller');
+            if (seller) {
+                if (seller.profilePicture && (seller.profilePicture.startsWith('http') || seller.profilePicture.startsWith('data:'))) return seller.profilePicture;
+                if (seller.farmImage && (seller.farmImage.startsWith('http') || seller.farmImage.startsWith('data:'))) return seller.farmImage;
+            }
+            const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            const sellerProduct = products.find(p => p.sellerEmail === sellerEmail);
+            if (sellerProduct && sellerProduct.sellerProfilePicture) return sellerProduct.sellerProfilePicture;
+            return null;
+        }
+
+        // ============================================================
+        // SHOW DASHBOARD
+        // ============================================================
+        function showDashboard(userName) {
+            loginModal.style.display = 'none';
+            dashboardContent.style.display = 'block';
+            hideSuspendedOverlay();
+            welcomeMessage.textContent = `Welcome, ${sanitizeHTML(userName)}!`;
+            updateUserAvatar();
+            loadAdminCustomizations();
+            loadProducts();
+            updateCartCount();
+            updateMobileNavActiveState();
+            const savedDiscount = sessionStorage.getItem('appliedDiscount');
+            if (savedDiscount) {
+                try {
+                    appliedDiscount = JSON.parse(savedDiscount);
+                    const badge = document.getElementById('appliedDiscountBadge');
+                    const badgeText = document.getElementById('appliedDiscountText');
+                    const discountText = appliedDiscount.type === 'percentage' ? `${appliedDiscount.value}% OFF` : `₱${appliedDiscount.value} OFF`;
+                    badgeText.textContent = sanitizeHTML(discountText);
+                    badge.classList.add('show');
+                } catch (e) { sessionStorage.removeItem('appliedDiscount'); }
+            }
+            const hero = document.getElementById('adminHero');
+            if (hero) {
+                if (window.heroTimeout) clearTimeout(window.heroTimeout);
+                hero.classList.remove('hidden');
+                window.heroTimeout = setTimeout(() => { hero.classList.add('hidden'); window.dispatchEvent(new CustomEvent('heroHidden')); }, 5000);
+            }
+        }
+
+        function updateUserAvatar() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${currentUser.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${sanitizeURL(buyerAvatar)}" alt="${sanitizeHTML(currentUser.name)}">`;
+                } else if (currentUser.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${sanitizeURL(currentUser.profilePicture)}" alt="${sanitizeHTML(currentUser.name)}">`;
+                } else {
+                    userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                }
+            }
+        }
+
+        function showToast(message, type) {
+            let toast = document.getElementById('toast');
+            if (!toast) { toast = document.createElement('div'); toast.id = 'toast'; toast.className = 'toast'; toast.innerHTML = '<span></span>'; document.body.appendChild(toast); }
+            const toastText = toast.querySelector('span:last-child');
+            toastText.textContent = sanitizeHTML(message);
+            toast.className = 'toast';
+            if (type === 'error') toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // STORAGE SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                switch (e.key) {
+                    case 'farmConnectCartItems': updateCartCount(); break;
+                    case 'farmConnectProducts': loadProducts(); break;
+                    case 'farmConnectBuyerCustomizations': loadAdminCustomizations(); loadEmailCampaigns(); break;
+                    case 'currentUser': 
+                        // Re-check login status when currentUser changes
+                        const user = checkUserLoggedIn();
+                        if (user) {
+                            showDashboard(user.name);
+                        } else {
+                            document.getElementById('loginModal').style.display = 'flex';
+                            dashboardContent.style.display = 'none';
+                        }
+                        break;
+                    case `buyerAvatar_${getCurrentUser()?.email}`: updateUserAvatar(); break;
+                    case 'farmConnectUsers': const user2 = getCurrentUser(); if (user2 && isUserSuspended(user2)) showSuspendedOverlay(user2); break;
+                    case 'farmConnectAdminSettings': loadEmailCampaigns(); break;
+                }
+            });
+            window.addEventListener('adminCustomizationsUpdated', function() { loadAdminCustomizations(); loadEmailCampaigns(); });
+            const originalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, value) { const event = new Event('localStorageChanged'); event.key = key; event.value = value; window.dispatchEvent(event); originalSetItem.apply(this, arguments); };
+        }
+
+        // ============================================================
+        // INITIALIZATION - SIMPLIFIED
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStorage();
+            initializeEventListeners();
+            initOTPEventListeners();
+            loadAdminCustomizations();
+            
+            // Check if user is already logged in (using the pre-check or checking again)
+            let user = window._userLoggedIn ? window._userData : null;
+            
+            // If not found from pre-check, check again
+            if (!user) {
+                user = checkUserLoggedIn();
+            }
+            
+            if (user) {
+                // User is logged in - show dashboard immediately
+                showDashboard(user.name);
+                loginModal.style.display = 'none';
+                dashboardContent.style.display = 'block';
+            } else {
+                // No user logged in - show login modal
+                loginModal.style.display = 'flex';
+                dashboardContent.style.display = 'none';
+                prefillLoginForm();
+            }
+            
+            updateCartCount();
+            updateMobileNavActiveState();
+            setupRealTimeSync();
+            initializeFullscreenViewer();
+            
+            document.getElementById('applyDiscountBtn').addEventListener('click', applyDiscountCode);
+            document.getElementById('discountCodeInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyDiscountCode();
+            });
+            document.getElementById('removeDiscountBtn').addEventListener('click', removeDiscount);
+            document.getElementById('subscribeBtn').addEventListener('click', subscribeToNewsletter);
+            document.getElementById('newsletterEmail').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') subscribeToNewsletter();
+            });
+        });
+
+        function initializeFullscreenViewer() {
+            fullscreenClose.addEventListener('click', closeFullscreenViewer);
+            fullscreenPrev.addEventListener('click', showPreviousImage);
+            fullscreenNext.addEventListener('click', showNextImage);
+            fullscreenZoom.addEventListener('click', toggleZoom);
+            fullscreenImageModal.addEventListener('click', function(e) { if (e.target === fullscreenImageModal) closeFullscreenViewer(); });
+            document.addEventListener('keydown', handleFullscreenKeyboard);
+        }
+
+        function openFullscreenViewer(product, imageIndex) {
+            currentProductImages = getProductImages(product);
+            currentImageIndex = imageIndex || 0;
+            if (currentProductImages.length === 0) return;
+            fullscreenImageModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+            updateFullscreenImage();
+        }
+
+        function getProductImages(product) {
+            const images = [];
+            if (product.imageUrl) images.push(product.imageUrl);
+            if (product.additionalImages && Array.isArray(product.additionalImages)) images.push(...product.additionalImages);
+            return images;
+        }
+
+        function updateFullscreenImage() {
+            if (currentProductImages.length === 0) return;
+            fullscreenImage.src = sanitizeURL(currentProductImages[currentImageIndex]);
+            fullscreenImage.alt = 'Product image ' + (currentImageIndex + 1);
+            fullscreenCounter.textContent = `${currentImageIndex + 1} / ${currentProductImages.length}`;
+            fullscreenPrev.style.display = currentProductImages.length > 1 ? 'flex' : 'none';
+            fullscreenNext.style.display = currentProductImages.length > 1 ? 'flex' : 'none';
+            fullscreenCounter.style.display = currentProductImages.length > 1 ? 'block' : 'none';
+            isZoomed = false;
+            fullscreenImage.style.transform = 'scale(1)';
+            fullscreenImage.style.cursor = 'default';
+            fullscreenZoom.innerHTML = '<i class="fas fa-search-plus"></i>';
+        }
+
+        function showPreviousImage() { if (currentProductImages.length <= 1) return; currentImageIndex = (currentImageIndex - 1 + currentProductImages.length) % currentProductImages.length; updateFullscreenImage(); }
+        function showNextImage() { if (currentProductImages.length <= 1) return; currentImageIndex = (currentImageIndex + 1) % currentProductImages.length; updateFullscreenImage(); }
+        function toggleZoom() { isZoomed = !isZoomed; if (isZoomed) { fullscreenImage.style.transform = 'scale(1.5)'; fullscreenImage.style.cursor = 'zoom-out'; fullscreenZoom.innerHTML = '<i class="fas fa-search-minus"></i>'; } else { fullscreenImage.style.transform = 'scale(1)'; fullscreenImage.style.cursor = 'default'; fullscreenZoom.innerHTML = '<i class="fas fa-search-plus"></i>'; } }
+        function closeFullscreenViewer() { fullscreenImageModal.style.display = 'none'; document.body.classList.remove('modal-open'); currentProductImages = []; currentImageIndex = 0; }
+        function handleFullscreenKeyboard(e) { if (fullscreenImageModal.style.display !== 'flex') return; switch (e.key) { case 'Escape': closeFullscreenViewer(); break; case 'ArrowLeft': showPreviousImage(); break; case 'ArrowRight': showNextImage(); break; case ' ': case 'Enter': toggleZoom(); break; } }
+
+        function getCurrentUser() { const user = localStorage.getItem('currentUser'); return user ? JSON.parse(user) : null; }
+
+        function initializeStorage() {
+            if (!localStorage.getItem('farmConnectProducts')) {
+                const sampleProducts = [
+                    { id: 1, name: "Organic Tomatoes", category: "Vegetables", price: 120, quantity: 50, description: "Fresh organic tomatoes from our farm. Perfect for salads and cooking.", sellerEmail: "greenvalley@example.com", sellerName: "Green Valley Farms", imageUrl: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() },
+                    { id: 2, name: "Sweet Mangoes", category: "Fruits", price: 85, quantity: 30, description: "Sweet and juicy mangoes harvested at peak ripeness.", sellerEmail: "sunshine@example.com", sellerName: "Sunshine Orchards", imageUrl: "https://images.unsplash.com/photo-1553279768-865429fa0078?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() },
+                    { id: 3, name: "Fresh Carrots", category: "Vegetables", price: 65, quantity: 100, description: "Crunchy and sweet carrots grown in nutrient-rich soil.", sellerEmail: "greenvalley@example.com", sellerName: "Green Valley Farms", imageUrl: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() },
+                    { id: 4, name: "Organic Rice", category: "Grains", price: 95, quantity: 200, description: "Premium organic rice grown using sustainable farming methods.", sellerEmail: "greenvalley@example.com", sellerName: "Green Valley Farms", imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e31c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() },
+                    { id: 5, name: "Fresh Eggs", category: "Livestock", price: 150, quantity: 60, description: "Free-range organic eggs from happy chickens.", sellerEmail: "sunshine@example.com", sellerName: "Sunshine Orchards", imageUrl: "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() },
+                    { id: 6, name: "Organic Bananas", category: "Fruits", price: 75, quantity: 40, description: "Sweet organic bananas perfect for snacking and smoothies.", sellerEmail: "sunshine@example.com", sellerName: "Sunshine Orchards", imageUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", status: "available", createdAt: new Date().toISOString() }
+                ];
+                localStorage.setItem('farmConnectProducts', JSON.stringify(sampleProducts));
+            }
+            if (!localStorage.getItem('farmConnectOrders')) localStorage.setItem('farmConnectOrders', JSON.stringify([]));
+            if (!localStorage.getItem('farmConnectUsers')) {
+                const sampleUsers = [
+                    { id: 1, name: "Green Valley Farms", email: "greenvalley@example.com", password: "password123", role: "seller", status: "active", farmName: "Green Valley Organic Farms", farmType: "Vegetable Farm", phone: "+1-555-0123", address: "123 Farm Road, Countryside", farmDescription: "Family-owned organic farm specializing in fresh vegetables and herbs.", profilePicture: "https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", certifications: ["organic", "sustainable"], registrationDate: new Date().toISOString() },
+                    { id: 2, name: "Sunshine Orchards", email: "sunshine@example.com", password: "password123", role: "seller", status: "active", farmName: "Sunshine Fruit Orchards", farmType: "Fruit Orchard", phone: "+1-555-0124", address: "456 Orchard Lane, Sunnyvale", farmDescription: "Premium fruit orchard with the sweetest seasonal fruits.", profilePicture: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60", certifications: ["organic"], registrationDate: new Date().toISOString() },
+                    { id: 3, name: "John Buyer", email: "buyer@example.com", password: "password123", role: "buyer", status: "active", address: "123 Buyer Street, City", registrationDate: new Date().toISOString() }
+                ];
+                localStorage.setItem('farmConnectUsers', JSON.stringify(sampleUsers));
+            }
+            if (!localStorage.getItem('farmConnectProductReviews')) localStorage.setItem('farmConnectProductReviews', JSON.stringify([]));
+            if (!localStorage.getItem('farmConnectFeedback')) localStorage.setItem('farmConnectFeedback', JSON.stringify([]));
+            if (!localStorage.getItem('farmConnectCartItems')) localStorage.setItem('farmConnectCartItems', JSON.stringify([]));
+            if (!localStorage.getItem('farmConnectMessages')) localStorage.setItem('farmConnectMessages', JSON.stringify([]));
+            if (!localStorage.getItem('rememberMeStatus')) localStorage.setItem('rememberMeStatus', 'false');
+            if (!localStorage.getItem('farmConnectAdminSettings')) localStorage.setItem('farmConnectAdminSettings', JSON.stringify({ marketing: { campaigns: [], discountCodes: [], newsletter: [] } }));
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            users.forEach(user => { if (user.role === 'seller' && user.profilePicture) localStorage.setItem(`sellerAvatar_${user.email}`, user.profilePicture); });
+        }
+
+        function initializeEventListeners() {
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
+            showRegister.addEventListener('click', showRegisterModal);
+            showLogin.addEventListener('click', showLoginModal);
+            showTerms.addEventListener('click', showTermsModal);
+            termsModalClose.addEventListener('click', closeTermsModal);
+            termsAccept.addEventListener('click', acceptTerms);
+            termsClose.addEventListener('click', closeTermsModal);
+            termsModal.addEventListener('click', function(e) { if (e.target === termsModal) closeTermsModal(); });
+            searchButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keyup', handleAutoSearch);
+            searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') handleSearch(); });
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    const category = this.getAttribute('data-category');
+                    filterProductsByCategory(category);
+                });
+            });
+            
+            productModalClose.addEventListener('click', closeProductModal);
+            productModal.addEventListener('click', function(e) { if (e.target === productModal) closeProductModal(); });
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (!this.href || this.getAttribute('href') === '#') e.preventDefault();
+                    mobileNavItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        function updateMobileNavActiveState() {
+            const currentPath = window.location.pathname;
+            mobileNavItems.forEach(item => {
+                const href = item.getAttribute('href');
+                if (currentPath.includes(href) || (currentPath.endsWith('Register as Buyer.html') && href.includes('Register as Buyer.html')) || (currentPath.endsWith('Buyer Profile.html') && href.includes('Buyer Profile.html')) || (currentPath.endsWith('Shopping Cart.html') && href.includes('Shopping Cart.html')) || (currentPath.endsWith('Nearby Farms.html') && href.includes('Nearby Farms.html')) || (currentPath.endsWith('Seller Directory.html') && href.includes('Seller Directory.html')) || (currentPath.endsWith('Product Categories.html') && href.includes('Product Categories.html')) || (currentPath.endsWith('Saved Sellers.html') && href.includes('Saved Sellers.html'))) item.classList.add('active');
+                else item.classList.remove('active');
+            });
+        }
+
+        function showRegisterModal(e) { e.preventDefault(); loginSection.classList.remove('active'); registerSection.classList.add('active'); registerForm.reset(); termsAgreement.checked = false; }
+        function showLoginModal(e) { e.preventDefault(); registerSection.classList.remove('active'); loginSection.classList.add('active'); loginForm.reset(); prefillLoginForm(); }
+        function showTermsModal(e) { e.preventDefault(); termsModal.style.display = 'flex'; }
+        function closeTermsModal() { termsModal.style.display = 'none'; }
+        function acceptTerms() { termsAgreement.checked = true; closeTermsModal(); }
+
+        // ============================================================
+        // PRODUCT FUNCTIONS
+        // ============================================================
+        function getAllProducts() { const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]'); return products.filter(product => product.quantity > 0 && product.status !== 'sold out'); }
+        function loadProducts() { displayProducts(getAllProducts()); }
+        function getProductReviews(productId) { const reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]'); return reviews.filter(review => review.productId === productId); }
+        function getProductAverageRating(productId) { const reviews = getProductReviews(productId); if (reviews.length === 0) return 0; const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0); return (totalRating / reviews.length).toFixed(1); }
+
+        function updateCartCount() {
+            const cartItems = JSON.parse(localStorage.getItem('farmConnectCartItems') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                const userCartItems = cartItems.filter(item => item.buyerEmail === currentUser.email);
+                cartCount.textContent = userCartItems.length;
+                cartCountMobile.textContent = userCartItems.length;
+                cartCount.style.display = userCartItems.length > 0 ? 'flex' : 'none';
+                cartCountMobile.style.display = userCartItems.length > 0 ? 'flex' : 'none';
+            } else { cartCount.style.display = 'none'; cartCountMobile.style.display = 'none'; }
+        }
+
+        // ============================================================
+        // DISPLAY PRODUCTS
+        // ============================================================
+        function displayProducts(productsToDisplay) {
+            const productsGrid = document.querySelector('.products-grid');
+            productsGrid.innerHTML = '';
+            if (productsToDisplay.length === 0) {
+                productsGrid.innerHTML = `<div class="no-products"><i class="fas fa-box-open" style="font-size:48px; color:#bdc3c7;"></i><p>No products available. Check back later or sellers haven't added any products yet.</p></div>`;
+                return;
+            }
+            productsToDisplay.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                const productReviews = getProductReviews(product.id);
+                const avgRating = getProductAverageRating(product.id);
+                const reviewCount = productReviews.length;
+                const sellerAvatarUrl = getSellerAvatar(product.sellerEmail);
+                const safeProductName = sanitizeHTML(product.name);
+                const safeDescription = sanitizeHTML(product.description);
+                const safeSellerName = sanitizeHTML(product.sellerName || 'Local Farmer');
+                const safeSellerEmail = sanitizeHTML(product.sellerEmail);
+                let imageContent = '';
+                if (product.imageUrl) { imageContent = `<img src="${sanitizeURL(product.imageUrl)}" alt="${safeProductName}" class="product-image" data-product-id="${product.id}">`; } 
+                else { imageContent = '<span><i class="fas fa-image" style="font-size:32px;"></i><br>Product Image</span>'; }
+                let starsHtml = '';
+                if (reviewCount > 0) {
+                    const fullStars = Math.floor(avgRating);
+                    const hasHalfStar = avgRating % 1 >= 0.5;
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= fullStars) starsHtml += '<i class="fas fa-star"></i>';
+                        else if (i === fullStars + 1 && hasHalfStar) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                        else starsHtml += '<i class="far fa-star"></i>';
+                    }
+                } else starsHtml = 'No ratings yet';
+                let displayPrice = product.price;
+                let discountBadge = '';
+                if (appliedDiscount) {
+                    let applies = false;
+                    if (appliedDiscount.target === 'all') applies = true;
+                    else if (appliedDiscount.target === product.category) applies = true;
+                    if (applies) {
+                        const originalPrice = product.price;
+                        if (appliedDiscount.type === 'percentage') displayPrice = originalPrice * (1 - appliedDiscount.value / 100);
+                        else displayPrice = Math.max(0, originalPrice - appliedDiscount.value);
+                        displayPrice = Math.round(displayPrice * 100) / 100;
+                        const discountText = appliedDiscount.type === 'percentage' ? `${appliedDiscount.value}% OFF` : '₱' + appliedDiscount.value + ' OFF';
+                        discountBadge = `<span style="display:inline-block; background:#dc2626; color:white; padding:2px 10px; border-radius:12px; font-size:11px; margin-left:8px;">${sanitizeHTML(discountText)}</span>`;
+                    }
+                }
+                let avatarHtml = '';
+                if (sellerAvatarUrl) avatarHtml = `<img src="${sanitizeURL(sellerAvatarUrl)}" alt="${safeSellerName}">`;
+                else avatarHtml = (product.sellerName || 'S').charAt(0).toUpperCase();
+                productCard.innerHTML = `
+                    <div class="product-image">${imageContent}</div>
+                    <div class="product-details">
+                        <h3 class="product-title"><i class="fas fa-tag"></i> ${safeProductName}</h3>
+                        <div class="farmer-info">
+                            <div class="farmer-avatar" data-seller-email="${safeSellerEmail}" aria-label="View ${safeSellerName}'s profile" title="View ${safeSellerName}'s profile">${avatarHtml}</div>
+                            <span class="farmer-name">${safeSellerName}</span>
+                        </div>
+                        <p class="product-description">${safeDescription}</p>
+                        <div class="product-review-summary">
+                            <div class="product-rating"><div class="product-stars">${starsHtml}</div><span>${avgRating > 0 ? avgRating : ''}</span></div>
+                            <div class="product-review-count">${reviewCount > 0 ? `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})` : ''}</div>
+                        </div>
+                        <div class="product-price"><i class="fas fa- peso-sign"></i> <span style="${displayPrice !== product.price ? 'color:#dc2626;' : ''}">₱${typeof displayPrice === 'number' ? displayPrice.toFixed(2) : displayPrice}</span>${displayPrice !== product.price ? `<span style="text-decoration:line-through; color:#94a3b8; font-size:16px; margin-left:8px;">₱${product.price.toFixed(2)}</span>` : ''}${discountBadge}</div>
+                        <div class="product-quantity"><i class="fas fa-boxes"></i> Available: ${product.quantity}</div>
+                        <div class="product-actions">
+                            <button class="buy-btn" data-id="${product.id}" ${product.quantity === 0 ? 'disabled' : ''}><i class="fas fa-shopping-bag"></i> Buy Now</button>
+                            <button class="details-btn" data-id="${product.id}"><i class="fas fa-info-circle"></i> View Details</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+
+            document.querySelectorAll('.product-image img').forEach(img => {
+                img.addEventListener('click', function(e) { e.stopPropagation(); const productId = parseInt(this.getAttribute('data-product-id')); const product = getAllProducts().find(p => p.id === productId); if (product) openFullscreenViewer(product); });
+            });
+            document.querySelectorAll('.buy-btn').forEach(button => {
+                button.addEventListener('click', function(e) { e.stopPropagation(); const productId = parseInt(this.getAttribute('data-id')); const product = getAllProducts().find(p => p.id === productId); if (product) buyNow(product); });
+            });
+            document.querySelectorAll('.details-btn').forEach(button => {
+                button.addEventListener('click', function(e) { e.stopPropagation(); const productId = parseInt(this.getAttribute('data-id')); const product = getAllProducts().find(p => p.id === productId); if (product) showProductDetails(product); });
+            });
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', function() { const productId = parseInt(this.querySelector('.details-btn').getAttribute('data-id')); const product = getAllProducts().find(p => p.id === productId); if (product) showProductDetails(product); });
+            });
+            document.querySelectorAll('.farmer-avatar').forEach(avatar => {
+                avatar.addEventListener('click', function(e) { e.stopPropagation(); const sellerEmail = this.getAttribute('data-seller-email'); if (sellerEmail) viewSellerProfile(sellerEmail); });
+            });
+        }
+
+        // ============================================================
+        // PRODUCT DETAILS MODAL
+        // ============================================================
+        function showProductDetails(product) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const productReviews = getProductReviews(product.id);
+            const avgRating = getProductAverageRating(product.id);
+            const sellerAvatarUrl = getSellerAvatar(product.sellerEmail);
+            const safeProductName = sanitizeHTML(product.name);
+            const safeDescription = sanitizeHTML(product.description);
+            const safeSellerName = sanitizeHTML(product.sellerName || 'Local Farmer');
+            const safeSellerEmail = sanitizeHTML(product.sellerEmail);
+            let imageContent = '';
+            if (product.imageUrl) imageContent = `<img src="${sanitizeURL(product.imageUrl)}" alt="${safeProductName}" data-product-id="${product.id}">`;
+            else imageContent = '<span><i class="fas fa-image" style="font-size:48px;"></i><br>No Image Available</span>';
+            const isInStock = product.quantity > 0;
+            const maxQty = product.quantity || 0;
+            let displayPrice = product.price;
+            let discountText = '';
+            if (appliedDiscount) {
+                let applies = false;
+                if (appliedDiscount.target === 'all') applies = true;
+                else if (appliedDiscount.target === product.category) applies = true;
+                if (applies) {
+                    if (appliedDiscount.type === 'percentage') { displayPrice = product.price * (1 - appliedDiscount.value / 100); discountText = `${appliedDiscount.value}% OFF`; } 
+                    else { displayPrice = Math.max(0, product.price - appliedDiscount.value); discountText = `₱${appliedDiscount.value} OFF`; }
+                    displayPrice = Math.round(displayPrice * 100) / 100;
+                }
+            }
+            let sellerAvatarHtml = '';
+            if (sellerAvatarUrl) sellerAvatarHtml = `<img src="${sanitizeURL(sellerAvatarUrl)}" alt="${safeSellerName}">`;
+            else sellerAvatarHtml = (product.sellerName || 'S').charAt(0).toUpperCase();
+            let reviewsHtml = '';
+            if (productReviews.length > 0) {
+                reviewsHtml = productReviews.map(review => `<div class="review-item"><div class="review-header"><span class="reviewer-name"><i class="fas fa-user"></i> ${sanitizeHTML(review.buyerName)}</span><span class="review-date"><i class="far fa-calendar-alt"></i> ${new Date(review.date).toLocaleDateString()}</span></div><div class="review-rating">${'<i class="fas fa-star"></i>'.repeat(review.rating)}${'<i class="far fa-star"></i>'.repeat(5 - review.rating)}</div><p class="review-text">${sanitizeHTML(review.comment)}</p></div>`).join('');
+            } else reviewsHtml = '<p><i class="fas fa-info-circle"></i> No reviews yet. Be the first to review this product!</p>';
+            const modalQtyId = `modal_qty_${product.id}`;
+            productModalBody.innerHTML = `
+                <div class="product-modal-header">
+                    <div class="product-modal-image">${imageContent}</div>
+                    <div class="product-modal-info">
+                        <h2><i class="fas fa-tag"></i> ${safeProductName}</h2>
+                        <div class="product-modal-price"><i class="fas fa- peso-sign"></i> <span style="${displayPrice !== product.price ? 'color:#dc2626;' : ''}">₱${typeof displayPrice === 'number' ? displayPrice.toFixed(2) : displayPrice}</span>${displayPrice !== product.price ? `<span style="text-decoration:line-through; color:#94a3b8; font-size:20px; margin-left:10px;">₱${product.price.toFixed(2)}</span>` : ''}${displayPrice !== product.price ? `<span style="display:inline-block; background:#dc2626; color:white; padding:2px 12px; border-radius:12px; font-size:12px; margin-left:10px;">${sanitizeHTML(discountText)}</span>` : ''}</div>
+                        <div class="product-modal-seller"><div class="seller-avatar" data-seller-email="${safeSellerEmail}">${sellerAvatarHtml}</div><div class="seller-info"><h4>${safeSellerName}</h4><p><i class="fas fa-store"></i> Seller</p></div></div>
+                        <div class="product-modal-description"><p>${safeDescription}</p></div>
+                        <div class="product-modal-stats"><div class="stat-item"><div class="stat-value">${product.quantity}</div><div class="stat-label"><i class="fas fa-boxes"></i> Available</div></div><div class="stat-item"><div class="stat-value">${productReviews.length}</div><div class="stat-label"><i class="fas fa-star"></i> Reviews</div></div><div class="stat-item"><div class="stat-value">${avgRating > 0 ? avgRating : 'N/A'}</div><div class="stat-label"><i class="fas fa-chart-bar"></i> Avg Rating</div></div></div>
+                        <div class="modal-quantity-selector">
+                            <label for="${modalQtyId}">Qty:</label>
+                            <button class="qty-btn" data-id="${product.id}" data-dir="-1" ${!isInStock ? 'disabled' : ''}>−</button>
+                            <input type="number" id="${modalQtyId}" value="1" min="1" max="${maxQty}" step="1" ${!isInStock ? 'disabled' : ''}>
+                            <button class="qty-btn" data-id="${product.id}" data-dir="1" ${!isInStock ? 'disabled' : ''}>+</button>
+                        </div>
+                        <div class="purchase-buttons">
+                            <button class="buy-now-btn" ${!isInStock ? 'disabled' : ''}><i class="fas fa-bolt"></i> ${isInStock ? 'Buy Now' : 'Out of Stock'}</button>
+                        </div>
+                        ${!isInStock ? '<div style="color: #ef4444; text-align: center; margin-top: 10px; font-weight: 600;"><i class="fas fa-exclamation-circle"></i> This product is currently out of stock.</div>' : ''}
+                    </div>
+                </div>
+                <div class="product-modal-tabs">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="reviews"><i class="fas fa-star"></i> Reviews & Ratings</button>
+                        <button class="tab-btn" data-tab="messages"><i class="fas fa-envelope"></i> Message Seller</button>
+                        <button class="tab-btn" data-tab="feedback"><i class="fas fa-comment"></i> Send Feedback</button>
+                    </div>
+                    <div class="tab-content active" id="reviews-tab">
+                        <div class="rating-section">
+                            <h3><i class="fas fa-star"></i> Rate this Product</h3>
+                            <div class="rating-stars" id="ratingStars">
+                                <button class="star" data-rating="1"><i class="far fa-star"></i></button>
+                                <button class="star" data-rating="2"><i class="far fa-star"></i></button>
+                                <button class="star" data-rating="3"><i class="far fa-star"></i></button>
+                                <button class="star" data-rating="4"><i class="far fa-star"></i></button>
+                                <button class="star" data-rating="5"><i class="far fa-star"></i></button>
+                            </div>
+                            <form class="rating-form" id="ratingForm">
+                                <textarea placeholder="Write your review..." required></textarea>
+                                <button type="submit" class="submit-rating"><i class="fas fa-paper-plane"></i> Submit Review</button>
+                            </form>
+                        </div>
+                        <div class="reviews-list"><h3><i class="fas fa-comments"></i> Customer Reviews (${productReviews.length})</h3>${reviewsHtml}</div>
+                    </div>
+                    <div class="tab-content" id="messages-tab">
+                        <div class="message-section"><h3><i class="fas fa-envelope"></i> Message ${safeSellerName}</h3><form class="message-form" id="messageForm"><textarea placeholder="Type your message to the seller..." required></textarea><button type="submit" class="send-message"><i class="fas fa-paper-plane"></i> Send Message</button></form></div>
+                    </div>
+                    <div class="tab-content" id="feedback-tab">
+                        <div class="feedback-section"><h3><i class="fas fa-comment"></i> Send Feedback</h3><form class="feedback-form" id="feedbackForm"><div class="feedback-type"><select required><option value="">Select Feedback Type</option><option value="suggestion"><i class="fas fa-lightbulb"></i> Suggestion</option><option value="issue"><i class="fas fa-exclamation-triangle"></i> Report Issue</option><option value="compliment"><i class="fas fa-heart"></i> Compliment</option><option value="other"><i class="fas fa-comment"></i> Other</option></select></div><textarea placeholder="Describe your feedback..." required></textarea><button type="submit" class="submit-feedback"><i class="fas fa-paper-plane"></i> Submit Feedback</button></form></div>
+                    </div>
+                </div>
+            `;
+
+            // Quantity selector logic
+            const modalQtyInput = document.getElementById(modalQtyId);
+            const modalMinusBtn = productModalBody.querySelector(`.qty-btn[data-id="${product.id}"][data-dir="-1"]`);
+            const modalPlusBtn = productModalBody.querySelector(`.qty-btn[data-id="${product.id}"][data-dir="1"]`);
+            function updateModalQty(delta) { if (!modalQtyInput) return; let val = parseInt(modalQtyInput.value) || 1; val = Math.min(Math.max(val + delta, 1), maxQty); modalQtyInput.value = val; if (modalMinusBtn) modalMinusBtn.disabled = (val <= 1); if (modalPlusBtn) modalPlusBtn.disabled = (val >= maxQty); }
+            if (modalQtyInput) {
+                modalQtyInput.addEventListener('change', function() { let val = parseInt(this.value) || 1; val = Math.min(Math.max(val, 1), maxQty); this.value = val; if (modalMinusBtn) modalMinusBtn.disabled = (val <= 1); if (modalPlusBtn) modalPlusBtn.disabled = (val >= maxQty); });
+                modalQtyInput.addEventListener('input', function() { let val = parseInt(this.value) || 1; if (val < 1) val = 1; if (val > maxQty) val = maxQty; if (modalMinusBtn) modalMinusBtn.disabled = (val <= 1); if (modalPlusBtn) modalPlusBtn.disabled = (val >= maxQty); });
+            }
+            if (modalMinusBtn) modalMinusBtn.addEventListener('click', function(e) { e.stopPropagation(); updateModalQty(-1); });
+            if (modalPlusBtn) modalPlusBtn.addEventListener('click', function(e) { e.stopPropagation(); updateModalQty(1); });
+            if (modalQtyInput && modalMinusBtn) modalMinusBtn.disabled = (parseInt(modalQtyInput.value) <= 1);
+            if (modalQtyInput && modalPlusBtn) modalPlusBtn.disabled = (parseInt(modalQtyInput.value) >= maxQty);
+
+            // Buy Now
+            const buyNowBtn = productModalBody.querySelector('.buy-now-btn');
+            if (isInStock) {
+                buyNowBtn.addEventListener('click', function() { let qty = 1; if (modalQtyInput) { qty = parseInt(modalQtyInput.value) || 1; if (qty < 1) qty = 1; if (qty > product.quantity) qty = product.quantity; } buyNowDirect(product, qty); });
+            }
+
+            // Image zoom
+            const productModalImage = productModalBody.querySelector('.product-modal-image img');
+            if (productModalImage) productModalImage.addEventListener('click', function() { openFullscreenViewer(product); });
+
+            // Seller avatar click
+            productModalBody.querySelector('.seller-avatar').addEventListener('click', function() { viewSellerProfile(product.sellerEmail); });
+
+            // Tabs
+            const tabBtns = productModalBody.querySelectorAll('.tab-btn');
+            const tabContents = productModalBody.querySelectorAll('.tab-content');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+
+            // Rating stars
+            const stars = productModalBody.querySelectorAll('.star');
+            let selectedRating = 0;
+            function updateStars(rating) { stars.forEach((star, index) => { const icon = star.querySelector('i'); if (index < rating) { icon.className = 'fas fa-star'; star.classList.add('active'); } else { icon.className = 'far fa-star'; star.classList.remove('active'); } }); }
+            stars.forEach(star => {
+                star.addEventListener('click', function() { selectedRating = parseInt(this.getAttribute('data-rating')); updateStars(selectedRating); });
+                star.addEventListener('mouseenter', function() { updateStars(parseInt(this.getAttribute('data-rating'))); });
+                star.addEventListener('mouseleave', function() { updateStars(selectedRating); });
+            });
+
+            // Rating form
+            const ratingForm = productModalBody.querySelector('#ratingForm');
+            ratingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) { alert('Please login to submit a review.'); return; }
+                if (selectedRating === 0) { alert('Please select a rating by clicking on the stars.'); return; }
+                const comment = this.querySelector('textarea').value.trim();
+                if (!comment) { alert('Please write a review comment.'); return; }
+                const review = { id: Date.now(), productId: product.id, productName: safeProductName, buyerEmail: sanitizeHTML(currentUser.email), buyerName: sanitizeHTML(currentUser.name), sellerEmail: safeSellerEmail, rating: selectedRating, comment: sanitizeHTML(comment), date: new Date().toISOString() };
+                const reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]');
+                reviews.push(review);
+                localStorage.setItem('farmConnectProductReviews', JSON.stringify(reviews));
+                alert('✅ Thank you for your review!');
+                showToast('✅ Review submitted successfully!', 'success');
+                this.querySelector('textarea').value = '';
+                selectedRating = 0;
+                updateStars(0);
+                showProductDetails(product);
+            });
+
+            // Message form
+            const messageForm = productModalBody.querySelector('#messageForm');
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) { alert('Please login to send a message.'); return; }
+                const messageText = this.querySelector('textarea').value.trim();
+                if (!messageText) { alert('Please enter a message.'); return; }
+                messageSeller(product, product.sellerEmail, messageText);
+                this.reset();
+            });
+
+            // Feedback form
+            const feedbackForm = productModalBody.querySelector('#feedbackForm');
+            feedbackForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!currentUser) { alert('Please login to submit feedback.'); return; }
+                const type = this.querySelector('select').value;
+                const feedback = this.querySelector('textarea').value.trim();
+                if (!type || !feedback) { alert('Please fill in all fields.'); return; }
+                const feedbackData = { id: Date.now(), productId: product.id, productName: safeProductName, buyerEmail: sanitizeHTML(currentUser.email), buyerName: sanitizeHTML(currentUser.name), type: sanitizeHTML(type), feedback: sanitizeHTML(feedback), date: new Date().toISOString() };
+                const feedbacks = JSON.parse(localStorage.getItem('farmConnectFeedback') || '[]');
+                feedbacks.push(feedbackData);
+                localStorage.setItem('farmConnectFeedback', JSON.stringify(feedbacks));
+                alert('Thank you for your feedback!');
+                this.reset();
+            });
+
+            productModal.style.display = 'flex';
+        }
+
+        function closeProductModal() { productModal.style.display = 'none'; }
+
+        // ============================================================
+        // BUY FUNCTIONS
+        // ============================================================
+        function buyNowDirect(product, qty) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) { alert('Please login to make a purchase.'); return; }
+            if (product.quantity <= 0) { alert('Sorry, this product is out of stock.'); return; }
+            if (qty < 1) qty = 1;
+            if (qty > product.quantity) qty = product.quantity;
+            let price = product.price;
+            if (appliedDiscount) {
+                let applies = false;
+                if (appliedDiscount.target === 'all') applies = true;
+                else if (appliedDiscount.target === product.category) applies = true;
+                if (applies) { if (appliedDiscount.type === 'percentage') price = price * (1 - appliedDiscount.value / 100); else price = Math.max(0, price - appliedDiscount.value); price = Math.round(price * 100) / 100; }
+            }
+            const singleItemCart = [{ id: Date.now(), productId: product.id, productName: sanitizeHTML(product.name), buyerEmail: sanitizeHTML(currentUser.email), buyerName: sanitizeHTML(currentUser.name), sellerEmail: sanitizeHTML(product.sellerEmail), sellerName: sanitizeHTML(product.sellerName), price: price, originalPrice: product.price, quantity: qty, discountApplied: appliedDiscount ? true : false, discountCode: appliedDiscount ? sanitizeHTML(appliedDiscount.code) : null, date: new Date().toISOString() }];
+            localStorage.setItem('farmConnectCartItems', JSON.stringify(singleItemCart));
+            closeProductModal();
+            window.location.href = 'Checkout.html';
+        }
+
+        function buyNow(product) { buyNowDirect(product, 1); }
+
+        // ============================================================
+        // VIEW SELLER FUNCTIONS
+        // ============================================================
+        function viewFeaturedFarm(sellerEmail) {
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const seller = users.find(user => user.email === sellerEmail && user.role === 'seller');
+            if (seller) { sessionStorage.setItem('viewedSeller', JSON.stringify(seller)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`; return; }
+            const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            const sellerProduct = products.find(product => product.sellerEmail === sellerEmail);
+            if (sellerProduct) {
+                const sellerFromProduct = { email: sellerEmail, name: sellerProduct.sellerName || 'Local Farmer', role: 'seller', farmName: sellerProduct.sellerName || 'Local Farm', farmDescription: sellerProduct.sellerDescription || 'Fresh farm products direct from the farm.', profilePicture: sellerProduct.sellerProfilePicture || '', phone: sellerProduct.sellerPhone || '', address: sellerProduct.sellerAddress || '' };
+                sessionStorage.setItem('viewedSeller', JSON.stringify(sellerFromProduct)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`;
+                return;
+            }
+            const basicSeller = { email: sellerEmail, name: 'Local Farmer', role: 'seller', farmName: 'Local Farm', farmDescription: 'Fresh farm products direct from the farm.', profilePicture: '', phone: '', address: '' };
+            sessionStorage.setItem('viewedSeller', JSON.stringify(basicSeller)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`;
+        }
+
+        function viewSellerProfile(sellerEmail) {
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const seller = users.find(user => user.email === sellerEmail && user.role === 'seller');
+            if (seller) { sessionStorage.setItem('viewedSeller', JSON.stringify(seller)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`; return; }
+            const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            const sellerProduct = products.find(product => product.sellerEmail === sellerEmail);
+            if (sellerProduct) {
+                const sellerFromProduct = { email: sellerEmail, name: sellerProduct.sellerName || 'Local Farmer', role: 'seller', farmName: sellerProduct.sellerName || 'Local Farm', farmDescription: sellerProduct.sellerDescription || 'Fresh farm products direct from the farm.', profilePicture: sellerProduct.sellerProfilePicture || '', phone: sellerProduct.sellerPhone || '', address: sellerProduct.sellerAddress || '' };
+                sessionStorage.setItem('viewedSeller', JSON.stringify(sellerFromProduct)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`;
+                return;
+            }
+            const basicSeller = { email: sellerEmail, name: 'Local Farmer', role: 'seller', farmName: 'Local Farm', farmDescription: 'Fresh farm products direct from the farm.', profilePicture: '', phone: '', address: '' };
+            sessionStorage.setItem('viewedSeller', JSON.stringify(basicSeller)); window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`;
+        }
+
+        function messageSeller(product, sellerEmail, messageText) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) { alert('Please login to message sellers.'); return; }
+            const safeMessage = sanitizeHTML(messageText);
+            const safeSellerEmail = sanitizeHTML(sellerEmail);
+            const safeProductName = sanitizeHTML(product.name);
+            const safeSellerName = sanitizeHTML(product.sellerName);
+            const safeBuyerName = sanitizeHTML(currentUser.name);
+            const safeBuyerEmail = sanitizeHTML(currentUser.email);
+            const chats = JSON.parse(localStorage.getItem('farmConnectChats') || '[]');
+            let chat = chats.find(chat => chat.buyerEmail === currentUser.email && chat.sellerEmail === sellerEmail && chat.productId === product.id);
+            if (!chat) { chat = { id: Date.now(), buyerEmail: currentUser.email, buyerName: currentUser.name, sellerEmail: sellerEmail, sellerName: product.sellerName, productId: product.id, productName: product.name, messages: [], lastMessageTime: new Date().toISOString(), createdAt: new Date().toISOString() }; chats.push(chat); }
+            const newMessage = { id: Date.now(), text: safeMessage, sender: 'buyer', senderEmail: currentUser.email, timestamp: new Date().toISOString(), read: false, status: 'delivered' };
+            chat.messages.push(newMessage);
+            chat.lastMessageTime = new Date().toISOString();
+            localStorage.setItem('farmConnectChats', JSON.stringify(chats));
+            const messages = JSON.parse(localStorage.getItem('farmConnectMessages') || '[]');
+            messages.push({ id: Date.now(), productId: product.id, productName: safeProductName, buyerEmail: safeBuyerEmail, buyerName: safeBuyerName, sellerEmail: safeSellerEmail, sellerName: safeSellerName, message: safeMessage, date: new Date().toISOString(), read: false, direction: 'buyer_to_seller' });
+            localStorage.setItem('farmConnectMessages', JSON.stringify(messages));
+            alert(`Message sent to ${safeSellerName}!`);
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // ============================================================
+        // SEARCH & FILTER
+        // ============================================================
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            const allProducts = getAllProducts();
+            if (searchTerm === '') { 
+                const activeCategoryBtn = document.querySelector('.category-btn.active');
+                const category = activeCategoryBtn ? activeCategoryBtn.getAttribute('data-category') : 'all';
+                filterProductsByCategory(category); 
+                return; 
+            }
+            const filteredProducts = allProducts.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) || 
+                product.description.toLowerCase().includes(searchTerm) || 
+                (product.sellerName && product.sellerName.toLowerCase().includes(searchTerm)) || 
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            displayProducts(filteredProducts);
+        }
+
+        function handleAutoSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (searchTerm === '') { 
+                const activeCategoryBtn = document.querySelector('.category-btn.active');
+                const category = activeCategoryBtn ? activeCategoryBtn.getAttribute('data-category') : 'all';
+                filterProductsByCategory(category); 
+                return; 
+            }
+            if (searchTerm.length < 2) return;
+            clearTimeout(window.searchTimeout);
+            window.searchTimeout = setTimeout(handleSearch, 300);
+        }
+
+        // ============================================================
+        // FILTER PRODUCTS BY CATEGORY
+        // ============================================================
+        function filterProductsByCategory(category) {
+            const allProducts = getAllProducts();
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            let filteredProducts;
+            
+            if (searchTerm !== '') {
+                const searchFiltered = allProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm) || 
+                    product.description.toLowerCase().includes(searchTerm) || 
+                    (product.sellerName && product.sellerName.toLowerCase().includes(searchTerm)) || 
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+                filteredProducts = category === 'all' ? searchFiltered : searchFiltered.filter(p => p.category === category);
+            } else {
+                filteredProducts = category === 'all' ? allProducts : allProducts.filter(p => p.category === category);
+            }
+            
+            displayProducts(filteredProducts);
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggle = input.nextElementSibling;
+            if (input.type === 'password') { input.type = 'text'; toggle.textContent = 'Hide'; } 
+            else { input.type = 'password'; toggle.textContent = 'Show'; }
+        }
+
+        window.addEventListener('beforeunload', function() {
+            if (localStorage.getItem('rememberMeStatus') === 'false') { if (!sessionStorage.getItem('isRefreshing')) localStorage.removeItem('currentUser'); }
+        });
+        window.addEventListener('beforeunload', function() { sessionStorage.setItem('isRefreshing', 'true'); });
+        window.addEventListener('load', function() { setTimeout(() => sessionStorage.removeItem('isRefreshing'), 100); });
+
+        // ============================================================
+        // TOGGLE DISCOUNT CODE SECTION
+        // ============================================================
+        function toggleDiscountSection() {
+            const section = document.getElementById('discountCodeSection');
+            const btn = document.getElementById('showDiscountBtn');
+            
+            if (section.style.display === 'none' || section.style.display === '') {
+                section.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-times"></i> Hide discount code';
+                setTimeout(() => document.getElementById('discountCodeInput').focus(), 100);
+            } else {
+                section.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-tags"></i> Have a discount code?';
+            }
+        }
+
+        // ============================================================
+        // TOGGLE PROMOTIONS & UPDATES SECTION
+        // ============================================================
+        function togglePromotionsSection() {
+            const section = document.getElementById('emailCampaignsSection');
+            const btn = document.getElementById('showPromoBtn');
+            
+            if (section.style.display === 'none' || section.style.display === '') {
+                section.style.display = 'block';
+                btn.innerHTML = '<i class="fas fa-times"></i> Hide Promotions';
+            } else {
+                section.style.display = 'none';
+                btn.innerHTML = '<i class="fas fa-bullhorn"></i> View Latest Promotions & Updates';
+            }
+        }
+    </script>
+</body>
+</html>

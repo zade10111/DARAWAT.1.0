@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Order History - DARAWAT</title>
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Seller Order History.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Seller!</div>
+                    <a href="Register as Seller.html" class="user-avatar" id="userAvatar">S</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="Register as Seller.html"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="Seller Profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Seller Account Setting.html"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="#" class="active"><i class="fas fa-box"></i> Order History</a>
+                <a href="Seller Products.html"><i class="fas fa-list"></i> My Products</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1><i class="fas fa-box"></i> Order History</h1>
+                    <p>Manage orders from your customers</p>
+                </div>
+                <button class="btn" onclick="downloadSalesReport()"><i class="fas fa-download"></i> Download Sales Report</button>
+            </div>
+
+            <div class="sales-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOrders">0</div>
+                    <div class="stat-label"><i class="fas fa-list"></i> Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingOrders">0</div>
+                    <div class="stat-label"><i class="fas fa-clock"></i> Pending Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedOrders">0</div>
+                    <div class="stat-label"><i class="fas fa-check-circle"></i> Completed Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRevenue">₱0</div>
+                    <div class="stat-label"><i class="fas fa-money-bill-wave"></i> Total Revenue</div>
+                </div>
+            </div>
+
+            <div class="filters-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="statusFilter"><i class="fas fa-filter"></i> Order Status</label>
+                        <select id="statusFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="pending"><i class="fas fa-clock"></i> Pending</option>
+                            <option value="shipped"><i class="fas fa-truck"></i> Shipped</option>
+                            <option value="delivered"><i class="fas fa-check-circle"></i> Delivered</option>
+                            <option value="cancelled"><i class="fas fa-times-circle"></i> Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFilter"><i class="fas fa-calendar-alt"></i> Date Range</label>
+                        <select id="dateFilter">
+                            <option value="all">All Time</option>
+                            <option value="last7">Last 7 Days</option>
+                            <option value="last30">Last 30 Days</option>
+                            <option value="last90">Last 3 Months</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    <div class="filter-group" id="customDateRange" style="display: none;">
+                        <label for="startDate"><i class="fas fa-calendar-day"></i> From</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="filter-group" id="customDateRangeEnd" style="display: none;">
+                        <label for="endDate"><i class="fas fa-calendar-day"></i> To</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <button class="btn" onclick="applyFilters()"><i class="fas fa-search"></i> Apply Filters</button>
+                    <button class="btn btn-outline" onclick="resetFilters()"><i class="fas fa-undo"></i> Reset</button>
+                </div>
+            </div>
+
+            <div class="orders-container" id="ordersContainer">
+                <!-- Orders will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Seller.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
+                <span class="mobile-nav-label">Back</span>
+            </a>
+            <a href="Seller Profile.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span class="mobile-nav-label">Profile</span>
+            </a>
+            <a href="Seller Account Setting.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="mobile-nav-label">Settings</span>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span class="mobile-nav-label">Orders</span>
+            </a>
+            <a href="Seller Products.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-list"></i></span>
+                <span class="mobile-nav-label">Products</span>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+                <div class="footer-links">
+                    <a href="Privacy Policy.html"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                    <a href="Terms of Service.html"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="Contact us.html"><i class="fas fa-envelope"></i> Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // CHECK AUTHENTICATION
+        // ============================================================
+        function checkAuthentication() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('Please log in to view your order history.');
+                window.location.href = 'Register as Seller.html';
+                return false;
+            }
+            
+            const user = JSON.parse(currentUser);
+            if (user.role !== 'seller') {
+                alert('This page is for sellers only.');
+                window.location.href = 'Register as Seller.html';
+                return false;
+            }
+            
+            return true;
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            const currentUser = localStorage.getItem('currentUser');
+            return currentUser ? JSON.parse(currentUser) : null;
+        }
+
+        // ============================================================
+        // GET SELLER ORDERS
+        // ============================================================
+        function getSellerOrders() {
+            const currentUser = getCurrentUser();
+            if (!currentUser) return [];
+            
+            const allOrders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            
+            const sellerOrders = allOrders.filter(order => {
+                if (order.sellerEmail === currentUser.email) return true;
+                
+                if (order.items && Array.isArray(order.items)) {
+                    return order.items.some(item => item.sellerEmail === currentUser.email);
+                }
+                
+                return false;
+            });
+            
+            return sellerOrders;
+        }
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const currentUser = getCurrentUser();
+            if (currentUser) {
+                const displayName = currentUser.farmName || currentUser.name || 'Seller';
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${displayName}!`;
+                updateUserAvatar(currentUser);
+            }
+        }
+
+        // ============================================================
+        // UPDATE USER AVATAR
+        // ============================================================
+        function updateUserAvatar(user) {
+            const userAvatar = document.getElementById('userAvatar');
+            const avatarUrl = user.profilePicture || 
+                             localStorage.getItem('sellerAvatar') ||
+                             user.avatar;
+            
+            if (avatarUrl && (avatarUrl.startsWith('http') || avatarUrl.startsWith('data:'))) {
+                userAvatar.innerHTML = `<img src="${avatarUrl}" alt="Profile Picture">`;
+            } else {
+                const initial = (user.farmName || user.name || 'S').charAt(0).toUpperCase();
+                userAvatar.textContent = initial;
+                userAvatar.style.backgroundColor = '#ff9800';
+                userAvatar.style.display = 'flex';
+                userAvatar.style.alignItems = 'center';
+                userAvatar.style.justifyContent = 'center';
+                userAvatar.style.fontWeight = 'bold';
+                userAvatar.style.color = 'white';
+                userAvatar.style.textDecoration = 'none';
+                userAvatar.style.fontSize = '18px';
+            }
+        }
+
+        // ============================================================
+        // LOAD SELLER ORDERS
+        // ============================================================
+        function loadSellerOrders() {
+            if (!checkAuthentication()) return;
+            
+            loadUserData();
+            const orders = getSellerOrders();
+            displayOrders(orders);
+            updateSalesStats(orders);
+        }
+
+        // ============================================================
+        // DISPLAY ORDERS
+        // ============================================================
+        function displayOrders(orders) {
+            const ordersContainer = document.getElementById('ordersContainer');
+            
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = `
+                    <div class="no-orders">
+                        <p><i class="fas fa-inbox"></i> No orders found.</p>
+                        <p>Orders from buyers will appear here.</p>
+                        <button class="btn" onclick="window.location.href='Seller Products.html'"><i class="fas fa-list"></i> Add Products</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersContainer.innerHTML = '';
+            
+            orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            orders.forEach(order => {
+                const orderItem = document.createElement('div');
+                orderItem.className = 'order-item';
+                
+                const orderDate = new Date(order.date);
+                const formattedDate = orderDate.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const products = order.items || order.products || [];
+                const productItems = products.map(product => ({
+                    name: product.productName || product.name || 'Product',
+                    price: product.price || '₱0',
+                    quantity: product.quantity || 1,
+                    sellerEmail: product.sellerEmail || order.sellerEmail
+                }));
+                
+                const sellerProducts = productItems.filter(p => 
+                    p.sellerEmail === getCurrentUser().email
+                );
+                
+                let productsHTML = '';
+                if (sellerProducts.length > 0) {
+                    sellerProducts.forEach(product => {
+                        productsHTML += `
+                            <div class="product-item">
+                                <div class="product-image"><i class="fas fa-shopping-bag"></i></div>
+                                <div class="product-info">
+                                    <div class="product-name"><i class="fas fa-leaf"></i> ${product.name}</div>
+                                    <div class="product-meta">
+                                        <span><i class="fas fa-money-bill-wave"></i> Price: ${product.price}</span>
+                                        <span><i class="fas fa-weight-hanging"></i> Quantity: ${product.quantity}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else if (order.productName) {
+                    productsHTML = `
+                        <div class="product-item">
+                            <div class="product-image"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="product-info">
+                                <div class="product-name"><i class="fas fa-leaf"></i> ${order.productName}</div>
+                                <div class="product-meta">
+                                    <span><i class="fas fa-money-bill-wave"></i> Price: ${order.price || '₱0'}</span>
+                                    <span><i class="fas fa-weight-hanging"></i> Quantity: ${order.quantity || 1}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                const buyerName = order.buyerName || order.buyer?.name || 'Customer';
+                const buyerEmail = order.buyerEmail || order.buyer?.email || 'No email';
+                const buyerPhone = order.buyerPhone || order.buyer?.phone || 'No phone';
+                const buyerAddress = order.shippingAddress || order.buyer?.address || 'No address';
+                
+                const status = order.status || 'pending';
+                const statusIcon = {
+                    'delivered': '<i class="fas fa-check-circle"></i>',
+                    'pending': '<i class="fas fa-clock"></i>',
+                    'shipped': '<i class="fas fa-truck"></i>',
+                    'cancelled': '<i class="fas fa-times-circle"></i>'
+                }[status] || '<i class="fas fa-clock"></i>';
+                
+                const subtotal = order.subtotal || '₱0';
+                const shipping = order.shipping || '₱50';
+                const total = order.total || '₱0';
+                
+                orderItem.innerHTML = `
+                    <div class="order-header">
+                        <div>
+                            <div class="order-id"><i class="fas fa-hashtag"></i> Order #${order.id}</div>
+                            <div class="order-date"><i class="fas fa-calendar-alt"></i> Placed on: ${formattedDate}</div>
+                        </div>
+                        <div class="order-status status-${status}">${statusIcon} ${status.charAt(0).toUpperCase() + status.slice(1)}</div>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-products">
+                            ${productsHTML}
+                        </div>
+                        <div class="order-summary">
+                            <div class="summary-row">
+                                <span><i class="fas fa-money-bill-wave"></i> Subtotal:</span>
+                                <span>${subtotal}</span>
+                            </div>
+                            <div class="summary-row">
+                                <span><i class="fas fa-truck"></i> Shipping:</span>
+                                <span>${shipping}</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span><i class="fas fa-receipt"></i> Total:</span>
+                                <span>${total}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buyer-info">
+                        <h4><i class="fas fa-user"></i> Buyer Information</h4>
+                        <div class="buyer-details">
+                            <div><i class="fas fa-user"></i> <strong>Name:</strong> ${buyerName}</div>
+                            <div><i class="fas fa-envelope"></i> <strong>Email:</strong> ${buyerEmail}</div>
+                            <div><i class="fas fa-phone"></i> <strong>Phone:</strong> ${buyerPhone}</div>
+                            <div><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> ${buyerAddress}</div>
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-outline" onclick="viewOrderDetails('${order.id}')"><i class="fas fa-eye"></i> View Details</button>
+                        <button class="btn btn-outline" onclick="contactBuyer('${order.id}')"><i class="fas fa-comment"></i> Contact Buyer</button>
+                        ${status === 'pending' ? `
+                            <button class="btn btn-warning" onclick="updateOrderStatus('${order.id}', 'shipped')"><i class="fas fa-truck"></i> Mark as Shipped</button>
+                            <button class="btn btn-danger" onclick="cancelOrder('${order.id}')"><i class="fas fa-times"></i> Cancel Order</button>
+                        ` : ''}
+                        ${status === 'shipped' ? `
+                            <button class="btn" onclick="updateOrderStatus('${order.id}', 'delivered')"><i class="fas fa-check-circle"></i> Mark as Delivered</button>
+                        ` : ''}
+                    </div>
+                `;
+                
+                ordersContainer.appendChild(orderItem);
+            });
+        }
+
+        // ============================================================
+        // UPDATE SALES STATS
+        // ============================================================
+        function updateSalesStats(orders) {
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(order => order.status === 'pending').length;
+            const completedOrders = orders.filter(order => order.status === 'delivered').length;
+            
+            let totalRevenue = 0;
+            orders.forEach(order => {
+                if (order.status !== 'cancelled') {
+                    const totalStr = order.total || '0';
+                    const totalValue = parseFloat(totalStr.replace(/[^\d.]/g, ''));
+                    if (!isNaN(totalValue)) {
+                        totalRevenue += totalValue;
+                    }
+                }
+            });
+            
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+            document.getElementById('completedOrders').textContent = completedOrders;
+            document.getElementById('totalRevenue').textContent = `₱${totalRevenue.toFixed(2)}`;
+        }
+
+        // ============================================================
+        // UPDATE ORDER STATUS
+        // ============================================================
+        function updateOrderStatus(orderId, newStatus) {
+            const statusMessages = {
+                'shipped': 'Mark as Shipped',
+                'delivered': 'Mark as Delivered',
+                'cancelled': 'Cancel Order'
+            };
+            
+            if (!confirm(`Are you sure you want to ${statusMessages[newStatus] || 'update'} order ${orderId}?`)) {
+                return;
+            }
+            
+            const allOrders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            const orderIndex = allOrders.findIndex(o => o.id == orderId);
+            
+            if (orderIndex === -1) {
+                showToast('Order not found.', 'error');
+                return;
+            }
+            
+            allOrders[orderIndex].status = newStatus;
+            
+            if (allOrders[orderIndex].orderTimeline) {
+                allOrders[orderIndex].orderTimeline.push({
+                    date: new Date().toISOString(),
+                    status: newStatus
+                });
+            }
+            
+            localStorage.setItem('farmConnectOrders', JSON.stringify(allOrders));
+            
+            showToast(`Order ${orderId} status updated to ${newStatus}`);
+            window.dispatchEvent(new Event('storage'));
+            loadSellerOrders();
+        }
+
+        // ============================================================
+        // CANCEL ORDER
+        // ============================================================
+        function cancelOrder(orderId) {
+            updateOrderStatus(orderId, 'cancelled');
+        }
+
+        // ============================================================
+        // VIEW ORDER DETAILS
+        // ============================================================
+        function viewOrderDetails(orderId) {
+            const orders = getSellerOrders();
+            const order = orders.find(o => o.id == orderId);
+            
+            if (!order) {
+                showToast('Order not found.', 'error');
+                return;
+            }
+            
+            let details = `📋 ORDER DETAILS\n`;
+            details += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+            details += `Order ID: ${order.id}\n`;
+            details += `Date: ${new Date(order.date).toLocaleDateString()}\n`;
+            details += `Status: ${order.status.toUpperCase()}\n`;
+            details += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            details += `🛒 PRODUCTS:\n`;
+            const products = order.items || order.products || [];
+            if (products.length > 0) {
+                products.forEach(p => {
+                    const name = p.productName || p.name || 'Product';
+                    const price = p.price || '₱0';
+                    const qty = p.quantity || 1;
+                    details += `  • ${name} - ${price} x ${qty}\n`;
+                });
+            } else if (order.productName) {
+                details += `  • ${order.productName} - ${order.price || '₱0'} x ${order.quantity || 1}\n`;
+            }
+            
+            details += `\n💰 SUMMARY:\n`;
+            details += `  Subtotal: ${order.subtotal || '₱0'}\n`;
+            details += `  Shipping: ${order.shipping || '₱50'}\n`;
+            details += `  Total: ${order.total || '₱0'}\n`;
+            
+            details += `\n👤 BUYER:\n`;
+            details += `  Name: ${order.buyerName || order.buyer?.name || 'N/A'}\n`;
+            details += `  Email: ${order.buyerEmail || order.buyer?.email || 'N/A'}\n`;
+            details += `  Phone: ${order.buyerPhone || order.buyer?.phone || 'N/A'}\n`;
+            details += `  Address: ${order.shippingAddress || order.buyer?.address || 'N/A'}\n`;
+            
+            alert(details);
+        }
+
+        // ============================================================
+        // CONTACT BUYER
+        // ============================================================
+        function contactBuyer(orderId) {
+            const orders = getSellerOrders();
+            const order = orders.find(o => o.id == orderId);
+            
+            if (!order) {
+                showToast('Order not found.', 'error');
+                return;
+            }
+            
+            const buyerEmail = order.buyerEmail || order.buyer?.email || 'No email';
+            const buyerName = order.buyerName || order.buyer?.name || 'Customer';
+            
+            if (buyerEmail && buyerEmail !== 'No email') {
+                if (confirm(`Send email to ${buyerName} (${buyerEmail})?`)) {
+                    window.location.href = `mailto:${buyerEmail}?subject=Order%20${order.id}%20Update&body=Dear%20${buyerName},%0A%0AYour%20order%20${order.id}%20...`;
+                }
+            } else {
+                showToast('No email address available for this buyer.', 'error');
+            }
+        }
+
+        // ============================================================
+        // APPLY FILTERS
+        // ============================================================
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            let filteredOrders = getSellerOrders();
+            
+            if (statusFilter !== 'all') {
+                filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
+            }
+            
+            if (dateFilter !== 'all' && dateFilter !== 'custom') {
+                const now = new Date();
+                let days = 0;
+                switch(dateFilter) {
+                    case 'last7': days = 7; break;
+                    case 'last30': days = 30; break;
+                    case 'last90': days = 90; break;
+                }
+                const startDateObj = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
+                filteredOrders = filteredOrders.filter(order => {
+                    const orderDate = new Date(order.date);
+                    return orderDate >= startDateObj;
+                });
+            } else if (dateFilter === 'custom' && startDate && endDate) {
+                const startDateObj = new Date(startDate);
+                const endDateObj = new Date(endDate);
+                endDateObj.setHours(23, 59, 59);
+                filteredOrders = filteredOrders.filter(order => {
+                    const orderDate = new Date(order.date);
+                    return orderDate >= startDateObj && orderDate <= endDateObj;
+                });
+            }
+            
+            displayOrders(filteredOrders);
+            updateSalesStats(filteredOrders);
+        }
+
+        // ============================================================
+        // RESET FILTERS
+        // ============================================================
+        function resetFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('dateFilter').value = 'all';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('customDateRange').style.display = 'none';
+            document.getElementById('customDateRangeEnd').style.display = 'none';
+            loadSellerOrders();
+        }
+
+        // ============================================================
+        // DOWNLOAD SALES REPORT
+        // ============================================================
+        function downloadSalesReport() {
+            const orders = getSellerOrders();
+            if (orders.length === 0) {
+                showToast('No orders to export.', 'error');
+                return;
+            }
+            
+            let csvContent = "Order ID,Date,Status,Product,Quantity,Price,Total,Buyer\n";
+            orders.forEach(order => {
+                const date = new Date(order.date).toLocaleDateString();
+                const products = order.items || order.products || [];
+                const buyer = order.buyerName || order.buyer?.name || 'Customer';
+                
+                if (products.length > 0) {
+                    products.forEach(product => {
+                        const name = product.productName || product.name || 'Product';
+                        const price = product.price || '₱0';
+                        const qty = product.quantity || 1;
+                        csvContent += `"${order.id}","${date}","${order.status}","${name}","${qty}","${price}","${order.total || '₱0'}","${buyer}"\n`;
+                    });
+                } else if (order.productName) {
+                    csvContent += `"${order.id}","${date}","${order.status}","${order.productName}","${order.quantity || 1}","${order.price || '₱0'}","${order.total || '₱0'}","${buyer}"\n`;
+                }
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Sales_Report_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showToast('Sales report downloaded successfully!');
+        }
+
+        // ============================================================
+        // SHOW TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = toast.querySelector('i');
+            const toastText = toast.querySelector('span');
+            
+            toastText.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                toastIcon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuthentication()) return;
+            
+            loadThemePreference();
+            loadSellerOrders();
+            
+            document.getElementById('dateFilter').addEventListener('change', function() {
+                const customRange = document.getElementById('customDateRange');
+                const customRangeEnd = document.getElementById('customDateRangeEnd');
+                
+                if (this.value === 'custom') {
+                    customRange.style.display = 'block';
+                    customRangeEnd.style.display = 'block';
+                } else {
+                    customRange.style.display = 'none';
+                    customRangeEnd.style.display = 'none';
+                }
+            });
+            
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectOrders' || e.key === 'currentUser') {
+                    loadSellerOrders();
+                }
+                if (e.key === 'sellerAvatar') {
+                    loadUserData();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <link rel="stylesheet" href="Css/Search Result.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> All Sellers
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                    <a href="Buyer Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-search"></i> Search Results</h1>
+                <p>Find products and sellers across DARAWAT</p>
+            </div>
+
+            <!-- Search Query Display -->
+            <div class="search-query-display" id="searchQueryDisplay">
+                <i class="fas fa-search" style="color: #2e7d32;"></i>
+                <span>Showing results for: <strong id="searchQueryText">All Products</strong></span>
+                <span class="result-count" id="resultCount">0 results</span>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-section">
+                <input type="text" id="searchInput" placeholder="Search products or sellers...">
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Livestock">Livestock</option>
+                    <option value="Dairy">Dairy</option>
+                </select>
+                <select id="sortFilter">
+                    <option value="relevance">Sort by Relevance</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name</option>
+                </select>
+                <button class="btn btn-primary" onclick="performSearch()">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button class="btn btn-outline" onclick="resetSearch()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="all" onclick="switchTab('all')">
+                    <i class="fas fa-th-large"></i> All
+                    <span class="badge" id="allCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="products" onclick="switchTab('products')">
+                    <i class="fas fa-box"></i> Products
+                    <span class="badge" id="productCount">0</span>
+                </button>
+                <button class="tab-btn" data-tab="sellers" onclick="switchTab('sellers')">
+                    <i class="fas fa-store"></i> Sellers
+                    <span class="badge" id="sellerCount">0</span>
+                </button>
+            </div>
+
+            <!-- Results -->
+            <div class="tab-content active" id="tab-all">
+                <div class="results-grid" id="allResults">
+                    <!-- Results will be dynamically inserted -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-products">
+                <div class="results-grid" id="productResults">
+                    <!-- Product results will be dynamically inserted -->
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-sellers">
+                <div class="results-grid" id="sellerResults">
+                    <!-- Seller results will be dynamically inserted -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-search"></i></span>
+                <span>Search</span>
+            </a>
+            <a href="Buyer Messages.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-envelope"></i></span>
+                <span>Messages</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // SEARCH RESULTS - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const allResults = document.getElementById('allResults');
+        const productResults = document.getElementById('productResults');
+        const sellerResults = document.getElementById('sellerResults');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const searchQueryText = document.getElementById('searchQueryText');
+        const resultCount = document.getElementById('resultCount');
+        const allCount = document.getElementById('allCount');
+        const productCount = document.getElementById('productCount');
+        const sellerCount = document.getElementById('sellerCount');
+
+        // State
+        let allProducts = [];
+        let allSellers = [];
+        let currentQuery = '';
+        let currentCategory = 'all';
+        let currentSort = 'relevance';
+        let currentTab = 'all';
+
+        // Category Icons Map
+        const categoryIconsMap = {
+            'Vegetables': '🥦',
+            'Fruits': '🍎',
+            'Grains': '🌾',
+            'Livestock': '🐄',
+            'Dairy': '🥛',
+            'Herbs': '🌿',
+            'Spices': '🌶️',
+            'Processed': '🧀',
+            'Organic': '🌱',
+            'Other': '📦'
+        };
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // LOAD DATA
+        // ============================================================
+        function loadData() {
+            allProducts = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            allProducts = allProducts.filter(p => p.quantity > 0);
+            
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            allSellers = users.filter(user => user.role === 'seller' && user.status !== 'suspended');
+            
+            // Check URL for search query
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            const category = urlParams.get('category');
+            
+            if (query) {
+                document.getElementById('searchInput').value = query;
+                currentQuery = query;
+            }
+            
+            if (category && category !== 'all') {
+                document.getElementById('categoryFilter').value = category;
+                currentCategory = category;
+            }
+            
+            performSearch();
+        }
+
+        // ============================================================
+        // GET SELLER PRODUCTS
+        // ============================================================
+        function getSellerProducts(sellerEmail) {
+            return allProducts.filter(p => p.sellerEmail === sellerEmail);
+        }
+
+        // ============================================================
+        // GET SELLER RATING
+        // ============================================================
+        function getSellerRating(sellerEmail) {
+            const reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]');
+            const sellerReviews = reviews.filter(r => r.sellerEmail === sellerEmail);
+            if (sellerReviews.length === 0) return 0;
+            const avg = sellerReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / sellerReviews.length;
+            return Math.round(avg * 10) / 10;
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR
+        // ============================================================
+        function getSellerAvatar(seller) {
+            if (!seller) return 'S';
+            
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            return (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+        }
+
+        // ============================================================
+        // PERFORM SEARCH
+        // ============================================================
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const query = searchInput.value.trim().toLowerCase();
+            currentQuery = query;
+            currentCategory = document.getElementById('categoryFilter').value;
+            currentSort = document.getElementById('sortFilter').value;
+            
+            // Search products
+            let matchedProducts = allProducts;
+            
+            if (query) {
+                matchedProducts = matchedProducts.filter(p => 
+                    p.name.toLowerCase().includes(query) ||
+                    (p.description || '').toLowerCase().includes(query) ||
+                    (p.sellerName || '').toLowerCase().includes(query) ||
+                    (p.category || '').toLowerCase().includes(query)
+                );
+            }
+            
+            if (currentCategory !== 'all') {
+                matchedProducts = matchedProducts.filter(p => p.category === currentCategory);
+            }
+            
+            // Search sellers
+            let matchedSellers = allSellers;
+            
+            if (query) {
+                matchedSellers = matchedSellers.filter(s => 
+                    (s.farmName || '').toLowerCase().includes(query) ||
+                    (s.name || '').toLowerCase().includes(query) ||
+                    (s.address || '').toLowerCase().includes(query) ||
+                    (s.farmDescription || '').toLowerCase().includes(query) ||
+                    (s.farmType || '').toLowerCase().includes(query)
+                );
+            }
+            
+            if (currentCategory !== 'all') {
+                matchedSellers = matchedSellers.filter(s => {
+                    const products = getSellerProducts(s.email);
+                    return products.some(p => p.category === currentCategory);
+                });
+            }
+            
+            // Sort products
+            matchedProducts = sortProducts(matchedProducts);
+            
+            // Sort sellers
+            matchedSellers = sortSellers(matchedSellers);
+            
+            // Update counts
+            const totalResults = matchedProducts.length + matchedSellers.length;
+            searchQueryText.textContent = query || 'All Products';
+            resultCount.textContent = `${totalResults} result${totalResults !== 1 ? 's' : ''}`;
+            
+            allCount.textContent = totalResults;
+            productCount.textContent = matchedProducts.length;
+            sellerCount.textContent = matchedSellers.length;
+            
+            // Display results
+            displayAllResults(matchedProducts, matchedSellers);
+            displayProductResults(matchedProducts);
+            displaySellerResults(matchedSellers);
+            
+            // Update current tab
+            switchTab(currentTab);
+        }
+
+        // ============================================================
+        // SORT PRODUCTS
+        // ============================================================
+        function sortProducts(products) {
+            const sorted = [...products];
+            
+            switch(currentSort) {
+                case 'price-low':
+                    sorted.sort((a, b) => (a.price || 0) - (b.price || 0));
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
+                    break;
+                case 'name':
+                    sorted.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+                    break;
+                case 'relevance':
+                default:
+                    // Keep as is (already filtered by relevance)
+                    break;
+            }
+            
+            return sorted;
+        }
+
+        // ============================================================
+        // SORT SELLERS
+        // ============================================================
+        function sortSellers(sellers) {
+            const sorted = [...sellers];
+            
+            switch(currentSort) {
+                case 'name':
+                    sorted.sort((a, b) => (a.farmName || a.name || '').localeCompare(b.farmName || b.name || ''));
+                    break;
+                case 'price-low':
+                case 'price-high':
+                    sorted.sort((a, b) => {
+                        const aProducts = getSellerProducts(a.email);
+                        const bProducts = getSellerProducts(b.email);
+                        const aAvg = aProducts.reduce((sum, p) => sum + (p.price || 0), 0) / (aProducts.length || 1);
+                        const bAvg = bProducts.reduce((sum, p) => sum + (p.price || 0), 0) / (bProducts.length || 1);
+                        return currentSort === 'price-low' ? aAvg - bAvg : bAvg - aAvg;
+                    });
+                    break;
+                case 'relevance':
+                default:
+                    // Keep as is
+                    break;
+            }
+            
+            return sorted;
+        }
+
+        // ============================================================
+        // DISPLAY ALL RESULTS
+        // ============================================================
+        function displayAllResults(products, sellers) {
+            if (products.length === 0 && sellers.length === 0) {
+                allResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>No results found for "<strong>${currentQuery || 'All Products'}</strong>"</p>
+                        <p style="font-size:14px; margin-top:10px;">Try adjusting your search or filters</p>
+                        <button class="btn btn-primary" onclick="resetSearch()" style="margin-top:15px;">
+                            <i class="fas fa-undo"></i> Reset Search
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            allResults.innerHTML = '';
+
+            // Show products first
+            products.forEach(product => {
+                allResults.appendChild(createProductCard(product, 'product'));
+            });
+
+            // Then show sellers
+            sellers.forEach(seller => {
+                allResults.appendChild(createSellerCard(seller));
+            });
+        }
+
+        // ============================================================
+        // DISPLAY PRODUCT RESULTS
+        // ============================================================
+        function displayProductResults(products) {
+            if (products.length === 0) {
+                productResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-box-open"></i>
+                        <p>No products found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            productResults.innerHTML = '';
+            products.forEach(product => {
+                productResults.appendChild(createProductCard(product, 'product'));
+            });
+        }
+
+        // ============================================================
+        // DISPLAY SELLER RESULTS
+        // ============================================================
+        function displaySellerResults(sellers) {
+            if (sellers.length === 0) {
+                sellerResults.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-store-slash"></i>
+                        <p>No sellers found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            sellerResults.innerHTML = '';
+            sellers.forEach(seller => {
+                sellerResults.appendChild(createSellerCard(seller));
+            });
+        }
+
+        // ============================================================
+        // CREATE PRODUCT CARD
+        // ============================================================
+        function createProductCard(product, type) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            let imageHTML = '';
+            if (product.imageUrl) {
+                imageHTML = `<img src="${product.imageUrl}" alt="${product.name}">`;
+            } else {
+                const icon = categoryIconsMap[product.category] || '📦';
+                imageHTML = `
+                    <div class="placeholder">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>${icon}</span>
+                    </div>
+                `;
+            }
+            
+            const priceDisplay = typeof product.price === 'number' ? 
+                `₱${product.price.toFixed(2)}` : 
+                product.price;
+            
+            card.innerHTML = `
+                <div class="result-image">
+                    ${imageHTML}
+                    <span class="result-badge product">Product</span>
+                </div>
+                <div class="result-details">
+                    <div class="result-title">${product.name}</div>
+                    <div class="result-description">${product.description || 'Fresh farm product'}</div>
+                    <div class="result-price">${priceDisplay}</div>
+                    <div class="result-meta">
+                        <span><i class="fas fa-store"></i> ${product.sellerName || 'Local Farmer'}</span>
+                        <span><i class="fas fa-box"></i> ${product.quantity} in stock</span>
+                    </div>
+                    <div class="result-actions">
+                        <a href="Shop.html?product=${product.id}" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="Product Inquiry.html?product=${product.id}" class="btn btn-message">
+                            <i class="fas fa-question"></i> Inquire
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // ============================================================
+        // CREATE SELLER CARD
+        // ============================================================
+        function createSellerCard(seller) {
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            
+            const products = getSellerProducts(seller.email);
+            const rating = getSellerRating(seller.email);
+            const avatarHTML = getSellerAvatar(seller);
+            
+            const stars = rating > 0 ? '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating)) : 'No ratings';
+            const ratingDisplay = rating > 0 ? rating.toFixed(1) : 'N/A';
+            
+            card.innerHTML = `
+                <div class="result-image">
+                    <div class="placeholder">
+                        <span style="font-size:48px;">${avatarHTML}</span>
+                    </div>
+                    <span class="result-badge seller">Seller</span>
+                </div>
+                <div class="result-details">
+                    <div class="result-title">${seller.farmName || seller.name}</div>
+                    <div class="result-description">${seller.farmDescription || 'Local farm offering fresh products.'}</div>
+                    <div class="result-price" style="font-size:16px; color:#666;">
+                        <i class="fas fa-tractor"></i> ${seller.farmType || 'Mixed Farming'}
+                    </div>
+                    <div class="result-meta">
+                        <span><i class="fas fa-box"></i> ${products.length} Products</span>
+                        <span><i class="fas fa-star"></i> ${ratingDisplay}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${seller.address || 'Philippines'}</span>
+                    </div>
+                    <div class="result-actions">
+                        <a href="Buyer View Seller.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="Contact Seller.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-message">
+                            <i class="fas fa-comment"></i> Contact
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // ============================================================
+        // SWITCH TAB
+        // ============================================================
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `tab-${tab}`);
+            });
+        }
+
+        // ============================================================
+        // RESET SEARCH
+        // ============================================================
+        function resetSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('sortFilter').value = 'relevance';
+            currentQuery = '';
+            currentCategory = 'all';
+            currentSort = 'relevance';
+            performSearch();
+            showToast('Search reset!', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+            
+            text.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            document.getElementById('categoryFilter').addEventListener('change', performSearch);
+            document.getElementById('sortFilter').addEventListener('change', performSearch);
+            
+            // Avatar click goes to profile
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectProducts' || e.key === 'farmConnectUsers') {
+                    loadData();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadData();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('🔍 Search Results loaded successfully!');
+        });
+    </script>
+</body>
+</html>

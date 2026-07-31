@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Sellers - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Seller Directory.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-store"></i> All Sellers
+                    </a>
+                    <a href="Search Result.html" class="nav-link">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                    <a href="Buyer Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-store"></i> All Sellers</h1>
+                <p>Browse and connect with farmers and sellers near you</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSellers">0</div>
+                    <div class="stat-label">Total Sellers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-label">Products Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCategories">0</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-section">
+                <input type="text" id="searchSellers" placeholder="Search sellers by name, farm, or location...">
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruits">Fruits</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Livestock">Livestock</option>
+                    <option value="Dairy">Dairy</option>
+                </select>
+                <select id="sortFilter">
+                    <option value="name">Sort by Name</option>
+                    <option value="products">Sort by Products</option>
+                    <option value="rating">Sort by Rating</option>
+                </select>
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-search"></i> Apply
+                </button>
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+
+            <!-- Sellers Grid -->
+            <div class="sellers-grid" id="sellersGrid">
+                <!-- Sellers will be dynamically inserted -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+             <a href="Search Result.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-search"></i></span>
+                <span>Search</span>
+            </a>
+            <a href="Buyer Messages.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-envelope"></i></span>
+                <span>Messages</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // SELLER DIRECTORY - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const sellersGrid = document.getElementById('sellersGrid');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const totalSellersEl = document.getElementById('totalSellers');
+        const totalProductsEl = document.getElementById('totalProducts');
+        const totalCategoriesEl = document.getElementById('totalCategories');
+
+        // State
+        let allSellers = [];
+        let allProducts = [];
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR
+        // ============================================================
+        function getSellerAvatar(seller) {
+            if (!seller) return 'S';
+            
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            return (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+        }
+
+        // ============================================================
+        // LOAD SELLERS
+        // ============================================================
+        function loadSellers() {
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            allSellers = users.filter(user => user.role === 'seller' && user.status !== 'suspended');
+            
+            allProducts = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            
+            // Update stats
+            totalSellersEl.textContent = allSellers.length;
+            
+            const activeProducts = allProducts.filter(p => p.quantity > 0);
+            totalProductsEl.textContent = activeProducts.length;
+            
+            const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+            totalCategoriesEl.textContent = categories.length;
+            
+            displaySellers(allSellers);
+        }
+
+        // ============================================================
+        // GET SELLER PRODUCTS
+        // ============================================================
+        function getSellerProducts(sellerEmail) {
+            return allProducts.filter(p => p.sellerEmail === sellerEmail && p.quantity > 0);
+        }
+
+        // ============================================================
+        // GET SELLER RATING
+        // ============================================================
+        function getSellerRating(sellerEmail) {
+            const reviews = JSON.parse(localStorage.getItem('farmConnectProductReviews') || '[]');
+            const sellerReviews = reviews.filter(r => r.sellerEmail === sellerEmail);
+            if (sellerReviews.length === 0) return 0;
+            const avg = sellerReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / sellerReviews.length;
+            return Math.round(avg * 10) / 10;
+        }
+
+        // ============================================================
+        // GET SELLER CATEGORIES
+        // ============================================================
+        function getSellerCategories(sellerEmail) {
+            const products = getSellerProducts(sellerEmail);
+            return [...new Set(products.map(p => p.category).filter(Boolean))];
+        }
+
+        // ============================================================
+        // CHECK IF SELLER IS SAVED
+        // ============================================================
+        function isSellerSaved(sellerEmail) {
+            const user = getCurrentUser();
+            if (!user) return false;
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            return saved[user.email] && saved[user.email].includes(sellerEmail);
+        }
+
+        // ============================================================
+        // TOGGLE SAVE SELLER
+        // ============================================================
+        function toggleSaveSeller(sellerEmail) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to save sellers.', 'error');
+                return;
+            }
+            
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            if (!saved[user.email]) saved[user.email] = [];
+            
+            const index = saved[user.email].indexOf(sellerEmail);
+            if (index > -1) {
+                saved[user.email].splice(index, 1);
+                showToast('Seller removed from saved list.', 'info');
+            } else {
+                saved[user.email].push(sellerEmail);
+                showToast('Seller saved successfully!', 'success');
+            }
+            
+            localStorage.setItem('farmConnectSavedSellers', JSON.stringify(saved));
+            displaySellers(allSellers);
+        }
+
+        // ============================================================
+        // DISPLAY SELLERS
+        // ============================================================
+        function displaySellers(sellers) {
+            if (sellers.length === 0) {
+                sellersGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-store-slash"></i>
+                        <p>No sellers found matching your criteria.</p>
+                        <button class="btn btn-primary" onclick="resetFilters()" style="margin-top:15px;">
+                            <i class="fas fa-undo"></i> Reset Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            sellersGrid.innerHTML = '';
+
+            sellers.forEach(seller => {
+                const products = getSellerProducts(seller.email);
+                const rating = getSellerRating(seller.email);
+                const categories = getSellerCategories(seller.email);
+                const isSaved = isSellerSaved(seller.email);
+                const avatarHTML = getSellerAvatar(seller);
+                
+                const card = document.createElement('div');
+                card.className = 'seller-card';
+                
+                const stars = rating > 0 ? '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating)) : 'No ratings';
+                const ratingDisplay = rating > 0 ? rating.toFixed(1) : 'N/A';
+                
+                card.innerHTML = `
+                    <div class="seller-header">
+                        <div class="seller-avatar">${avatarHTML}</div>
+                        <div class="seller-info">
+                            <h3>${seller.farmName || seller.name}</h3>
+                            <div class="seller-location">
+                                <i class="fas fa-map-marker-alt"></i> ${seller.address || 'Philippines'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="seller-body">
+                        <div class="seller-farm-type">
+                            <i class="fas fa-tractor"></i> ${seller.farmType || 'Mixed Farming'}
+                        </div>
+                        <p class="seller-description">${seller.farmDescription || 'Local farm offering fresh products.'}</p>
+                        <div class="seller-tags">
+                            ${categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
+                        </div>
+                        <div class="seller-stats">
+                            <span><i class="fas fa-box"></i> ${products.length} Products</span>
+                            <span><i class="fas fa-star"></i> ${ratingDisplay}</span>
+                            <span><i class="fas fa-shopping-bag"></i> ${products.reduce((sum, p) => sum + p.quantity, 0)} items</span>
+                        </div>
+                        <div class="seller-actions">
+                            <a href="Shop.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="Contact Seller.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-message">
+                                <i class="fas fa-comment"></i> Contact
+                            </a>
+                            <button class="btn btn-save ${isSaved ? 'saved' : ''}" onclick="toggleSaveSeller('${seller.email}')">
+                                <i class="fas ${isSaved ? 'fa-check' : 'fa-heart'}"></i>
+                                ${isSaved ? 'Saved' : 'Save'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                sellersGrid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // FILTER AND SORT
+        // ============================================================
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchSellers').value.toLowerCase().trim();
+            const category = document.getElementById('categoryFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            let filtered = [...allSellers];
+            
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(seller => {
+                    const name = (seller.farmName || seller.name || '').toLowerCase();
+                    const location = (seller.address || '').toLowerCase();
+                    const description = (seller.farmDescription || '').toLowerCase();
+                    return name.includes(searchTerm) || 
+                           location.includes(searchTerm) || 
+                           description.includes(searchTerm);
+                });
+            }
+            
+            // Category filter
+            if (category !== 'all') {
+                filtered = filtered.filter(seller => {
+                    const products = getSellerProducts(seller.email);
+                    return products.some(p => p.category === category);
+                });
+            }
+            
+            // Sorting
+            filtered.sort((a, b) => {
+                switch(sortBy) {
+                    case 'name':
+                        return (a.farmName || a.name || '').localeCompare(b.farmName || b.name || '');
+                    case 'products':
+                        return getSellerProducts(b.email).length - getSellerProducts(a.email).length;
+                    case 'rating':
+                        return getSellerRating(b.email) - getSellerRating(a.email);
+                    default:
+                        return 0;
+                }
+            });
+            
+            displaySellers(filtered);
+        }
+
+        // ============================================================
+        // RESET FILTERS
+        // ============================================================
+        function resetFilters() {
+            document.getElementById('searchSellers').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            document.getElementById('sortFilter').value = 'name';
+            displaySellers(allSellers);
+            showToast('Filters reset!', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+            
+            text.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            document.getElementById('searchSellers').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyFilters();
+            });
+            
+            document.getElementById('categoryFilter').addEventListener('change', applyFilters);
+            document.getElementById('sortFilter').addEventListener('change', applyFilters);
+            
+            // Avatar click goes to profile
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectUsers' || e.key === 'farmConnectProducts') {
+                    loadSellers();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+                if (e.key === 'farmConnectSavedSellers') {
+                    displaySellers(allSellers);
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadSellers();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('📋 Seller Directory loaded successfully!');
+        });
+    </script>
+</body>
+</html>

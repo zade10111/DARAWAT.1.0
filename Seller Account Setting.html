@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - DARAWAT</title>
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Seller Account Setting.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Seller!</div>
+                    <a href="Register as Seller.html" class="user-avatar" id="userAvatar">S</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="Register as Seller.html"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="Seller Profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="#" class="active"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="Seller Order History.html"><i class="fas fa-box"></i> Order History</a>
+                <a href="Seller Products.html"><i class="fas fa-list"></i> My Products</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-sliders-h"></i> Account Settings</h1>
+                <p>Manage your seller account preferences and business settings</p>
+            </div>
+
+            <div class="settings-container">
+                <div class="settings-sidebar">
+                    <ul class="settings-menu">
+                        <li><a href="#account" class="active" onclick="showSection('account', event)"><i class="fas fa-user-edit"></i> Account Information</a></li>
+                        <li><a href="#notifications" onclick="showSection('notifications', event)"><i class="fas fa-bell"></i> Notifications</a></li>
+                        <li><a href="#payments" onclick="showSection('payments', event)"><i class="fas fa-money-bill-wave"></i> Payment Methods</a></li>
+                        <li><a href="#shipping" onclick="showSection('shipping', event)"><i class="fas fa-truck"></i> Shipping & Delivery</a></li>
+                        <li><a href="#privacy" onclick="showSection('privacy', event)"><i class="fas fa-lock"></i> Privacy & Security</a></li>
+                        <li><a href="#business" onclick="showSection('business', event)"><i class="fas fa-store"></i> Business Settings</a></li>
+                        <li><a href="#theme" onclick="showSection('theme', event)"><i class="fas fa-palette"></i> Theme Preference</a></li>
+                    </ul>
+                </div>
+
+                <div class="settings-content">
+                    <!-- Success and Error Messages -->
+                    <div id="successMessage" class="success-message"></div>
+                    <div id="errorMessage" class="error-message"></div>
+
+                    <!-- Account Information Section -->
+                    <div id="account-section" class="settings-section">
+                        <h2 class="section-title"><i class="fas fa-user-edit"></i> Account Information</h2>
+                        
+                        <form id="accountForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Farm Name</label>
+                                    <input type="text" id="farmName" placeholder="Enter your farm name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Farm Type</label>
+                                    <select id="farmType">
+                                        <option value="">Select Farm Type</option>
+                                        <option value="Vegetable Farm">Vegetable Farm</option>
+                                        <option value="Fruit Orchard">Fruit Orchard</option>
+                                        <option value="Grain Farm">Grain Farm</option>
+                                        <option value="Livestock Farm">Livestock Farm</option>
+                                        <option value="Dairy Farm">Dairy Farm</option>
+                                        <option value="Mixed Farming">Mixed Farming</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Owner Name</label>
+                                <input type="text" id="ownerName" placeholder="Enter owner name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="accountEmail" placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="accountPhone" placeholder="Enter your phone number">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Business Address</label>
+                                <textarea id="businessAddress" rows="3" placeholder="Enter your farm/business address"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Preferred Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="tl">Tagalog</option>
+                                    <option value="es">Spanish</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn"><i class="fas fa-save"></i> Save Changes</button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm('accountForm')"><i class="fas fa-times"></i> Reset</button>
+                        </form>
+                    </div>
+
+                    <!-- Notifications Section -->
+                    <div id="notifications-section" class="settings-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-bell"></i> Notification Preferences</h2>
+                        <p>Choose how you want to be notified about orders and platform updates.</p>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-shopping-cart"></i> New Order Alerts</h4>
+                                <p>Get notified when you receive new orders</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="orderAlerts" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-box"></i> Order Updates</h4>
+                                <p>Notifications when order status changes</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="orderUpdates" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-exclamation-triangle"></i> Low Stock Alerts</h4>
+                                <p>Get notified when products are running low</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="stockAlerts" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-comment"></i> Buyer Messages</h4>
+                                <p>Notifications when buyers send messages</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="buyerMessages" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-sync"></i> Platform Updates</h4>
+                                <p>Important updates from FarmNet</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="platformUpdates" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="notification-item">
+                            <div class="notification-info">
+                                <h4><i class="fas fa-mail-bulk"></i> Marketing Emails</h4>
+                                <p>Promotional offers and farming tips</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="marketingEmails">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Notification Methods</label>
+                            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                                <label>
+                                    <input type="checkbox" id="emailNotifications" checked> <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="smsNotifications"> <i class="fas fa-sms"></i> SMS
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="pushNotifications" checked> <i class="fas fa-bell"></i> Push Notifications
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button class="btn" onclick="saveNotificationSettings()"><i class="fas fa-save"></i> Save Notification Settings</button>
+                    </div>
+
+                    <!-- Payment Methods Section -->
+                    <div id="payments-section" class="settings-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-money-bill-wave"></i> Payment Methods</h2>
+                        <p>Set up how you want to receive payments from buyers</p>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-method selected" data-method="bank-transfer">
+                                <div class="payment-icon"><i class="fas fa-university"></i></div>
+                                <h4>Bank Transfer</h4>
+                                <p>Direct bank deposits</p>
+                            </div>
+                            
+                            <div class="payment-method" data-method="gcash">
+                                <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
+                                <h4>GCash</h4>
+                                <p>Mobile payments</p>
+                            </div>
+                            
+                            <div class="payment-method" data-method="paymaya">
+                                <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
+                                <h4>PayMaya</h4>
+                                <p>Digital wallet</p>
+                            </div>
+                            
+                            <div class="payment-method" data-method="cash-pickup">
+                                <div class="payment-icon"><i class="fas fa-money-bill"></i></div>
+                                <h4>Cash Pickup</h4>
+                                <p>Remittance centers</p>
+                            </div>
+                        </div>
+                        
+                        <div id="bank-details" class="form-group">
+                            <label>Bank Name</label>
+                            <input type="text" id="bankName" placeholder="Enter bank name">
+                            
+                            <label>Account Number</label>
+                            <input type="text" id="accountNumber" placeholder="Enter account number">
+                            
+                            <label>Account Name</label>
+                            <input type="text" id="accountName" placeholder="Enter account holder name">
+                        </div>
+                        
+                        <div id="gcash-details" class="form-group" style="display: none;">
+                            <label>GCash Number</label>
+                            <input type="text" id="gcashNumber" placeholder="Enter GCash mobile number">
+                            
+                            <label>Account Name</label>
+                            <input type="text" id="gcashName" placeholder="Enter GCash account name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Payout Schedule</label>
+                            <select id="payoutSchedule">
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="bi-weekly">Bi-Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn" onclick="savePaymentSettings()"><i class="fas fa-save"></i> Save Payment Settings</button>
+                    </div>
+
+                    <!-- Shipping & Delivery Section -->
+                    <div id="shipping-section" class="settings-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-truck"></i> Shipping & Delivery</h2>
+                        
+                        <div class="form-group">
+                            <label>Delivery Radius</label>
+                            <select id="deliveryRadius">
+                                <option value="5">5 km</option>
+                                <option value="10">10 km</option>
+                                <option value="15">15 km</option>
+                                <option value="20">20 km</option>
+                                <option value="25">25 km</option>
+                                <option value="50">50 km</option>
+                                <option value="national">Nationwide</option>
+                            </select>
+                        </div>
+                        
+                        <div class="shipping-options">
+                            <h4>Shipping Options</h4>
+                            
+                            <div class="shipping-option">
+                                <div class="notification-info">
+                                    <h4><i class="fas fa-home"></i> Farm Pickup</h4>
+                                    <p>Buyers collect orders directly from your farm</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="farmPickup" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="shipping-option">
+                                <div class="notification-info">
+                                    <h4><i class="fas fa-car"></i> Local Delivery</h4>
+                                    <p>You deliver orders within your area</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="localDelivery" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="shipping-option">
+                                <div class="notification-info">
+                                    <h4><i class="fas fa-box"></i> Courier Service</h4>
+                                    <p>Use third-party delivery services</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="courierService">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Delivery Fee</label>
+                            <input type="text" id="deliveryFee" placeholder="₱" value="50">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Free Delivery Threshold</label>
+                            <input type="text" id="freeDeliveryThreshold" placeholder="₱" value="500">
+                            <small style="color: #666;">Minimum order amount for free delivery</small>
+                        </div>
+                        
+                        <button class="btn" onclick="saveShippingSettings()"><i class="fas fa-save"></i> Save Shipping Settings</button>
+                    </div>
+
+                    <!-- Privacy & Security Section -->
+                    <div id="privacy-section" class="settings-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-lock"></i> Privacy & Security</h2>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4><i class="fas fa-shield-alt"></i> Two-Factor Authentication</h4>
+                                <p>Add an extra layer of security to your account</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="twoFactorAuth">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="security-item">
+                            <div class="security-info">
+                                <h4><i class="fas fa-bell"></i> Login Notifications</h4>
+                                <p>Get notified when someone logs into your account</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="loginNotifications" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current password">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                        </div>
+                        
+                        <button class="btn" onclick="changePassword()"><i class="fas fa-lock"></i> Change Password</button>
+                        
+                        <div class="danger-zone">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Danger Zone</h3>
+                            <p>Once you delete your seller account, there is no going back. Please be certain.</p>
+                            <button class="btn btn-danger" onclick="showDeleteConfirmation()"><i class="fas fa-trash-alt"></i> Delete Seller Account</button>
+                        </div>
+                    </div>
+
+                    <!-- Business Settings Section -->
+                    <div id="business-section" class="settings-section" style="display: none;">
+                        <h2 class="section-title"><i class="fas fa-store"></i> Business Settings</h2>
+                        
+                        <div class="form-group">
+                            <label>Business Hours</label>
+                            <div class="business-hours">
+                                <div>
+                                    <label>Opening Time</label>
+                                    <input type="time" id="openingTime" value="08:00">
+                                </div>
+                                <div>
+                                    <label>Closing Time</label>
+                                    <input type="time" id="closingTime" value="17:00">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Weekend Operations</label>
+                            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                                <label>
+                                    <input type="checkbox" id="saturdayOperations"> Saturday
+                                </label>
+                                <label>
+                                    <input type="checkbox" id="sundayOperations"> Sunday
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Order Cut-off Time</label>
+                            <input type="time" id="orderCutoffTime" value="14:00">
+                            <small style="color: #666;">Last time to accept orders for same-day processing</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Minimum Order Amount</label>
+                            <input type="text" id="minOrderAmount" placeholder="₱" value="100">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Auto-Confirm Orders</label>
+                            <select id="autoOrderConfirmation">
+                                <option value="enabled">Enabled</option>
+                                <option value="disabled">Disabled</option>
+                            </select>
+                            <small style="color: #666;">Automatically confirm incoming orders</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Holiday Mode</label>
+                            <select id="holidayMode">
+                                <option value="disabled">Disabled</option>
+                                <option value="enabled">Enabled</option>
+                            </select>
+                            <small style="color: #666;">Temporarily pause orders during holidays</small>
+                        </div>
+                        
+                        <button class="btn" onclick="saveBusinessSettings()"><i class="fas fa-save"></i> Save Business Settings</button>
+                    </div>
+
+                    <!-- Theme Preference Section - SEPARATE section below business -->
+                    <div id="theme-section" class="settings-section" style="display: none;">
+                        <div class="theme-section">
+                            <h2 class="section-title"><i class="fas fa-palette"></i> Theme Preference</h2>
+                            <p>Choose your preferred visual theme for the FarmNet dashboard.</p>
+                            
+                            <div class="theme-toggle-container">
+                                <span class="theme-toggle-label"><i class="fas fa-sun"></i><i class="fas fa-moon" style="margin-left: 6px;"></i> Select Theme</span>
+                                <div class="theme-toggle-buttons">
+                                    <button class="theme-btn active-theme" data-theme="light" onclick="setTheme('light')">
+                                        <i class="fas fa-sun"></i> Light
+                                    </button>
+                                    <button class="theme-btn" data-theme="dark" onclick="setTheme('dark')">
+                                        <i class="fas fa-moon"></i> Dark
+                                    </button>
+                                </div>
+                            </div>
+                            <p style="margin-top: 0.5rem; color: #888; font-size: 0.9rem;">
+                                <i class="fas fa-info-circle"></i> Your theme preference is saved automatically.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Seller.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
+                <span class="mobile-nav-label">Back</span>
+            </a>
+            <a href="Seller Profile.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span class="mobile-nav-label">Profile</span>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="mobile-nav-label">Settings</span>
+            </a>
+            <a href="Seller Order History.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span class="mobile-nav-label">Orders</span>
+            </a>
+            <a href="Seller Products.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-list"></i></span>
+                <span class="mobile-nav-label">Products</span>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        function checkAuthentication() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('Please log in to access account settings.');
+                window.location.href = 'Register as Seller.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load user data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuthentication()) return;
+            
+            loadUserData();
+            loadSellerPreferences();
+            setupEventListeners();
+            setupMobileNavigation();
+            loadThemePreference();
+        });
+
+        // Set up mobile navigation active states
+        function setupMobileNavigation() {
+            const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+            
+            mobileNavItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    mobileNavItems.forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                document.getElementById('welcomeMessage').textContent = `Welcome, ${currentUser.name || currentUser.farmName}!`;
+                
+                const userAvatar = document.getElementById('userAvatar');
+                if (currentUser.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${currentUser.profilePicture}" alt="Profile Picture">`;
+                } else {
+                    userAvatar.textContent = (currentUser.name || currentUser.farmName).charAt(0).toUpperCase();
+                }
+                
+                document.getElementById('farmName').value = currentUser.farmName || '';
+                document.getElementById('farmType').value = currentUser.farmType || '';
+                document.getElementById('ownerName').value = currentUser.name || '';
+                document.getElementById('accountEmail').value = currentUser.email || '';
+                document.getElementById('accountPhone').value = currentUser.phone || '';
+                document.getElementById('businessAddress').value = currentUser.businessAddress || currentUser.address || '';
+            }
+        }
+
+        // Load seller preferences from localStorage
+        function loadSellerPreferences() {
+            const preferences = JSON.parse(localStorage.getItem('sellerPreferences') || '{}');
+            
+            document.getElementById('orderAlerts').checked = preferences.orderAlerts !== false;
+            document.getElementById('orderUpdates').checked = preferences.orderUpdates !== false;
+            document.getElementById('stockAlerts').checked = preferences.stockAlerts !== false;
+            document.getElementById('buyerMessages').checked = preferences.buyerMessages !== false;
+            document.getElementById('platformUpdates').checked = preferences.platformUpdates !== false;
+            document.getElementById('marketingEmails').checked = preferences.marketingEmails || false;
+            document.getElementById('emailNotifications').checked = preferences.emailNotifications !== false;
+            document.getElementById('smsNotifications').checked = preferences.smsNotifications || false;
+            document.getElementById('pushNotifications').checked = preferences.pushNotifications !== false;
+            
+            const paymentMethod = preferences.paymentMethod || 'bank-transfer';
+            document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+            document.querySelector(`.payment-method[data-method="${paymentMethod}"]`).classList.add('selected');
+            document.getElementById('bankName').value = preferences.bankName || '';
+            document.getElementById('accountNumber').value = preferences.accountNumber || '';
+            document.getElementById('accountName').value = preferences.accountName || '';
+            document.getElementById('gcashNumber').value = preferences.gcashNumber || '';
+            document.getElementById('gcashName').value = preferences.gcashName || '';
+            document.getElementById('payoutSchedule').value = preferences.payoutSchedule || 'weekly';
+            
+            document.getElementById('deliveryRadius').value = preferences.deliveryRadius || '10';
+            document.getElementById('farmPickup').checked = preferences.farmPickup !== false;
+            document.getElementById('localDelivery').checked = preferences.localDelivery !== false;
+            document.getElementById('courierService').checked = preferences.courierService || false;
+            document.getElementById('deliveryFee').value = preferences.deliveryFee || '50';
+            document.getElementById('freeDeliveryThreshold').value = preferences.freeDeliveryThreshold || '500';
+            
+            document.getElementById('twoFactorAuth').checked = preferences.twoFactorAuth || false;
+            document.getElementById('loginNotifications').checked = preferences.loginNotifications !== false;
+            
+            document.getElementById('openingTime').value = preferences.openingTime || '08:00';
+            document.getElementById('closingTime').value = preferences.closingTime || '17:00';
+            document.getElementById('saturdayOperations').checked = preferences.saturdayOperations || false;
+            document.getElementById('sundayOperations').checked = preferences.sundayOperations || false;
+            document.getElementById('orderCutoffTime').value = preferences.orderCutoffTime || '14:00';
+            document.getElementById('minOrderAmount').value = preferences.minOrderAmount || '100';
+            document.getElementById('autoOrderConfirmation').value = preferences.autoOrderConfirmation || 'enabled';
+            document.getElementById('holidayMode').value = preferences.holidayMode || 'disabled';
+            document.getElementById('language').value = preferences.language || 'en';
+            
+            updatePaymentDetails(paymentMethod);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const methodType = this.getAttribute('data-method');
+                    updatePaymentDetails(methodType);
+                });
+            });
+
+            document.getElementById('accountForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveAccountInfo();
+            });
+        }
+
+        // Show/hide sections
+        function showSection(sectionName, event) {
+            if (event) {
+                event.preventDefault();
+            }
+            
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.settings-menu a').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(sectionName + '-section').style.display = 'block';
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        // Update payment details display based on selected method
+        function updatePaymentDetails(methodType) {
+            document.getElementById('bank-details').style.display = 'none';
+            document.getElementById('gcash-details').style.display = 'none';
+            
+            if (methodType === 'bank-transfer') {
+                document.getElementById('bank-details').style.display = 'block';
+            } else if (methodType === 'gcash') {
+                document.getElementById('gcash-details').style.display = 'block';
+            }
+        }
+
+        // Save account information
+        function saveAccountInfo() {
+            if (!checkAuthentication()) return;
+            
+            const userData = {
+                farmName: document.getElementById('farmName').value,
+                farmType: document.getElementById('farmType').value,
+                name: document.getElementById('ownerName').value,
+                email: document.getElementById('accountEmail').value,
+                phone: document.getElementById('accountPhone').value,
+                businessAddress: document.getElementById('businessAddress').value,
+                language: document.getElementById('language').value
+            };
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const updatedUser = { ...currentUser, ...userData };
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex !== -1) {
+                users[userIndex] = { ...users[userIndex], ...userData };
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+            }
+            
+            showToast('Account information updated successfully!');
+            loadUserData();
+        }
+
+        // Save notification settings
+        function saveNotificationSettings() {
+            if (!checkAuthentication()) return;
+            
+            const preferences = {
+                orderAlerts: document.getElementById('orderAlerts').checked,
+                orderUpdates: document.getElementById('orderUpdates').checked,
+                stockAlerts: document.getElementById('stockAlerts').checked,
+                buyerMessages: document.getElementById('buyerMessages').checked,
+                platformUpdates: document.getElementById('platformUpdates').checked,
+                marketingEmails: document.getElementById('marketingEmails').checked,
+                emailNotifications: document.getElementById('emailNotifications').checked,
+                smsNotifications: document.getElementById('smsNotifications').checked,
+                pushNotifications: document.getElementById('pushNotifications').checked
+            };
+            
+            savePreferencesToStorage(preferences);
+            showToast('Notification settings saved successfully!');
+        }
+
+        // Save payment settings
+        function savePaymentSettings() {
+            if (!checkAuthentication()) return;
+            
+            const selectedMethod = document.querySelector('.payment-method.selected').getAttribute('data-method');
+            const preferences = {
+                paymentMethod: selectedMethod,
+                bankName: document.getElementById('bankName').value,
+                accountNumber: document.getElementById('accountNumber').value,
+                accountName: document.getElementById('accountName').value,
+                gcashNumber: document.getElementById('gcashNumber').value,
+                gcashName: document.getElementById('gcashName').value,
+                payoutSchedule: document.getElementById('payoutSchedule').value
+            };
+            
+            savePreferencesToStorage(preferences);
+            showToast('Payment settings saved successfully!');
+        }
+
+        // Save shipping settings
+        function saveShippingSettings() {
+            if (!checkAuthentication()) return;
+            
+            const preferences = {
+                deliveryRadius: document.getElementById('deliveryRadius').value,
+                farmPickup: document.getElementById('farmPickup').checked,
+                localDelivery: document.getElementById('localDelivery').checked,
+                courierService: document.getElementById('courierService').checked,
+                deliveryFee: document.getElementById('deliveryFee').value,
+                freeDeliveryThreshold: document.getElementById('freeDeliveryThreshold').value
+            };
+            
+            savePreferencesToStorage(preferences);
+            showToast('Shipping settings saved successfully!');
+        }
+
+        // Save business settings
+        function saveBusinessSettings() {
+            if (!checkAuthentication()) return;
+            
+            const preferences = {
+                openingTime: document.getElementById('openingTime').value,
+                closingTime: document.getElementById('closingTime').value,
+                saturdayOperations: document.getElementById('saturdayOperations').checked,
+                sundayOperations: document.getElementById('sundayOperations').checked,
+                orderCutoffTime: document.getElementById('orderCutoffTime').value,
+                minOrderAmount: document.getElementById('minOrderAmount').value,
+                autoOrderConfirmation: document.getElementById('autoOrderConfirmation').value,
+                holidayMode: document.getElementById('holidayMode').value,
+                language: document.getElementById('language').value
+            };
+            
+            savePreferencesToStorage(preferences);
+            showToast('Business settings saved successfully!');
+        }
+
+        // Change password
+        function changePassword() {
+            if (!checkAuthentication()) return;
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Please fill in all password fields.', 'error');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showToast('New password must be at least 6 characters long.', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match.', 'error');
+                return;
+            }
+            
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            
+            if (userIndex !== -1 && users[userIndex].password === currentPassword) {
+                users[userIndex].password = newPassword;
+                currentUser.password = newPassword;
+                
+                localStorage.setItem('farmConnectUsers', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                showToast('Password changed successfully!');
+                
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('confirmPassword').value = '';
+            } else {
+                showToast('Current password is incorrect.', 'error');
+            }
+        }
+
+        // Helper function to save preferences to localStorage
+        function savePreferencesToStorage(newPreferences) {
+            const existingPreferences = JSON.parse(localStorage.getItem('sellerPreferences') || '{}');
+            const updatedPreferences = { ...existingPreferences, ...newPreferences };
+            localStorage.setItem('sellerPreferences', JSON.stringify(updatedPreferences));
+        }
+
+        // Show confirmation for account deletion
+        function showDeleteConfirmation() {
+            if (!checkAuthentication()) return;
+            
+            if (confirm('Are you sure you want to delete your seller account? This action cannot be undone and will remove all your products and order history.')) {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+                const updatedUsers = users.filter(u => u.email !== currentUser.email);
+                
+                const sellerProductsKey = `sellerProducts_${currentUser.email}`;
+                localStorage.removeItem(sellerProductsKey);
+                
+                localStorage.setItem('farmConnectUsers', JSON.stringify(updatedUsers));
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('sellerPreferences');
+                
+                alert('Your seller account has been deleted. Redirecting to home page...');
+                window.location.href = 'Register as Seller.html';
+            }
+        }
+
+        // Reset form
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            loadUserData();
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = toast.querySelector('i');
+            const toastText = toast.querySelector('span');
+            
+            toastText.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === 'error') {
+                toast.classList.add('error');
+                toastIcon.className = 'fas fa-exclamation-circle';
+            } else {
+                toastIcon.className = 'fas fa-check-circle';
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ---- Theme Management ----
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            setTheme(theme, false);
+        }
+
+        function setTheme(theme, save = true) {
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+            
+            // Update active button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active-theme', btn.dataset.theme === theme);
+            });
+            
+            if (save) {
+                localStorage.setItem('farmnetTheme', theme);
+                showToast(`Theme switched to ${theme.charAt(0).toUpperCase() + theme.slice(1)} mode!`);
+            }
+        }
+
+        // Listen for storage changes to sync across tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'currentUser' || e.key === 'sellerPreferences') {
+                loadUserData();
+                loadSellerPreferences();
+            }
+            if (e.key === 'farmnetTheme') {
+                loadThemePreference();
+            }
+        });
+    </script>
+</body>
+</html>

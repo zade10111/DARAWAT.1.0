@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Onboarding - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+      <link rel="stylesheet" href="Css/Buyer Onboarding.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> Sellers
+                    </a>
+                    <a href="Product Categories.html" class="nav-link">
+                        <i class="fas fa-tags"></i> Categories
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-rocket"></i> Welcome to DARAWAT!</h1>
+                <p>Complete these steps to start finding and buying fresh products</p>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress-section">
+                <div class="progress-info">
+                    <span>Getting Started Progress</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Welcome Box -->
+            <div class="welcome-box">
+                <h2>🛒 Welcome to DARAWAT!</h2>
+                <p>Complete the steps below to set up your buyer account and start connecting with local farmers. Each step you complete brings you closer to fresh, farm-direct products.</p>
+            </div>
+
+            <!-- Steps -->
+            <div class="steps-container" id="stepsContainer">
+                <!-- Step 1: Complete Profile -->
+                <div class="step-card" id="step1" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Complete Your Profile</div>
+                        <div class="step-description">Add your name, location, and contact details so sellers can connect with you.</div>
+                        <div class="step-status pending" id="step1Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Buyer Profile.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-user-edit"></i> Complete Profile
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(1)" id="step1Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Browse Sellers -->
+                <div class="step-card" id="step2" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Browse Sellers</div>
+                        <div class="step-description">Explore the directory of farmers and sellers to find the products you're looking for.</div>
+                        <div class="step-status pending" id="step2Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Directory.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-store"></i> Browse Sellers
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(2)" id="step2Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-title"><i class="fas fa-lightbulb"></i> Tip</div>
+                            <div class="tip-text">Use the search bar and filters to find sellers near you or those selling specific products.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Browse Categories -->
+                <div class="step-card" id="step3" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Browse Product Categories</div>
+                        <div class="step-description">Discover products by category - Vegetables, Fruits, Grains, Livestock, and more.</div>
+                        <div class="step-status pending" id="step3Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Product Categories.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-tags"></i> Browse Categories
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(3)" id="step3Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-title"><i class="fas fa-lightbulb"></i> Tip</div>
+                            <div class="tip-text">Categories help you find exactly what you're looking for. Start with your favorite category!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Contact a Seller -->
+                <div class="step-card" id="step4" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Contact a Seller</div>
+                        <div class="step-description">Reach out to a seller to ask about their products, availability, and pricing.</div>
+                        <div class="step-status pending" id="step4Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="Seller Directory.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-comment"></i> Find a Seller
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(4)" id="step4Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-title"><i class="fas fa-lightbulb"></i> Tip</div>
+                            <div class="tip-text">Be clear about what you're looking for - quantity, quality, and delivery preferences.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Explore Platform -->
+                <div class="step-card" id="step5" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <div class="step-title">Explore the Platform</div>
+                        <div class="step-description">Learn how to save sellers, manage messages, and make the most of DARAWAT.</div>
+                        <div class="step-status pending" id="step5Status">
+                            <span class="status-icon">⏳</span> Pending
+                        </div>
+                        <div class="step-actions">
+                            <a href="How It Works.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-book"></i> Learn More
+                            </a>
+                            <button class="btn btn-success btn-sm" onclick="markStepComplete(5)" id="step5Btn" style="display:none;">
+                                <i class="fas fa-check"></i> Mark as Done
+                            </button>
+                        </div>
+                        <div class="tip-box">
+                            <div class="tip-title"><i class="fas fa-lightbulb"></i> Tip</div>
+                            <div class="tip-text">Explore all the features - save your favorite sellers, check messages, and discover new products.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Message -->
+            <div class="completion-message" id="completionMessage">
+                <i class="fas fa-trophy"></i>
+                <h2>🎉 All Steps Complete!</h2>
+                <p>You're all set! You can now start browsing products and connecting with sellers on FarmNet. Happy shopping!</p>
+                <a href="Register as Buyer.html" class="btn btn-primary">
+                    <i class="fas fa-th-large"></i> Go to Dashboard
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+            <a href="Product Categories.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-tags"></i></span>
+                <span>Categories</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-rocket"></i></span>
+                <span>Get Started</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // BUYER ONBOARDING - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const completionMessage = document.getElementById('completionMessage');
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Buyer!';
+                userAvatar.textContent = 'B';
+            }
+        }
+
+        // ============================================================
+        // LOAD ONBOARDING PROGRESS
+        // ============================================================
+        function loadProgress() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectBuyerOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            // Check each step
+            for (let i = 1; i <= 5; i++) {
+                const stepCard = document.getElementById(`step${i}`);
+                const statusEl = document.getElementById(`step${i}Status`);
+                const completeBtn = document.getElementById(`step${i}Btn`);
+                
+                if (userProgress[`step${i}`]) {
+                    // Step is complete
+                    stepCard.classList.add('completed');
+                    stepCard.classList.remove('active', 'locked');
+                    statusEl.className = 'step-status completed';
+                    statusEl.innerHTML = '<span class="status-icon">✅</span> Complete';
+                    if (completeBtn) completeBtn.style.display = 'none';
+                } else {
+                    // Step is pending
+                    stepCard.classList.remove('completed', 'locked');
+                    stepCard.classList.add('active');
+                    statusEl.className = 'step-status pending';
+                    statusEl.innerHTML = '<span class="status-icon">⏳</span> Pending';
+                    if (completeBtn) completeBtn.style.display = 'inline-flex';
+                }
+            }
+
+            updateProgress();
+        }
+
+        // ============================================================
+        // MARK STEP COMPLETE
+        // ============================================================
+        function markStepComplete(step) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to save your progress.', 'error');
+                return;
+            }
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectBuyerOnboarding') || '{}');
+            if (!progress[user.email]) progress[user.email] = {};
+
+            progress[user.email][`step${step}`] = true;
+            localStorage.setItem('farmConnectBuyerOnboarding', JSON.stringify(progress));
+
+            // Update UI
+            const stepCard = document.getElementById(`step${step}`);
+            const statusEl = document.getElementById(`step${step}Status`);
+            const completeBtn = document.getElementById(`step${step}Btn`);
+
+            stepCard.classList.add('completed');
+            stepCard.classList.remove('active');
+            statusEl.className = 'step-status completed';
+            statusEl.innerHTML = '<span class="status-icon">✅</span> Complete';
+            if (completeBtn) completeBtn.style.display = 'none';
+
+            showToast(`Step ${step} completed! 🎉`, 'success');
+            updateProgress();
+            checkAllComplete();
+        }
+
+        // ============================================================
+        // UPDATE PROGRESS
+        // ============================================================
+        function updateProgress() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectBuyerOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            let completed = 0;
+            for (let i = 1; i <= 5; i++) {
+                if (userProgress[`step${i}`]) completed++;
+            }
+
+            const percentage = Math.round((completed / 5) * 100);
+            progressFill.style.width = `${percentage}%`;
+            progressText.textContent = `${percentage}%`;
+        }
+
+        // ============================================================
+        // CHECK ALL COMPLETE
+        // ============================================================
+        function checkAllComplete() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectBuyerOnboarding') || '{}');
+            const userProgress = progress[user.email] || {};
+
+            let allComplete = true;
+            for (let i = 1; i <= 5; i++) {
+                if (!userProgress[`step${i}`]) {
+                    allComplete = false;
+                    break;
+                }
+            }
+
+            if (allComplete) {
+                completionMessage.classList.add('show');
+                document.querySelector('.steps-container').style.opacity = '0.5';
+                showToast('🎉 All onboarding steps complete!', 'success');
+            } else {
+                completionMessage.classList.remove('show');
+                document.querySelector('.steps-container').style.opacity = '1';
+            }
+        }
+
+        // ============================================================
+        // RESET ONBOARDING (for testing/debug)
+        // ============================================================
+        function resetOnboarding() {
+            const user = getCurrentUser();
+            if (!user) return;
+
+            if (!confirm('Reset all onboarding progress?')) return;
+
+            const progress = JSON.parse(localStorage.getItem('farmConnectBuyerOnboarding') || '{}');
+            progress[user.email] = {};
+            localStorage.setItem('farmConnectBuyerOnboarding', JSON.stringify(progress));
+
+            loadProgress();
+            completionMessage.classList.remove('show');
+            document.querySelector('.steps-container').style.opacity = '1';
+            showToast('Onboarding progress reset.', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectBuyerOnboarding') {
+                    loadProgress();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadProgress();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('🚀 Buyer Onboarding loaded successfully!');
+        });
+    </script>
+</body>
+</html>

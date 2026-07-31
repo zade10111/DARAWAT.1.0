@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ | DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/FAQ.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">❓</div>
+            <h1>Frequently Asked Questions</h1>
+            <p class="tagline">Find answers to common questions about DARAWAT</p>
+        </div>
+    </header>
+    
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search for answers...">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="faq-categories">
+        <div class="container">
+            <button class="category-btn active" data-category="all">
+                <i class="fas fa-th"></i> All Questions
+            </button>
+            <button class="category-btn" data-category="farmers">
+                <i class="fas fa-user"></i> For Farmers
+            </button>
+            <button class="category-btn" data-category="buyers">
+                <i class="fas fa-shopping-cart"></i> For Buyers
+            </button>
+            <button class="category-btn" data-category="platform">
+                <i class="fas fa-cogs"></i> Platform Features
+            </button>
+            <button class="category-btn" data-category="partnerships">
+                <i class="fas fa-handshake"></i> Partnerships
+            </button>
+        </div>
+    </section>
+    
+    <section class="faq-sections">
+        <div class="container">
+            <!-- Farmers & Sellers Section -->
+            <div class="faq-section" id="farmers">
+                <div class="section-header">
+                    <div class="section-icon">🧑‍🌾</div>
+                    <h2 class="section-title">For Farmers & Sellers</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I list my products?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Just sign up, choose "Seller" as your role, and tap "Add Product." Upload a photo, set your price, and choose availability dates. You can write descriptions in Tagalog, Cebuano, Hiligaynon, or Waray.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I use FarmNet without internet?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! FarmNet is offline-ready. You can manage inventory, view orders, and update listings even in low-signal areas. Changes sync automatically when you reconnect.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What if I don't have a smartphone?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can access FarmNet via desktop or shared devices at cooperatives or barangay hubs. SMS support is also available for basic functions.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Buyers Section -->
+            <div class="faq-section" id="buyers">
+                <div class="section-header">
+                    <div class="section-icon">🛒</div>
+                    <h2 class="section-title">For Buyers</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I place an order?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Browse products, add items to your cart, choose delivery or pickup, and confirm payment. You'll get real-time updates and seller messages.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What payment methods are accepted?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>FarmNet supports mobile wallets (GCash, Maya), cash-on-delivery, and cooperative credits. More options are coming soon.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I trust the sellers?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. Each seller has a profile, trust rating, and farm story. You can chat with them directly and leave reviews after purchase.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Platform Features Section -->
+            <div class="faq-section" id="platform">
+                <div class="section-header">
+                    <div class="section-icon">🧩</div>
+                    <h2 class="section-title">Platform Features</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What languages does FarmNet support?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Tagalog, English, Cebuano, Hiligaynon, Waray — with more coming soon. You can switch languages anytime in the settings.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What makes FarmNet different from other marketplaces?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>FarmNet is built for Filipino agriculture. It's modular, offline-first, emoji-enhanced, and designed with local pride. We support farmers, cooperatives, and LGUs — not just transactions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is my data safe?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. FarmNet uses encrypted transactions, secure logins, and consent-based data sharing. We never sell your information.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Partnerships Section -->
+            <div class="faq-section" id="partnerships">
+                <div class="section-header">
+                    <div class="section-icon">🤝</div>
+                    <h2 class="section-title">Partnerships & Support</h2>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can LGUs or NGOs use FarmNet?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely. We offer admin dashboards, training modules, and onboarding support for government and nonprofit partners.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I get help?
+                        <div class="faq-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Tap the 🧑‍🌾 icon in the app, email support@farmnet.ph, or text "TANONG" to 2929. We respond in your preferred language.</p>
+                    </div>
+                </div>
+            </div>
+            
+        
+            
+            <!-- Support Section -->
+            <div class="support-section">
+                <h3 class="support-title">Still Need Help?</h3>
+                <p>Our support team is ready to assist you in Tagalog, Cebuano, Hiligaynon, or Waray.</p>
+                
+                <div class="support-options">
+                    <a href="Contact us.html" class="support-option">
+                        <div class="support-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="support-label">Contact Support</div>
+                        <div class="support-value">Get in touch with our team</div>
+                    </a>
+                    
+                    <a href="Help Center.html" class="support-option">
+                        <div class="support-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="support-label">Help Center</div>
+                        <div class="support-value">Guides and documentation</div>
+                    </a>
+                    
+                    <a href="Community Guidelines.html" class="support-option">
+                        <div class="support-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="support-label">Community Guidelines</div>
+                        <div class="support-value">Our community standards</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-logo">🌾 DARAWAT</div>
+            <p class="footer-tagline">Let's make farming digital — and make digital feel like home.</p>
+            <p>© 2026 DARAWAT. All rights reserved.</p>
+            
+            
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+        
+        // Category Filtering
+        document.querySelectorAll('.category-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const category = button.getAttribute('data-category');
+                
+                // Show/hide sections based on category
+                document.querySelectorAll('.faq-section').forEach(section => {
+                    if (category === 'all' || section.id === category) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search Functionality
+        const searchBox = document.querySelector('.search-box');
+        searchBox.addEventListener('input', () => {
+            const searchTerm = searchBox.value.toLowerCase();
+            
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+                
+                if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    
+                    // Expand matching items
+                    if (searchTerm && !item.classList.contains('active')) {
+                        item.classList.add('active');
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

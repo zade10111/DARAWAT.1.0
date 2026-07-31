@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Farms · DARAWAT</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="Css/Nearby Farms.css">
+      
+</head>
+<body>
+<div class="container">
+    <!-- header -->
+    <div class="page-header">
+        <h1><i class="fas fa-map-pin"></i> Nearby Farms</h1>
+        <!-- ===== CLICKABLE LOCATION BADGE ===== -->
+        <div class="location-badge" id="locationBadge">
+            <i class="fas fa-location-dot"></i>
+            <span id="locationDisplay">Batangas City</span>
+            <span style="color:#94a3b8; margin:0 0.2rem;">·</span>
+            <span id="radiusDisplay">5.2</span> <span style="font-size:0.8rem;">km radius</span>
+            <i class="fas fa-chevron-down chevron"></i>
+        </div>
+    </div>
+
+    <!-- ===== LOCATION MODAL ===== -->
+    <div class="location-modal" id="locationModal">
+        <div class="location-modal-content">
+            <div class="location-modal-header">
+                <h2><i class="fas fa-map-pin" style="color:#3b8b6e;"></i> Change Location</h2>
+                <button class="location-modal-close" id="locationModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="locationForm">
+                <div class="form-group">
+                    <label for="provinceSelect"><i class="fas fa-map"></i> Province</label>
+                    <select id="provinceSelect">
+                        <option value="">Select Province...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="citySelect"><i class="fas fa-city"></i> City / Municipality</label>
+                    <select id="citySelect">
+                        <option value="">Select City / Municipality...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="radiusSelect"><i class="fas fa-route"></i> Search Radius</label>
+                    <select id="radiusSelect">
+                        <option value="2">2 km</option>
+                        <option value="5" selected>5 km</option>
+                        <option value="10">10 km</option>
+                        <option value="20">20 km</option>
+                        <option value="50">50 km</option>
+                        <option value="100">100 km</option>
+                    </select>
+                </div>
+                <div class="location-modal-actions">
+                    <button type="button" class="btn-location use-gps" id="useGpsBtn">
+                        <i class="fas fa-satellite-dish"></i> GPS
+                    </button>
+                    <button type="submit" class="btn-location primary">
+                        <i class="fas fa-check"></i> Update
+                    </button>
+                    <button type="button" class="btn-location secondary" id="locationCancelBtn">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+            <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #e8f0ec; display:flex; justify-content:space-between; font-size:0.8rem; color:#94a3b8;">
+                <span><i class="fas fa-info-circle"></i> Click the badge to change your location</span>
+                <span id="locationStatus">📍 Location saved locally</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- filter row -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label for="farmTypeFilter"><i class="fas fa-tractor"></i> Farm type</label>
+            <select id="farmTypeFilter">
+                <option value="all">All farms</option>
+                <option value="organic">Organic</option>
+                <option value="conventional">Conventional</option>
+                <option value="mixed">Mixed / Agro</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="distanceFilter"><i class="fas fa-route"></i> Distance</label>
+            <select id="distanceFilter">
+                <option value="all">Any</option>
+                <option value="2">≤ 2 km</option>
+                <option value="5">≤ 5 km</option>
+                <option value="10">≤ 10 km</option>
+            </select>
+        </div>
+        <button class="clear-btn" id="clearFiltersBtn"><i class="fas fa-rotate-left"></i> Reset</button>
+        <!-- NEW: View All Sellers Link -->
+        <a href="Seller Directory.html" class="view-all-link">
+            <i class="fas fa-store"></i> View All Sellers
+        </a>
+    </div>
+
+    <!-- main map area -->
+    <div class="map-grid">
+        <!-- left: farm cards -->
+        <div>
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="font-weight: 500; color: #1d3d31;"><i class="fas fa-seedling" style="margin-right:0.4rem;"></i> farms near you</span>
+                <span style="font-size:0.85rem; background: #e1eee7; padding:0.2rem 1rem; border-radius:40px;" id="farmCountDisplay">0 farms</span>
+            </div>
+            <div class="farm-list" id="farmListContainer">
+                <!-- cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- right: visual map -->
+        <div class="map-visual">
+            <div class="map-header">
+                <h2><i class="fas fa-location-dot"></i> farm clusters</h2>
+                <div class="map-legend">
+                    <span><span class="dot organic"></span> organic</span>
+                    <span><span class="dot conventional"></span> conventional</span>
+                    <span><span class="dot mixed"></span> mixed</span>
+                </div>
+            </div>
+            <div class="map-grid-points" id="mapPointsContainer">
+                <!-- injected by JS -->
+            </div>
+            <div class="mobile-note">
+                <i class="fas fa-arrows-up-down"></i> scroll farms · tap pin
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <div class="footer-note">
+        <span><i class="fas fa-leaf" style="color:#3b8b6e;"></i> FarmNetPh · local harvest</span>
+        <a href="Register as Buyer.html"><i class="fas fa-arrow-left"></i> back to dashboard</a>
+        <a href="#" id="refreshLocationLink"><i class="fas fa-rotate"></i> refresh location</a>
+        <a href="Seller Directory.html"><i class="fas fa-store"></i> all sellers</a>
+    </div>
+</div>
+
+<!-- toast notification -->
+<div id="buyerToast" class="toast-msg">
+    <i class="fas fa-circle-check"></i>
+    <span id="toastText">Action completed</span>
+    <button class="toast-close" id="toastCloseBtn"><i class="fas fa-xmark"></i></button>
+</div>
+
+<script>
+    (function() {
+        // ============================================================
+        // PHILIPPINE CITIES AND PROVINCES DATA (abridged for demo)
+        // ============================================================
+        const philippineData = {
+            "Metro Manila": ["Manila", "Quezon City", "Makati", "Taguig", "Pasig", "Mandaluyong", "San Juan", "Marikina", "Pasay", "Parañaque", "Las Piñas", "Muntinlupa", "Valenzuela", "Caloocan", "Malabon", "Navotas", "Pateros"],
+            "Batangas": ["Batangas City", "Lipa City", "Tanauan City", "Agoncillo", "Alitagtag", "Balayan", "Balete", "Bauan", "Calaca", "Calatagan", "Cuenca", "Ibaan", "Laurel", "Lemery", "Lian", "Lobo", "Mabini", "Malvar", "Mataasnakahoy", "Nasugbu", "Padre Garcia", "Rosario", "San Jose", "San Juan", "San Luis", "San Nicolas", "San Pascual", "Santa Teresita", "Santo Tomas", "Taal", "Talisay", "Taysan", "Tingloy", "Tuy"],
+            "Cavite": ["Dasmariñas City", "Imus City", "Bacoor City", "Trece Martires City", "General Trias City", "Cavite City", "Tagaytay City", "Alfonso", "Amadeo", "Carmona", "General Emilio Aguinaldo", "General Mariano Alvarez", "Indang", "Kawit", "Magallanes", "Maragondon", "Mendez", "Naic", "Noveleta", "Rosario", "Silang", "Tanza", "Ternate"],
+            "Laguna": ["Calamba City", "Santa Rosa City", "Biñan City", "San Pedro City", "Cabuyao City", "Los Baños", "Bay", "Calauan", "Cavinti", "Famy", "Kalayaan", "Liliw", "Luisiana", "Lumban", "Mabitac", "Magdalena", "Majayjay", "Nagcarlan", "Paete", "Pagsanjan", "Pakil", "Pangil", "Pila", "Rizal", "San Pablo City", "San Rafael", "Santa Cruz", "Santa Maria", "Siniloan", "Victoria"],
+            "Pampanga": ["Angeles City", "San Fernando City", "Apalit", "Arayat", "Bacolor", "Candaba", "Floridablanca", "Guagua", "Lubao", "Mabalacat City", "Macabebe", "Magalang", "Masantol", "Mexico", "Minalin", "Porac", "San Luis", "San Simon", "Santa Ana", "Santa Rita", "Santo Tomas", "Sasmuan"],
+            "Bulacan": ["Malolos City", "Meycauayan City", "San Jose del Monte City", "Angat", "Balagtas", "Baliuag", "Bocaue", "Bulakan", "Bustos", "Calumpit", "Doña Remedios Trinidad", "Guiguinto", "Hagonoy", "Marilao", "Norzagaray", "Obando", "Pandi", "Paombong", "Plaridel", "Pulilan", "San Ildefonso", "San Miguel", "San Rafael", "Santa Maria"],
+            "Cebu": ["Cebu City", "Mandaue City", "Lapu-Lapu City", "Toledo City", "Danao City", "Talisay City", "Bogo City", "Carcar City", "Naga City", "Alcantara", "Alcoy", "Alegria", "Aloguinsan", "Argao", "Asturias", "Badian", "Balamban", "Bantayan", "Barili", "Boljoon", "Borbon", "Carmen", "Catmon", "Compostela", "Consolacion", "Cordova", "Daanbantayan", "Dalaguete", "Dumanjug", "Ginatilan", "Liloan", "Madridejos", "Malabuyoc", "Medellin", "Minglanilla", "Moalboal", "Oslob", "Pilar", "Pinamungahan", "Poro", "Ronda", "Samboan", "San Fernando", "San Francisco", "San Remigio", "Santa Fe", "Santander", "Sibonga", "Sogod", "Tabogon", "Tabuelan", "Tuburan", "Tudela"],
+            "Davao del Sur": ["Davao City", "Digos City", "Bansalan", "Don Marcelino", "Hagonoy", "Jose Abad Santos", "Kiblawan", "Magsaysay", "Malalag", "Malita", "Matanao", "Padada", "Santa Cruz", "Sulop"],
+            "Iloilo": ["Iloilo City", "Passi City", "Ajuy", "Alimodian", "Anilao", "Badiangan", "Balasan", "Banate", "Barotac Nuevo", "Barotac Viejo", "Batad", "Bingawan", "Cabatuan", "Calinog", "Carles", "Concepcion", "Dingle", "Dueñas", "Dumangas", "Estancia", "Guimbal", "Igbaras", "Janiuay", "Lambunao", "Leganes", "Lemery", "Leon", "Maasin", "Miagao", "Mina", "New Lucena", "Oton", "Pavia", "Pototan", "San Dionisio", "San Enrique", "San Joaquin", "San Miguel", "San Rafael", "Santa Barbara", "Sara", "Tigbauan", "Tubungan", "Zarraga"],
+            "Negros Occidental": ["Bacolod City", "Bago City", "Cadiz City", "Escalante City", "Himamaylan City", "Kabankalan City", "La Carlota City", "Sagay City", "San Carlos City", "Silay City", "Sipalay City", "Talisay City", "Victorias City", "Binalbagan", "Calatrava", "Candoni", "Cauayan", "Enrique B. Magalona", "Hinigaran", "Hinoba-an", "Ilog", "Isabela", "La Castellana", "Manapla", "Moises Padilla", "Murcia", "Pontevedra", "Pulupandan", "Salvador Benedicto", "San Enrique", "Toboso", "Valladolid"]
+        };
+
+        // ============================================================
+        // POPULATE PROVINCE DROPDOWN
+        // ============================================================
+        const provinceSelect = document.getElementById('provinceSelect');
+        const citySelect = document.getElementById('citySelect');
+
+        // Sort provinces alphabetically
+        const sortedProvinces = Object.keys(philippineData).sort();
+
+        sortedProvinces.forEach(province => {
+            const option = document.createElement('option');
+            option.value = province;
+            option.textContent = province;
+            provinceSelect.appendChild(option);
+        });
+
+        // ============================================================
+        // POPULATE CITY DROPDOWN BASED ON PROVINCE SELECTION
+        // ============================================================
+        provinceSelect.addEventListener('change', function() {
+            const province = this.value;
+            citySelect.innerHTML = '<option value="">Select City / Municipality...</option>';
+
+            if (province && philippineData[province]) {
+                const cities = philippineData[province].sort();
+                cities.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city;
+                    option.textContent = city;
+                    citySelect.appendChild(option);
+                });
+            }
+        });
+
+        // ============================================================
+        // LOCATION MANAGEMENT
+        // ============================================================
+        let currentLocation = {
+            city: 'Batangas City',
+            province: 'Batangas',
+            radius: 5.2
+        };
+
+        // Load saved location from localStorage
+        function loadSavedLocation() {
+            try {
+                const saved = localStorage.getItem('farmNetLocation');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    currentLocation = parsed;
+                    if (parsed.province) {
+                        provinceSelect.value = parsed.province;
+                        const event = new Event('change');
+                        provinceSelect.dispatchEvent(event);
+                        setTimeout(() => {
+                            citySelect.value = parsed.city;
+                        }, 50);
+                    }
+                    updateLocationDisplay();
+                }
+            } catch (e) {
+                console.log('No saved location found, using default.');
+                provinceSelect.value = 'Batangas';
+                const event = new Event('change');
+                provinceSelect.dispatchEvent(event);
+                setTimeout(() => {
+                    citySelect.value = 'Batangas City';
+                }, 50);
+            }
+        }
+
+        function saveLocation(city, province, radius) {
+            currentLocation = { city, province, radius };
+            localStorage.setItem('farmNetLocation', JSON.stringify(currentLocation));
+            updateLocationDisplay();
+            document.getElementById('locationStatus').textContent = '✅ Location updated!';
+            setTimeout(() => {
+                document.getElementById('locationStatus').textContent = '📍 Location saved locally';
+            }, 3000);
+        }
+
+        function updateLocationDisplay() {
+            document.getElementById('locationDisplay').textContent = currentLocation.city;
+            document.getElementById('radiusDisplay').textContent = currentLocation.radius.toFixed(1);
+            updateFarmDistances();
+        }
+
+        function updateFarmDistances() {
+            const type = document.getElementById('farmTypeFilter').value;
+            const dist = document.getElementById('distanceFilter').value;
+            let maxDist = 999;
+            if (dist !== 'all') maxDist = parseFloat(dist);
+            renderFarms(type, maxDist);
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR HTML - Updated with real avatars
+        // ============================================================
+        function getSellerAvatarHTML(seller) {
+            if (!seller) return '<span class="avatar-initial">S</span>';
+            
+            // Check if seller has a profile picture
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            // Check for stored seller avatar
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg && sellerAvatarImg.startsWith('data:image') || sellerAvatarImg && sellerAvatarImg.startsWith('http')) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.farmName || seller.name}">`;
+            }
+            
+            // Check in farmConnectUsers for avatar
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const user = users.find(u => u.email === seller.email);
+            if (user && user.profilePicture) {
+                localStorage.setItem(`sellerAvatar_${seller.email}`, user.profilePicture);
+                return `<img src="${user.profilePicture}" alt="${user.farmName || user.name}">`;
+            }
+            
+            // Fallback to initial
+            const initial = (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+            return `<span class="avatar-initial">${initial}</span>`;
+        }
+
+        // ============================================================
+        // LOAD REAL FARMS FROM localStorage (from Register as Buyer)
+        // ============================================================
+        function loadRealFarms() {
+            const users = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            const sellers = users.filter(u => u.role === 'seller' && u.status !== 'suspended');
+            
+            // Map sellers to farm objects with realistic data
+            const farms = sellers.map((seller, index) => {
+                // Generate a random distance between 0.5 and 20 km
+                const distance = 0.5 + (Math.random() * 19.5);
+                
+                // Determine farm type from farmType or random
+                let farmType = seller.farmType || 'mixed';
+                if (farmType.toLowerCase().includes('organic')) farmType = 'organic';
+                else if (farmType.toLowerCase().includes('conventional')) farmType = 'conventional';
+                else if (farmType.toLowerCase().includes('mixed')) farmType = 'mixed';
+                else {
+                    // Random type if not specified
+                    const types = ['organic', 'conventional', 'mixed'];
+                    farmType = types[Math.floor(Math.random() * types.length)];
+                }
+                
+                // Generate tags from farm description or default
+                let tags = ['fresh produce'];
+                if (seller.farmDescription) {
+                    const words = seller.farmDescription.split(' ');
+                    tags = words.slice(0, 4).map(w => w.toLowerCase().replace(/[^a-z]/g, '')).filter(w => w.length > 3);
+                    if (tags.length === 0) tags = ['fresh', 'local'];
+                }
+                // Limit to 3 tags
+                tags = tags.slice(0, 3);
+                
+                // Get avatar emoji based on farm type (fallback)
+                const emojis = {
+                    'organic': '🌿',
+                    'conventional': '🌾',
+                    'mixed': '🌱'
+                };
+                const avatar = emojis[farmType] || '🌾';
+                
+                // Seller email
+                const sellerEmail = seller.email || `seller${index}@farmnet.com`;
+                
+                return {
+                    id: index + 1,
+                    name: seller.farmName || seller.name || `Farm ${index + 1}`,
+                    type: farmType,
+                    distance: parseFloat(distance.toFixed(1)),
+                    tags: tags,
+                    avatar: avatar,
+                    sellerEmail: sellerEmail,
+                    sellerName: seller.name || 'Local Farmer',
+                    farmName: seller.farmName || seller.name || 'Local Farm',
+                    farmDescription: seller.farmDescription || 'Local farm products',
+                    profilePicture: seller.profilePicture || null,
+                    // Store the full seller object for avatar rendering
+                    seller: seller
+                };
+            });
+            
+            return farms;
+        }
+
+        // ============================================================
+        // DOM REFS
+        // ============================================================
+        const farmListEl = document.getElementById('farmListContainer');
+        const mapPointsEl = document.getElementById('mapPointsContainer');
+        const farmCountDisplay = document.getElementById('farmCountDisplay');
+        const typeFilter = document.getElementById('farmTypeFilter');
+        const distanceFilter = document.getElementById('distanceFilter');
+        const clearBtn = document.getElementById('clearFiltersBtn');
+        const locationBadge = document.getElementById('locationBadge');
+        const locationModal = document.getElementById('locationModal');
+        const locationModalClose = document.getElementById('locationModalClose');
+        const locationCancelBtn = document.getElementById('locationCancelBtn');
+        const locationForm = document.getElementById('locationForm');
+        const radiusSelect = document.getElementById('radiusSelect');
+        const useGpsBtn = document.getElementById('useGpsBtn');
+        const locationStatus = document.getElementById('locationStatus');
+
+        // ============================================================
+        // TOAST SYSTEM
+        // ============================================================
+        const toastEl = document.getElementById('buyerToast');
+        const toastText = document.getElementById('toastText');
+        const toastClose = document.getElementById('toastCloseBtn');
+
+        function showToast(msg) {
+            toastText.textContent = msg;
+            toastEl.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 4000);
+        }
+
+        toastClose.addEventListener('click', function() {
+            toastEl.classList.remove('show');
+            clearTimeout(window.toastTimer);
+        });
+
+        // ============================================================
+        // LOCATION MODAL FUNCTIONS
+        // ============================================================
+        function openLocationModal() {
+            if (currentLocation.province) {
+                provinceSelect.value = currentLocation.province;
+                const event = new Event('change');
+                provinceSelect.dispatchEvent(event);
+                setTimeout(() => {
+                    citySelect.value = currentLocation.city;
+                }, 50);
+            }
+            const radiusOptions = radiusSelect.options;
+            let closestVal = radiusOptions[0].value;
+            for (let i = 0; i < radiusOptions.length; i++) {
+                const val = parseFloat(radiusOptions[i].value);
+                if (val >= currentLocation.radius) {
+                    closestVal = radiusOptions[i].value;
+                    break;
+                }
+            }
+            radiusSelect.value = closestVal;
+            locationModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLocationModal() {
+            locationModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        locationBadge.addEventListener('click', openLocationModal);
+        locationModalClose.addEventListener('click', closeLocationModal);
+        locationCancelBtn.addEventListener('click', closeLocationModal);
+        locationModal.addEventListener('click', function(e) {
+            if (e.target === locationModal) {
+                closeLocationModal();
+            }
+        });
+
+        // ============================================================
+        // LOCATION FORM SUBMIT
+        // ============================================================
+        locationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const city = citySelect.value;
+            const province = provinceSelect.value;
+            const radius = parseFloat(radiusSelect.value);
+
+            if (!city) {
+                showToast('⚠️ Please select a city or municipality.');
+                return;
+            }
+            if (!province) {
+                showToast('⚠️ Please select a province.');
+                return;
+            }
+
+            saveLocation(city, province, radius);
+            closeLocationModal();
+            showToast(`📍 Location updated to ${city}, ${province} (${radius} km radius)`);
+            const type = typeFilter.value;
+            const dist = distanceFilter.value;
+            let maxDist = 999;
+            if (dist !== 'all') maxDist = parseFloat(dist);
+            renderFarms(type, maxDist);
+        });
+
+        // ============================================================
+        // GPS FUNCTIONALITY (simplified)
+        // ============================================================
+        useGpsBtn.addEventListener('click', function() {
+            if (!navigator.geolocation) {
+                showToast('⚠️ GPS not supported on this device.');
+                return;
+            }
+            showToast('📍 Getting your location...');
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // In production, use reverse geocoding. For demo, set to a known location.
+                    showToast('📍 GPS location detected (demo: set to Batangas City)');
+                    saveLocation('Batangas City', 'Batangas', currentLocation.radius);
+                    closeLocationModal();
+                    const type = typeFilter.value;
+                    const dist = distanceFilter.value;
+                    let maxDist = 999;
+                    if (dist !== 'all') maxDist = parseFloat(dist);
+                    renderFarms(type, maxDist);
+                    useGpsBtn.innerHTML = '<i class="fas fa-satellite-dish"></i> GPS';
+                    useGpsBtn.disabled = false;
+                },
+                function(error) {
+                    showToast('⚠️ GPS error: ' + error.message);
+                    useGpsBtn.innerHTML = '<i class="fas fa-satellite-dish"></i> GPS';
+                    useGpsBtn.disabled = false;
+                }
+            );
+        });
+
+        // ============================================================
+        // NAVIGATE TO SHOP (CONNECTED TO Shop.html)
+        // ============================================================
+        function navigateToShop(sellerEmail, sellerName) {
+            if (!sellerEmail) {
+                showToast('⚠️ No seller email for this farm.');
+                return;
+            }
+            sessionStorage.setItem('viewedSellerEmail', sellerEmail);
+            sessionStorage.setItem('viewedSellerName', sellerName || 'Farm');
+            window.location.href = `Shop.html?seller=${encodeURIComponent(sellerEmail)}`;
+        }
+
+        // ============================================================
+        // NAVIGATE TO CONTACT SELLER
+        // ============================================================
+        function navigateToContactSeller(sellerEmail, sellerName) {
+            if (!sellerEmail) {
+                showToast('⚠️ No seller email for this farm.');
+                return;
+            }
+            window.location.href = `Contact Seller.html?seller=${encodeURIComponent(sellerEmail)}`;
+        }
+
+        // ============================================================
+        // RENDER FARMS
+        // ============================================================
+        function renderFarms(filterType = 'all', maxDist = 999) {
+            // Load real farms from localStorage
+            const allFarms = loadRealFarms();
+            
+            let filtered = allFarms.filter(f => {
+                const typeOk = filterType === 'all' || f.type === filterType;
+                const distOk = maxDist === 999 || f.distance <= maxDist;
+                return typeOk && distOk;
+            });
+
+            // Sort by distance
+            filtered.sort((a, b) => a.distance - b.distance);
+
+            farmCountDisplay.textContent = filtered.length + (filtered.length === 1 ? ' farm' : ' farms');
+
+            // left cards
+            if (filtered.length === 0) {
+                farmListEl.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-seedling"></i>
+            <p style="margin-top:0.5rem;">No farms match the current filters</p>
+            <button class="btn-outline" style="margin-top:0.8rem;" onclick="document.getElementById('clearFiltersBtn').click();">clear filters</button>
+          </div>
+        `;
+            } else {
+                farmListEl.innerHTML = filtered.map(f => {
+                    // Get avatar HTML for this farm
+                    const avatarHTML = getSellerAvatarHTML(f.seller);
+                    
+                    return `
+          <div class="farm-card" data-id="${f.id}">
+            <div class="farm-avatar">
+              ${avatarHTML}
+            </div>
+            <div class="farm-info">
+              <h3>${f.name} <i class="fas fa-circle-check" style="color:#3b8b6e; font-size:0.9rem;"></i></h3>
+              <div class="farm-tags">
+                <span><i class="fas fa-tag"></i> ${f.type}</span>
+                ${f.tags.slice(0, 2).map(t => `<span><i class="fas fa-leaf"></i> ${t}</span>`).join('')}
+                ${f.tags.length > 2 ? `<span>+${f.tags.length-2}</span>` : ''}
+              </div>
+              <div class="distance-badge"><i class="fas fa-location-dot"></i> ${f.distance.toFixed(1)} km</div>
+            </div>
+            <div class="action-group">
+              <button class="btn-outline" data-action="view" data-id="${f.id}" data-email="${f.sellerEmail}" data-name="${f.name}"><i class="fas fa-eye"></i> View</button>
+              <button class="btn-contact" data-action="contact" data-email="${f.sellerEmail}" data-name="${f.name}"><i class="fas fa-comment"></i> Contact</button>
+              <button class="btn-solid" data-action="shop" data-email="${f.sellerEmail}" data-name="${f.name}"><i class="fas fa-store"></i> Shop</button>
+            </div>
+          </div>
+        `}).join('');
+            }
+
+            // right map points
+            if (filtered.length === 0) {
+                mapPointsEl.innerHTML = `
+          <div style="grid-column:1/-1; padding:2rem 0; text-align:center; color:#2f5a48;">
+            <i class="fas fa-map-location-dot" style="font-size:2rem; opacity:0.4;"></i>
+            <p style="margin-top:0.5rem;">no farms to show</p>
+          </div>
+        `;
+            } else {
+                const displayPoints = filtered.slice(0, 9);
+                mapPointsEl.innerHTML = displayPoints.map(f => {
+                    let dotClass = 'organic';
+                    if (f.type === 'conventional') dotClass = 'conventional';
+                    else if (f.type === 'mixed') dotClass = 'mixed';
+                    return `
+            <div class="map-point" data-id="${f.id}" data-email="${f.sellerEmail}" data-name="${f.name}">
+              <div class="pin">${f.avatar || '🌾'}</div>
+              <div class="farm-label">${f.name.length > 12 ? f.name.slice(0,10)+'…' : f.name}</div>
+              <span class="sub-label"><i class="fas fa-circle" style="color:${dotClass === 'organic' ? '#2f7a5e' : dotClass === 'conventional' ? '#b38b6b' : '#8a9b6e'}; font-size:0.5rem;"></i> ${f.type}</span>
+              <div class="distance-tag"><i class="fas fa-route"></i> ${f.distance.toFixed(1)} km</div>
+            </div>
+          `;
+                }).join('');
+                if (filtered.length > 9) {
+                    const extra = document.createElement('div');
+                    extra.className = 'map-point';
+                    extra.style.cssText = 'background: rgba(255,255,255,0.5); justify-content:center;';
+                    extra.innerHTML = `<div style="font-size:1.8rem;">+${filtered.length-9}</div><div class="farm-label" style="font-size:0.7rem;">more nearby</div>`;
+                    mapPointsEl.appendChild(extra);
+                }
+            }
+
+            // ----- ATTACH EVENT LISTENERS FOR VIEW (go to Buyer View Seller) -----
+            document.querySelectorAll('.farm-card .btn-outline[data-action="view"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) {
+                        sessionStorage.setItem('viewedSellerEmail', email);
+                        window.location.href = `Buyer View Seller.html?seller=${encodeURIComponent(email)}`;
+                    } else {
+                        showToast('⚠️ Seller information not available');
+                    }
+                });
+            });
+
+            // ----- ATTACH EVENT LISTENERS FOR CONTACT (go to Contact Seller) -----
+            document.querySelectorAll('.farm-card .btn-contact[data-action="contact"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) {
+                        navigateToContactSeller(email, name);
+                    } else {
+                        showToast('⚠️ Seller information not available');
+                    }
+                });
+            });
+
+            // ----- ATTACH EVENT LISTENERS FOR SHOP (go to Shop.html) -----
+            document.querySelectorAll('.farm-card .btn-solid[data-action="shop"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) {
+                        navigateToShop(email, name);
+                    } else {
+                        showToast('⚠️ Seller information not available');
+                    }
+                });
+            });
+
+            // Map point click -> go to shop
+            document.querySelectorAll('.map-point').forEach(point => {
+                point.addEventListener('click', function() {
+                    const email = this.dataset.email;
+                    const name = this.dataset.name;
+                    if (email) {
+                        navigateToShop(email, name);
+                    } else {
+                        showToast('⚠️ Farm details not available');
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // FILTER LOGIC
+        // ============================================================
+        function applyFilters() {
+            const type = typeFilter.value;
+            const dist = distanceFilter.value;
+            let maxDist = 999;
+            if (dist !== 'all') maxDist = parseFloat(dist);
+            renderFarms(type, maxDist);
+        }
+
+        function resetFilters() {
+            typeFilter.value = 'all';
+            distanceFilter.value = 'all';
+            applyFilters();
+        }
+
+        typeFilter.addEventListener('change', applyFilters);
+        distanceFilter.addEventListener('change', applyFilters);
+        clearBtn.addEventListener('click', resetFilters);
+
+        document.getElementById('refreshLocationLink')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            showToast('📍 Location refreshed – nearby farms updated');
+            const type = typeFilter.value;
+            const dist = distanceFilter.value;
+            let maxDist = 999;
+            if (dist !== 'all') maxDist = parseFloat(dist);
+            renderFarms(type, maxDist);
+        });
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        setTimeout(() => {
+            loadSavedLocation();
+            renderFarms('all', 999);
+        }, 100);
+
+        // Expose functions globally
+        window.showToast = showToast;
+        window.openLocationModal = openLocationModal;
+        window.closeLocationModal = closeLocationModal;
+        window.applyFilters = applyFilters;
+        window.resetFilters = resetFilters;
+        window.navigateToShop = navigateToShop;
+        window.navigateToContactSeller = navigateToContactSeller;
+
+        console.log('📍 Nearby Farms loaded with location:', currentLocation);
+        console.log('📍 Available provinces:', Object.keys(philippineData).length);
+
+        // Listen for storage changes to update farms in real-time
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'farmConnectUsers') {
+                console.log('🔄 Users updated, refreshing farms...');
+                const type = typeFilter.value;
+                const dist = distanceFilter.value;
+                let maxDist = 999;
+                if (dist !== 'all') maxDist = parseFloat(dist);
+                renderFarms(type, maxDist);
+                showToast('🔄 Farm list updated from registration data');
+            }
+            // Also listen for avatar updates
+            if (e.key && e.key.startsWith('sellerAvatar_')) {
+                console.log('🔄 Avatar updated, refreshing farms...');
+                const type = typeFilter.value;
+                const dist = distanceFilter.value;
+                let maxDist = 999;
+                if (dist !== 'all') maxDist = parseFloat(dist);
+                renderFarms(type, maxDist);
+            }
+        });
+
+        // Also listen for chat updates
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'farmConnectChats') {
+                console.log('🔄 Chats updated');
+            }
+        });
+
+    })();
+</script>
+
+</body>
+</html>

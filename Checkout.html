@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="Css/Checkout.css">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </div>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Buyer Dashboard
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Checkout Main Content -->
+    <main class="checkout">
+        <div class="container">
+            <div class="checkout-header">
+                <h1><i class="fas fa-shopping-cart"></i> Checkout</h1>
+                <p>Complete your purchase by confirming your delivery details</p>
+            </div>
+
+            <!-- Checkout Steps -->
+            <div class="checkout-steps">
+                <div class="step-line"></div>
+                <div class="step-progress" id="stepProgress"></div>
+
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Delivery</div>
+                </div>
+
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <div class="checkout-container">
+                <!-- Left Column: Checkout Forms -->
+                <div class="checkout-forms">
+                    <!-- Delivery/Pickup Section -->
+                    <section class="checkout-section" id="deliverySection">
+                        <div class="section-header">
+                            <h2><i class="fas fa-truck"></i> Delivery Method</h2>
+                        </div>
+
+                        <div class="delivery-options">
+                            <div class="delivery-option selected" id="deliveryOption">
+                                <div class="option-header">
+                                    <div class="option-icon"><i class="fas fa-truck"></i></div>
+                                    <div class="option-title">Home Delivery</div>
+                                </div>
+                                <p class="option-description">Get your farm-fresh products delivered directly to your doorstep.</p>
+                                <div class="option-details">
+                                    <div class="option-price">Delivery Fee: ₱50</div>
+                                    <div>Estimated Delivery: 2-3 days</div>
+                                </div>
+                            </div>
+
+                            <div class="delivery-option" id="pickupOption">
+                                <div class="option-header">
+                                    <div class="option-icon"><i class="fas fa-store"></i></div>
+                                    <div class="option-title">Farm Pickup</div>
+                                </div>
+                                <p class="option-description">Pick up your order directly from the farm for maximum freshness.</p>
+                                <div class="option-details">
+                                    <div class="option-price">No Delivery Fee</div>
+                                    <div>Ready for pickup in 1-2 days</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address Form -->
+                        <div class="delivery-form" id="deliveryForm">
+                            <div class="section-header">
+                                <h2><i class="fas fa-home"></i> Delivery Address</h2>
+                            </div>
+
+                            <form id="addressForm">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Full Name</label>
+                                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <input type="tel" id="phoneNumber" placeholder="Enter your phone number" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-pin"></i> Street Address</label>
+                                    <input type="text" id="streetAddress" placeholder="Enter your street address" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-city"></i> City</label>
+                                        <input type="text" id="city" placeholder="Enter your city" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label><i class="fas fa-mailbox"></i> Postal Code</label>
+                                        <input type="text" id="postalCode" placeholder="Enter postal code" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-map"></i> Province/Region</label>
+                                    <select id="province" required>
+                                        <option value="">Select Province/Region</option>
+                                        <option value="Metro Manila">Metro Manila</option>
+                                        <option value="CALABARZON">CALABARZON</option>
+                                        <option value="Central Luzon">Central Luzon</option>
+                                        <option value="Bicol Region">Bicol Region</option>
+                                        <option value="Western Visayas">Western Visayas</option>
+                                        <option value="Central Visayas">Central Visayas</option>
+                                        <option value="Eastern Visayas">Eastern Visayas</option>
+                                        <option value="Zamboanga Peninsula">Zamboanga Peninsula</option>
+                                        <option value="Northern Mindanao">Northern Mindanao</option>
+                                        <option value="Davao Region">Davao Region</option>
+                                        <option value="SOCCSKSARGEN">SOCCSKSARGEN</option>
+                                        <option value="CAR">Cordillera Administrative Region</option>
+                                        <option value="CARAGA">CARAGA</option>
+                                        <option value="MIMAROPA">MIMAROPA</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-pen"></i> Delivery Instructions (Optional)</label>
+                                    <textarea id="deliveryInstructions" placeholder="Any special delivery instructions?"></textarea>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Pickup Location Form -->
+                        <div class="pickup-form" id="pickupForm" style="display: none;">
+                            <div class="section-header">
+                                <h2><i class="fas fa-location-dot"></i> Pickup Location</h2>
+                            </div>
+
+                            <form id="pickupLocationForm">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Full Name</label>
+                                    <input type="text" id="pickupName" placeholder="Enter your full name" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <input type="tel" id="pickupPhone" placeholder="Enter your phone number" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-store"></i> Select Farm Location</label>
+                                    <select id="farmLocation" required>
+                                        <option value="">Select Farm Location</option>
+                                        <option value="Green Valley Farms - Quezon City">Green Valley Farms - Quezon City</option>
+                                        <option value="Sunshine Orchards - Laguna">Sunshine Orchards - Laguna</option>
+                                        <option value="Mountain View Farm - Benguet">Mountain View Farm - Benguet</option>
+                                        <option value="Coastal Harvest - Cavite">Coastal Harvest - Cavite</option>
+                                        <option value="Organic Oasis - Batangas">Organic Oasis - Batangas</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar"></i> Preferred Pickup Date</label>
+                                    <input type="date" id="pickupDate" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label><i class="fas fa-clock"></i> Preferred Pickup Time</label>
+                                    <select id="pickupTime" required>
+                                        <option value="">Select Time</option>
+                                        <option value="08:00-10:00">8:00 AM - 10:00 AM</option>
+                                        <option value="10:00-12:00">10:00 AM - 12:00 PM</option>
+                                        <option value="12:00-14:00">12:00 PM - 2:00 PM</option>
+                                        <option value="14:00-16:00">2:00 PM - 4:00 PM</option>
+                                        <option value="16:00-18:00">4:00 PM - 6:00 PM</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- CONTINUE TO CONFIRMATION BUTTON -->
+                        <button class="checkout-btn" id="continueToConfirmationBtn">
+                            <i class="fas fa-clipboard-list"></i> Review Order
+                        </button>
+                    </section>
+
+                    <!-- Confirmation Section -->
+                    <section class="checkout-section" id="confirmationSection" style="display: none;">
+                        <div class="section-header">
+                            <h2><i class="fas fa-check-circle"></i> Confirm Order</h2>
+                        </div>
+
+                        <!-- Order Summary Preview -->
+                        <div style="background: #f8faf9; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <p style="margin-bottom: 8px;"><strong><i class="fas fa-box"></i> Order Details</strong></p>
+                            <div id="confirmationOrderItems" style="margin-bottom: 12px;"></div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid #e2e8f0;">
+                                <span><strong>Total:</strong></span>
+                                <span style="color: #2e7d32; font-weight: 700; font-size: 18px;" id="confirmationTotal">₱0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Summary -->
+                        <div style="background: #f8faf9; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <p style="margin-bottom: 8px;"><strong><i class="fas fa-truck"></i> Delivery Method</strong></p>
+                            <p id="confirmationDeliveryMethod" style="color: #4a5568;">Home Delivery</p>
+                            <p id="confirmationDeliveryAddress" style="color: #4a5568; font-size: 14px;"></p>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="terms-summary-box">
+                            <h4><i class="fas fa-shield-alt"></i> Before You Proceed</h4>
+                            <p>By placing this order, you agree to DARAWAT's <strong class="terms-link" onclick="openTermsModal('terms')">Terms and Conditions</strong> and <strong class="terms-link" onclick="openTermsModal('privacy')">Privacy Policy</strong>. Please review them carefully.</p>
+                        </div>
+
+                        <div class="terms-agreement-group">
+                            <div class="terms-checkbox">
+                                <input type="checkbox" id="termsAgreement" required>
+                                <label for="termsAgreement">
+                                    I have read and agree to the 
+                                    <span class="terms-link" onclick="openTermsModal('terms')">Terms and Conditions</span> 
+                                    and 
+                                    <span class="terms-link" onclick="openTermsModal('privacy')">Privacy Policy</span> 
+                                    of DARAWAT.
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="checkout-btn" id="placeOrderBtn">
+                            <i class="fas fa-check"></i> Place Order
+                        </button>
+
+                        <button class="btn btn-primary btn-block" id="backToDeliveryBtn" style="margin-top: 12px; background: #e2e8f0; color: #4a5568; box-shadow: none;">
+                            <i class="fas fa-arrow-left"></i> Back to Delivery
+                        </button>
+                    </section>
+                </div>
+
+                <!-- Right Column: Order Summary -->
+                <div class="order-summary">
+                    <div class="summary-header">
+                        <h2><i class="fas fa-clipboard-list"></i> Order Summary</h2>
+                    </div>
+
+                    <div class="order-items" id="orderItems">
+                        <!-- Order items will be dynamically generated -->
+                    </div>
+
+                    <div class="summary-totals">
+                        <div class="total-row">
+                            <span class="total-label">Subtotal</span>
+                            <span class="total-value" id="subtotal">₱0.00</span>
+                        </div>
+
+                        <div class="total-row">
+                            <span class="total-label">Delivery Fee</span>
+                            <span class="total-value" id="deliveryFee">₱0.00</span>
+                        </div>
+
+                        <div class="total-row">
+                            <span class="total-label">Tax (12%)</span>
+                            <span class="total-value" id="tax">₱0.00</span>
+                        </div>
+
+                        <div class="total-row grand-total">
+                            <span class="total-label">Total</span>
+                            <span class="total-value" id="grandTotal">₱0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="blockchain-notice" style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; text-align: center;">
+                        <p style="margin: 0; color: #2e7d32; font-weight: 600;"><i class="fas fa-link"></i> Secured by Blockchain Technology</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== TERMS AND PRIVACY MODAL ===== -->
+    <div id="termsModal" class="terms-modal">
+        <div class="terms-modal-content">
+            <button class="terms-modal-close" onclick="closeTermsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="terms-modal-body">
+                <div class="terms-header">
+                    <h2><i class="fas fa-file-contract"></i> DARAWAT Agreement</h2>
+                    <p>Please review our Terms and Conditions and Privacy Policy before placing your order</p>
+                </div>
+
+                <div class="terms-tabs">
+                    <button class="terms-tab-btn active" data-tab="terms" onclick="switchTermsTab('terms')">
+                        <i class="fas fa-gavel"></i> Terms & Conditions
+                    </button>
+                    <button class="terms-tab-btn" data-tab="privacy" onclick="switchTermsTab('privacy')">
+                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                    </button>
+                </div>
+
+                <!-- Terms and Conditions Tab -->
+                <div class="terms-tab-content active" id="terms-tab">
+                    <h3>1. Acceptance of Terms</h3>
+                    <p>By using FarmNet and placing an order, you agree to comply with these Terms and Conditions and our Privacy Policy. If you do not agree, please do not use our platform.</p>
+
+                    <h3>2. Order and Payment</h3>
+                    <ul>
+                        <li>All orders are subject to product availability and seller confirmation.</li>
+                        <li>Prices are set by sellers and may vary based on market conditions.</li>
+                        <li>Payment must be completed before order fulfillment.</li>
+                        <li>FarmNet uses secure blockchain technology to process transactions.</li>
+                    </ul>
+
+                    <h3>3. Delivery and Pickup</h3>
+                    <ul>
+                        <li>Delivery times are estimates and may vary based on location and conditions.</li>
+                        <li>For farm pickup, please bring valid ID and order confirmation.</li>
+                        <li>FarmNet is not responsible for delays caused by weather, traffic, or other external factors.</li>
+                    </ul>
+
+                    <h3>4. Product Quality and Returns</h3>
+                    <ul>
+                        <li>Products are sold as described by the seller.</li>
+                        <li>If you receive damaged or incorrect products, contact the seller within 24 hours.</li>
+                        <li>Refunds and returns are handled between buyer and seller.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong><i class="fas fa-exclamation-triangle"></i> Important:</strong> All transactions on FarmNet are recorded on the blockchain for security and transparency. Please review product descriptions carefully before purchasing.
+                    </div>
+
+                    <h3>5. Buyer Responsibilities</h3>
+                    <ul>
+                        <li>Provide accurate delivery information.</li>
+                        <li>Inspect products upon receipt.</li>
+                        <li>Pay the correct amount for your order.</li>
+                        <li>Communicate any issues within 24 hours.</li>
+                    </ul>
+
+                    <h3>6. Limitation of Liability</h3>
+                    <p>FarmNet acts as a platform connecting buyers and sellers. We are not responsible for:</p>
+                    <ul>
+                        <li>Product quality or seller claims.</li>
+                        <li>Delivery delays or issues.</li>
+                        <li>Disputes between buyers and sellers.</li>
+                    </ul>
+
+                    <h3>7. Changes to Terms</h3>
+                    <p>FarmNet reserves the right to update these Terms at any time. Continued use of the platform after changes means you accept the new Terms.</p>
+                </div>
+
+                <!-- Privacy Policy Tab -->
+                <div class="terms-tab-content" id="privacy-tab">
+                    <h3>1. Information We Collect</h3>
+                    <p>We collect the following information to process your orders and improve your experience:</p>
+                    <ul>
+                        <li><strong>Account Information:</strong> Name, email, phone number, and address.</li>
+                        <li><strong>Transaction Data:</strong> Order history, payment details, and delivery information.</li>
+                        <li><strong>Usage Data:</strong> How you interact with our platform.</li>
+                    </ul>
+
+                    <h3>2. How We Use Your Data</h3>
+                    <ul>
+                        <li>Process and deliver your orders.</li>
+                        <li>Communicate about your orders and updates.</li>
+                        <li>Improve our platform and services.</li>
+                        <li>Ensure security and prevent fraud.</li>
+                    </ul>
+
+                    <h3>3. Data Protection</h3>
+                    <ul>
+                        <li>All data is encrypted and stored securely.</li>
+                        <li>Blockchain technology ensures transaction transparency.</li>
+                        <li>We never sell your personal information to third parties.</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <strong><i class="fas fa-lock"></i> Your Privacy Matters:</strong> FarmNet uses industry-standard security measures to protect your data. All transactions are recorded on the blockchain for transparency and security.
+                    </div>
+
+                    <h3>4. Data Sharing</h3>
+                    <p>We share your data only when necessary:</p>
+                    <ul>
+                        <li><strong>With Sellers:</strong> To fulfill your orders.</li>
+                        <li><strong>With Delivery Partners:</strong> For shipping and logistics.</li>
+                        <li><strong>With Payment Processors:</strong> To complete transactions.</li>
+                    </ul>
+
+                    <h3>5. Your Rights</h3>
+                    <ul>
+                        <li>Access and view your personal data.</li>
+                        <li>Correct or update your information.</li>
+                        <li>Request deletion of your account and data.</li>
+                        <li>Opt out of marketing communications.</li>
+                    </ul>
+
+                    <h3>6. Contact Us</h3>
+                    <p>If you have questions about our Privacy Policy or Terms, contact us at:</p>
+                    <ul>
+                        <li><strong>Email:</strong> support@DARAWAT.ph</li>
+                        <li><strong>Phone:</strong> 1-800-DARAWAT</li>
+                    </ul>
+                </div>
+
+                <div class="terms-actions">
+                    <button class="terms-accept-btn" onclick="acceptTerms()">
+                        <i class="fas fa-check"></i> I Accept
+                    </button>
+                    <button class="terms-close-btn" onclick="closeTermsModal()">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Buyer.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-th-large"></i></div>
+                <div class="mobile-nav-label">Dashboard</div>
+            </a>
+            <a href="Buyer Profile.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-user"></i></div>
+                <div class="mobile-nav-label">Profile</div>
+            </a>
+            <a href="Shopping Cart.html" class="mobile-nav-item">
+                <div class="mobile-nav-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="mobile-nav-label">Cart</div>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <div class="mobile-nav-icon"><i class="fas fa-credit-card"></i></div>
+                <div class="mobile-nav-label">Checkout</div>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const stepProgress = document.getElementById('stepProgress');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+
+        // Delivery/Pickup Elements
+        const deliveryOption = document.getElementById('deliveryOption');
+        const pickupOption = document.getElementById('pickupOption');
+        const deliveryForm = document.getElementById('deliveryForm');
+        const pickupForm = document.getElementById('pickupForm');
+
+        // Confirmation Elements
+        const confirmationSection = document.getElementById('confirmationSection');
+        const placeOrderBtn = document.getElementById('placeOrderBtn');
+        const continueToConfirmationBtn = document.getElementById('continueToConfirmationBtn');
+        const backToDeliveryBtn = document.getElementById('backToDeliveryBtn');
+
+        // Order Summary Elements
+        const orderItems = document.getElementById('orderItems');
+        const subtotalElement = document.getElementById('subtotal');
+        const deliveryFeeElement = document.getElementById('deliveryFee');
+        const taxElement = document.getElementById('tax');
+        const grandTotalElement = document.getElementById('grandTotal');
+        const confirmationTotal = document.getElementById('confirmationTotal');
+        const confirmationOrderItems = document.getElementById('confirmationOrderItems');
+        const confirmationDeliveryMethod = document.getElementById('confirmationDeliveryMethod');
+        const confirmationDeliveryAddress = document.getElementById('confirmationDeliveryAddress');
+
+        // Terms Modal Elements
+        const termsModal = document.getElementById('termsModal');
+        const termsAgreement = document.getElementById('termsAgreement');
+
+        // Current checkout state
+        let currentStep = 1;
+        let selectedDeliveryMethod = 'delivery';
+        let cartItems = [];
+        let orderTotal = 0;
+
+        // Initialize the checkout page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeEventListeners();
+            checkExistingLogin();
+            loadCartItems();
+            updateOrderSummary();
+            updateStepProgress();
+            autoFillBuyerInfo();
+        });
+
+        // Set up event listeners
+        function initializeEventListeners() {
+            // Delivery/Pickup options
+            deliveryOption.addEventListener('click', selectDelivery);
+            pickupOption.addEventListener('click', selectPickup);
+
+            // Continue to confirmation button
+            continueToConfirmationBtn.addEventListener('click', goToConfirmationStep);
+
+            // Back to delivery button
+            backToDeliveryBtn.addEventListener('click', goBackToDelivery);
+
+            // Place order button
+            placeOrderBtn.addEventListener('click', placeOrder);
+
+            // Close modal on outside click
+            termsModal.addEventListener('click', function(e) {
+                if (e.target === termsModal) {
+                    closeTermsModal();
+                }
+            });
+
+            // Close modal on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && termsModal.classList.contains('active')) {
+                    closeTermsModal();
+                }
+            });
+        }
+
+        // Check if user is already logged in
+        function checkExistingLogin() {
+            const currentUser = localStorage.getItem('currentUser');
+
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                updateUserAvatar(user);
+            } else {
+                window.location.href = 'Register as Buyer.html';
+            }
+        }
+
+        // Update user avatar
+        function updateUserAvatar(user) {
+            const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+
+            if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+            } else if (user.profilePicture) {
+                userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+            } else {
+                userAvatar.textContent = user.name.charAt(0).toUpperCase();
+            }
+        }
+
+        // Auto-fill buyer information from localStorage
+        function autoFillBuyerInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+
+            const fullNameField = document.getElementById('fullName');
+            const phoneField = document.getElementById('phoneNumber');
+            const addressField = document.getElementById('streetAddress');
+            const cityField = document.getElementById('city');
+            const provinceField = document.getElementById('province');
+
+            const pickupNameField = document.getElementById('pickupName');
+            const pickupPhoneField = document.getElementById('pickupPhone');
+
+            if (fullNameField) fullNameField.value = currentUser.name || '';
+            if (pickupNameField) pickupNameField.value = currentUser.name || '';
+
+            if (currentUser.address) {
+                const addressParts = currentUser.address.split(',');
+                if (addressParts.length >= 2) {
+                    if (addressField) addressField.value = addressParts[0].trim();
+                    if (cityField) cityField.value = addressParts[1].trim();
+                } else {
+                    if (addressField) addressField.value = currentUser.address;
+                }
+            }
+
+            if (currentUser.phone) {
+                if (phoneField) phoneField.value = currentUser.phone;
+                if (pickupPhoneField) pickupPhoneField.value = currentUser.phone;
+            }
+
+            if (currentUser.province && provinceField) {
+                provinceField.value = currentUser.province;
+            }
+
+            const pickupDateField = document.getElementById('pickupDate');
+            if (pickupDateField) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                pickupDateField.value = tomorrow.toISOString().split('T')[0];
+                pickupDateField.min = tomorrow.toISOString().split('T')[0];
+            }
+        }
+
+        // Load cart items from localStorage
+        function loadCartItems() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'Register as Buyer.html';
+                return;
+            }
+
+            const allCartItems = JSON.parse(localStorage.getItem('farmConnectCartItems') || '[]');
+            cartItems = allCartItems.filter(item => item.buyerEmail === currentUser.email);
+
+            if (cartItems.length === 0) {
+                alert('Your cart is empty. Please add items to your cart before checking out.');
+                window.location.href = 'Shopping Cart.html';
+            }
+        }
+
+        // Update order summary
+        function updateOrderSummary() {
+            orderItems.innerHTML = '';
+
+            let subtotal = 0;
+
+            cartItems.forEach(item => {
+                let price = 0;
+                const priceStr = item.price.toString();
+                const priceMatch = priceStr.match(/(\d+(?:\.\d+)?)/);
+                if (priceMatch) {
+                    price = parseFloat(priceMatch[1]);
+                } else if (typeof item.price === 'number') {
+                    price = item.price;
+                }
+
+                const quantity = item.quantity || 1;
+                const itemTotal = price * quantity;
+                subtotal += itemTotal;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'order-item';
+                itemElement.innerHTML = `
+                    <div class="item-image">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="item-details">
+                        <div class="item-name">${item.productName}</div>
+                        <div class="item-price">${item.price}</div>
+                        <div class="item-quantity">Quantity: ${quantity}</div>
+                    </div>
+                `;
+                orderItems.appendChild(itemElement);
+            });
+
+            const deliveryFee = selectedDeliveryMethod === 'delivery' ? 50 : 0;
+            const tax = subtotal * 0.12;
+            const grandTotal = subtotal + deliveryFee + tax;
+
+            subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+            deliveryFeeElement.textContent = `₱${deliveryFee.toFixed(2)}`;
+            taxElement.textContent = `₱${tax.toFixed(2)}`;
+            grandTotalElement.textContent = `₱${grandTotal.toFixed(2)}`;
+
+            orderTotal = grandTotal;
+        }
+
+        // Update step progress
+        function updateStepProgress() {
+            const progressPercentage = (currentStep - 1) / 1 * 100;
+            stepProgress.style.width = `${progressPercentage}%`;
+
+            step1.classList.toggle('active', currentStep === 1);
+            step1.classList.toggle('completed', currentStep > 1);
+
+            step2.classList.toggle('active', currentStep === 2);
+            step2.classList.toggle('completed', currentStep > 2);
+        }
+
+        // Select delivery option
+        function selectDelivery() {
+            selectedDeliveryMethod = 'delivery';
+            deliveryOption.classList.add('selected');
+            pickupOption.classList.remove('selected');
+            deliveryForm.style.display = 'block';
+            pickupForm.style.display = 'none';
+            updateOrderSummary();
+        }
+
+        // Select pickup option
+        function selectPickup() {
+            selectedDeliveryMethod = 'pickup';
+            pickupOption.classList.add('selected');
+            deliveryOption.classList.remove('selected');
+            pickupForm.style.display = 'block';
+            deliveryForm.style.display = 'none';
+            updateOrderSummary();
+        }
+
+        // Go to confirmation step
+        function goToConfirmationStep() {
+            let isValid = true;
+            let deliveryAddressText = '';
+
+            if (selectedDeliveryMethod === 'delivery') {
+                const fullName = document.getElementById('fullName').value;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                const streetAddress = document.getElementById('streetAddress').value;
+                const city = document.getElementById('city').value;
+                const postalCode = document.getElementById('postalCode').value;
+                const province = document.getElementById('province').value;
+
+                if (!fullName || !phoneNumber || !streetAddress || !city || !postalCode || !province) {
+                    isValid = false;
+                    alert('Please fill in all required delivery information.');
+                } else {
+                    deliveryAddressText = `${fullName}, ${streetAddress}, ${city}, ${province} ${postalCode}`;
+                }
+            } else {
+                const pickupName = document.getElementById('pickupName').value;
+                const pickupPhone = document.getElementById('pickupPhone').value;
+                const farmLocation = document.getElementById('farmLocation').value;
+                const pickupDate = document.getElementById('pickupDate').value;
+                const pickupTime = document.getElementById('pickupTime').value;
+
+                if (!pickupName || !pickupPhone || !farmLocation || !pickupDate || !pickupTime) {
+                    isValid = false;
+                    alert('Please fill in all required pickup information.');
+                } else {
+                    deliveryAddressText = `${pickupName}, ${farmLocation} on ${pickupDate} at ${pickupTime}`;
+                }
+            }
+
+            if (isValid) {
+                // Update confirmation section
+                const methodText = selectedDeliveryMethod === 'delivery' ? '🚚 Home Delivery' : '🏪 Farm Pickup';
+                confirmationDeliveryMethod.textContent = methodText;
+                confirmationDeliveryAddress.textContent = deliveryAddressText;
+
+                // Show order items in confirmation
+                confirmationOrderItems.innerHTML = '';
+                cartItems.forEach(item => {
+                    const div = document.createElement('div');
+                    div.style.cssText = 'display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px;';
+                    div.innerHTML = `
+                        <span>${item.productName} × ${item.quantity || 1}</span>
+                        <span>${item.price}</span>
+                    `;
+                    confirmationOrderItems.appendChild(div);
+                });
+                confirmationTotal.textContent = grandTotalElement.textContent;
+
+                currentStep = 2;
+                updateStepProgress();
+                document.getElementById('deliverySection').style.display = 'none';
+                confirmationSection.style.display = 'block';
+                confirmationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Go back to delivery step
+        function goBackToDelivery() {
+            currentStep = 1;
+            updateStepProgress();
+            confirmationSection.style.display = 'none';
+            document.getElementById('deliverySection').style.display = 'block';
+            document.getElementById('deliverySection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ============================================================
+        // TERMS MODAL FUNCTIONS
+        // ============================================================
+        function openTermsModal(tab) {
+            termsModal.classList.add('active');
+            document.body.classList.add('modal-open');
+            if (tab) {
+                switchTermsTab(tab);
+            }
+        }
+
+        function closeTermsModal() {
+            termsModal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        }
+
+        function switchTermsTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.terms-tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+
+            // Update tab content
+            document.querySelectorAll('.terms-tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tabId + '-tab');
+            });
+        }
+
+        function acceptTerms() {
+            termsAgreement.checked = true;
+            closeTermsModal();
+            // Trigger a change event to update any UI that depends on this
+            const event = new Event('change', { bubbles: true });
+            termsAgreement.dispatchEvent(event);
+        }
+
+        // ============================================================
+        // PLACE ORDER FUNCTION
+        // ============================================================
+        function placeOrder() {
+            if (!termsAgreement.checked) {
+                alert('Please read and accept the Terms and Conditions and Privacy Policy before placing your order.');
+                termsAgreement.focus();
+                return;
+            }
+
+            // Create order
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const orderId = 'FARM' + Date.now();
+
+            // Collect delivery/pickup information
+            let deliveryInfo = {};
+            let buyerPhone = '';
+            let shippingAddress = '';
+
+            if (selectedDeliveryMethod === 'delivery') {
+                const fullName = document.getElementById('fullName').value;
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                const streetAddress = document.getElementById('streetAddress').value;
+                const city = document.getElementById('city').value;
+                const postalCode = document.getElementById('postalCode').value;
+                const province = document.getElementById('province').value;
+                const instructions = document.getElementById('deliveryInstructions').value;
+
+                buyerPhone = phoneNumber;
+                shippingAddress = `${streetAddress}, ${city}, ${province} ${postalCode}`;
+
+                deliveryInfo = {
+                    method: 'delivery',
+                    fullName: fullName,
+                    phoneNumber: phoneNumber,
+                    streetAddress: streetAddress,
+                    city: city,
+                    postalCode: postalCode,
+                    province: province,
+                    instructions: instructions
+                };
+            } else {
+                const pickupName = document.getElementById('pickupName').value;
+                const pickupPhone = document.getElementById('pickupPhone').value;
+                const farmLocation = document.getElementById('farmLocation').value;
+                const pickupDate = document.getElementById('pickupDate').value;
+                const pickupTime = document.getElementById('pickupTime').value;
+
+                buyerPhone = pickupPhone;
+                shippingAddress = `Pickup at ${farmLocation}`;
+
+                deliveryInfo = {
+                    method: 'pickup',
+                    fullName: pickupName,
+                    phoneNumber: pickupPhone,
+                    farmLocation: farmLocation,
+                    pickupDate: pickupDate,
+                    pickupTime: pickupTime
+                };
+            }
+
+            // Calculate totals
+            let subtotal = 0;
+            const orderItemsList = [];
+
+            cartItems.forEach(item => {
+                let price = 0;
+                const priceStr = item.price.toString();
+                const priceMatch = priceStr.match(/(\d+(?:\.\d+)?)/);
+                if (priceMatch) {
+                    price = parseFloat(priceMatch[1]);
+                } else if (typeof item.price === 'number') {
+                    price = item.price;
+                }
+                const quantity = item.quantity || 1;
+                subtotal += price * quantity;
+
+                orderItemsList.push({
+                    productId: item.productId,
+                    productName: item.productName,
+                    price: item.price,
+                    quantity: quantity,
+                    sellerEmail: item.sellerEmail,
+                    sellerName: item.sellerName || 'Local Farmer'
+                });
+            });
+
+            const deliveryFee = selectedDeliveryMethod === 'delivery' ? 50 : 0;
+            const tax = subtotal * 0.12;
+            const total = subtotal + deliveryFee + tax;
+
+            // CREATE ORDER OBJECT
+            const order = {
+                id: orderId,
+                buyerEmail: currentUser.email,
+                buyerName: currentUser.name,
+                buyerPhone: buyerPhone,
+                date: new Date().toISOString(),
+                status: 'pending',
+                items: orderItemsList,
+                products: orderItemsList,
+                deliveryInfo: deliveryInfo,
+                subtotal: `₱${subtotal.toFixed(2)}`,
+                shipping: `₱${deliveryFee.toFixed(2)}`,
+                tax: `₱${tax.toFixed(2)}`,
+                total: `₱${total.toFixed(2)}`,
+                shippingAddress: shippingAddress,
+                paymentMethod: 'To be confirmed upon delivery',
+                orderTimeline: [
+                    {
+                        date: new Date().toISOString(),
+                        status: 'Order Placed'
+                    }
+                ],
+                blockchainHash: generateBlockchainHash(),
+                termsAccepted: true,
+                termsAcceptedAt: new Date().toISOString()
+            };
+
+            // SAVE ORDER TO LOCALSTORAGE
+            const orders = JSON.parse(localStorage.getItem('farmConnectOrders') || '[]');
+            orders.unshift(order);
+            localStorage.setItem('farmConnectOrders', JSON.stringify(orders));
+
+            // UPDATE PRODUCT QUANTITIES
+            const products = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+            cartItems.forEach(cartItem => {
+                const productIndex = products.findIndex(p => p.id === cartItem.productId);
+                if (productIndex !== -1) {
+                    products[productIndex].quantity -= (cartItem.quantity || 1);
+                    if (products[productIndex].quantity <= 0) {
+                        products[productIndex].quantity = 0;
+                        products[productIndex].status = 'sold out';
+                    }
+                }
+            });
+            localStorage.setItem('farmConnectProducts', JSON.stringify(products));
+
+            // UPDATE SELLER PRODUCTS
+            cartItems.forEach(cartItem => {
+                const sellerProductsKey = `sellerProducts_${cartItem.sellerEmail}`;
+                const sellerProducts = JSON.parse(localStorage.getItem(sellerProductsKey) || '[]');
+                const sellerProductIndex = sellerProducts.findIndex(p => p.id === cartItem.productId);
+                if (sellerProductIndex !== -1) {
+                    sellerProducts[sellerProductIndex].quantity -= (cartItem.quantity || 1);
+                    if (sellerProducts[sellerProductIndex].quantity <= 0) {
+                        sellerProducts[sellerProductIndex].quantity = 0;
+                        sellerProducts[sellerProductIndex].status = 'sold out';
+                    }
+                    localStorage.setItem(sellerProductsKey, JSON.stringify(sellerProducts));
+                }
+            });
+
+            // CLEAR CART
+            const allCartItems = JSON.parse(localStorage.getItem('farmConnectCartItems') || '[]');
+            const updatedCartItems = allCartItems.filter(item => item.buyerEmail !== currentUser.email);
+            localStorage.setItem('farmConnectCartItems', JSON.stringify(updatedCartItems));
+
+            // TRIGGER STORAGE EVENT
+            window.dispatchEvent(new Event('storage'));
+
+            // REDIRECT TO CONFIRMATION
+            alert(`✅ Order #${orderId} placed successfully!`);
+            window.location.href = 'Order Confirmation.html?orderId=' + orderId;
+        }
+
+        // Generate blockchain hash
+        function generateBlockchainHash() {
+            return '0x' + Math.random().toString(16).substr(2, 64);
+        }
+    </script>
+</body>
+</html>

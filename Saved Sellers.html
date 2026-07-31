@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Sellers - DARAWAT</title>
+    <!-- ============================================================ -->
+    <!-- EXTERNAL LIBRARIES                                            -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ============================================================ -->
+    <!-- EXTERNAL CSS FILE - Save Sellers.css                  -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="Css/Save Sellers.css">
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- SECTION: HEADER                                               -->
+    <!-- ============================================================ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Buyer.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> All Sellers
+                    </a>
+                    <a href="Product Categories.html" class="nav-link">
+                        <i class="fas fa-tags"></i> Categories
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-heart"></i> Saved
+                    </a>
+                    <a href="Buyer Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">B</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: PAGE CONTENT                                         -->
+    <!-- ============================================================ -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1><i class="fas fa-heart"></i> Saved Sellers</h1>
+                    <p>Your favorite sellers, all in one place</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" onclick="refreshSaved()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllSaved()">
+                        <i class="fas fa-trash-alt"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalSaved">0</div>
+                    <div class="stat-label">Saved Sellers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-label">Products Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCategories">0</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+
+            <!-- Saved Sellers Grid -->
+            <div class="saved-grid" id="savedGrid">
+                <!-- Saved sellers will be dynamically inserted -->
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MOBILE BOTTOM NAVIGATION                             -->
+    <!-- ============================================================ -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+            <a href="Product Categories.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-tags"></i></span>
+                <span>Categories</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-heart"></i></span>
+                <span>Saved</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: FOOTER                                               -->
+    <!-- ============================================================ -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: TOAST NOTIFICATION                                   -->
+    <!-- ============================================================ -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: COMPLETE JAVASCRIPT                                  -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // SAVED SELLERS - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const savedGrid = document.getElementById('savedGrid');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const totalSavedEl = document.getElementById('totalSaved');
+        const totalProductsEl = document.getElementById('totalProducts');
+        const totalCategoriesEl = document.getElementById('totalCategories');
+
+        // State
+        let savedSellers = [];
+        let allUsers = [];
+        let allProducts = [];
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name}!`;
+                const buyerAvatar = localStorage.getItem(`buyerAvatar_${user.email}`);
+                if (buyerAvatar && (buyerAvatar.startsWith('http') || buyerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${buyerAvatar}" alt="${user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name}">`;
+                } else {
+                    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // LOAD SAVED SELLERS
+        // ============================================================
+        function loadSavedSellers() {
+            const user = getCurrentUser();
+            if (!user) {
+                savedGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <h2>Please Login</h2>
+                        <p>Login to view and manage your saved sellers.</p>
+                        <a href="Register as Buyer.html" class="btn btn-primary" style="margin-top:15px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get saved seller emails
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            const savedEmails = saved[user.email] || [];
+
+            if (savedEmails.length === 0) {
+                savedGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h2>No Saved Sellers</h2>
+                        <p>Start saving sellers you're interested in. Click the "Save" button on any seller's profile.</p>
+                        <a href="Seller Directory.html" class="btn btn-primary" style="margin-top:15px;">
+                            <i class="fas fa-store"></i> Browse Sellers
+                        </a>
+                    </div>
+                `;
+                updateStats([]);
+                return;
+            }
+
+            // Get all users
+            allUsers = JSON.parse(localStorage.getItem('farmConnectUsers') || '[]');
+            allProducts = JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+
+            // Filter sellers
+            savedSellers = allUsers.filter(u => 
+                savedEmails.includes(u.email) && 
+                u.role === 'seller' && 
+                u.status !== 'suspended'
+            );
+
+            if (savedSellers.length === 0) {
+                savedGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-slash"></i>
+                        <h2>No Sellers Found</h2>
+                        <p>Some of your saved sellers may no longer be active.</p>
+                        <a href="Seller Directory.html" class="btn btn-primary" style="margin-top:15px;">
+                            <i class="fas fa-store"></i> Browse Sellers
+                        </a>
+                    </div>
+                `;
+                updateStats([]);
+                return;
+            }
+
+            displaySavedSellers(savedSellers);
+            updateStats(savedSellers);
+        }
+
+        // ============================================================
+        // GET SELLER AVATAR
+        // ============================================================
+        function getSellerAvatar(seller) {
+            if (!seller) return 'S';
+
+            if (seller.profilePicture) {
+                return `<img src="${seller.profilePicture}" alt="${seller.farmName || seller.name}">`;
+            }
+
+            const sellerAvatarImg = localStorage.getItem(`sellerAvatar_${seller.email}`);
+            if (sellerAvatarImg) {
+                return `<img src="${sellerAvatarImg}" alt="${seller.farmName || seller.name}">`;
+            }
+
+            return (seller.farmName || seller.name || 'S').charAt(0).toUpperCase();
+        }
+
+        // ============================================================
+        // GET SELLER PRODUCTS
+        // ============================================================
+        function getSellerProducts(sellerEmail) {
+            return allProducts.filter(p => p.sellerEmail === sellerEmail && p.quantity > 0);
+        }
+
+        // ============================================================
+        // GET SELLER CATEGORIES
+        // ============================================================
+        function getSellerCategories(sellerEmail) {
+            const products = getSellerProducts(sellerEmail);
+            return [...new Set(products.map(p => p.category).filter(Boolean))];
+        }
+
+        // ============================================================
+        // DISPLAY SAVED SELLERS
+        // ============================================================
+        function displaySavedSellers(sellers) {
+            savedGrid.innerHTML = '';
+
+            sellers.forEach(seller => {
+                const products = getSellerProducts(seller.email);
+                const categories = getSellerCategories(seller.email);
+                const avatarHTML = getSellerAvatar(seller);
+
+                const card = document.createElement('div');
+                card.className = 'seller-card';
+
+                // Get saved date
+                const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+                const user = getCurrentUser();
+                const savedList = saved[user?.email] || [];
+                const savedIndex = savedList.indexOf(seller.email);
+                const savedDate = savedIndex > -1 ? new Date().toISOString() : new Date().toISOString();
+
+                card.innerHTML = `
+                    <div class="seller-header">
+                        <div class="seller-avatar">${avatarHTML}</div>
+                        <div class="seller-info">
+                            <h3>${seller.farmName || seller.name}</h3>
+                            <div class="seller-location">
+                                <i class="fas fa-map-marker-alt"></i> ${seller.address || 'Philippines'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="seller-body">
+                        <div class="seller-info-text">
+                            ${seller.farmDescription || 'Local farm offering fresh products.'}
+                        </div>
+                        <div class="seller-tags">
+                            ${categories.map(cat => `<span class="tag">${cat}</span>`).join('')}
+                            <span class="tag">${products.length} products</span>
+                        </div>
+                        <div class="seller-saved-date">
+                            <i class="far fa-clock"></i> Saved on ${new Date(savedDate).toLocaleDateString()}
+                        </div>
+                        <div class="seller-actions">
+                            <a href="Buyer View Seller.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <a href="Contact Seller.html?seller=${encodeURIComponent(seller.email)}" class="btn btn-message">
+                                <i class="fas fa-comment"></i> Contact
+                            </a>
+                            <button class="btn btn-danger" onclick="removeSavedSeller('${seller.email}')">
+                                <i class="fas fa-times"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                savedGrid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // UPDATE STATS
+        // ============================================================
+        function updateStats(sellers) {
+            totalSavedEl.textContent = sellers.length;
+
+            let totalProducts = 0;
+            const categories = new Set();
+
+            sellers.forEach(seller => {
+                const products = getSellerProducts(seller.email);
+                totalProducts += products.length;
+                products.forEach(p => {
+                    if (p.category) categories.add(p.category);
+                });
+            });
+
+            totalProductsEl.textContent = totalProducts;
+            totalCategoriesEl.textContent = categories.size;
+        }
+
+        // ============================================================
+        // REMOVE SAVED SELLER
+        // ============================================================
+        function removeSavedSeller(sellerEmail) {
+            if (!confirm(`Remove this seller from your saved list?`)) return;
+
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to manage saved sellers.', 'error');
+                return;
+            }
+
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            if (saved[user.email]) {
+                saved[user.email] = saved[user.email].filter(email => email !== sellerEmail);
+                localStorage.setItem('farmConnectSavedSellers', JSON.stringify(saved));
+            }
+
+            showToast('Seller removed from saved list.', 'info');
+            loadSavedSellers();
+        }
+
+        // ============================================================
+        // CLEAR ALL SAVED
+        // ============================================================
+        function clearAllSaved() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('Please login to manage saved sellers.', 'error');
+                return;
+            }
+
+            if (!confirm('Remove all sellers from your saved list?')) return;
+
+            const saved = JSON.parse(localStorage.getItem('farmConnectSavedSellers') || '{}');
+            saved[user.email] = [];
+            localStorage.setItem('farmConnectSavedSellers', JSON.stringify(saved));
+
+            showToast('All saved sellers cleared.', 'info');
+            loadSavedSellers();
+        }
+
+        // ============================================================
+        // REFRESH
+        // ============================================================
+        function refreshSaved() {
+            loadSavedSellers();
+            showToast('Refreshed!', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectSavedSellers' || 
+                    e.key === 'farmConnectUsers' || 
+                    e.key === 'farmConnectProducts') {
+                    loadSavedSellers();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadSavedSellers();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('❤️ Saved Sellers loaded successfully!');
+        });
+    </script>
+</body>
+</html>

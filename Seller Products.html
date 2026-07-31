@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Products - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/Seller Products.css">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Seller!</div>
+                    <a href="Register as Seller.html" class="user-avatar" id="userAvatar">S</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-nav">
+        <div class="container">
+            <div class="nav-links">
+                <a href="Register as Seller.html"><i class="fas fa-arrow-left"></i> Back</a>
+                <a href="Seller Profile.html"><i class="fas fa-user"></i> My Profile</a>
+                <a href="Seller Account Setting.html"><i class="fas fa-cog"></i> Account Settings</a>
+                <a href="Seller Order History.html"><i class="fas fa-box"></i> Order History</a>
+                <a href="#" class="active"><i class="fas fa-list"></i> My Products</a>
+            </div>
+        </div>
+    </div>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1><i class="fas fa-list"></i> My Products</h1>
+                    <p>View and manage your product listings</p>
+                </div>
+                <a href="Register as Seller.html" class="btn"><i class="fas fa-plus"></i> Add New Product</a>
+            </div>
+
+            <div class="products-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProducts">0</div>
+                    <div class="stat-label"><i class="fas fa-boxes"></i> Total Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeProducts">0</div>
+                    <div class="stat-label"><i class="fas fa-check-circle"></i> Active Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="lowStockProducts">0</div>
+                    <div class="stat-label"><i class="fas fa-exclamation-triangle"></i> Low Stock</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="outOfStockProducts">0</div>
+                    <div class="stat-label"><i class="fas fa-times-circle"></i> Out of Stock</div>
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <div class="search-bar">
+                    <input type="text" id="productSearch" placeholder="Search products...">
+                    <button onclick="applyFilters()"><i class="fas fa-search"></i> Search</button>
+                </div>
+                <div class="filters">
+                    <select id="categoryFilter" onchange="applyFilters()">
+                        <option value="all">All Categories</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Grains">Grains</option>
+                        <option value="Livestock">Livestock</option>
+                        <option value="Dairy">Dairy</option>
+                    </select>
+                    <select id="statusFilter" onchange="applyFilters()">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <select id="stockFilter" onchange="applyFilters()">
+                        <option value="all">All Stock</option>
+                        <option value="in-stock">In Stock</option>
+                        <option value="low-stock">Low Stock</option>
+                        <option value="out-of-stock">Out of Stock</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="Register as Seller.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
+                <span class="mobile-nav-label">Back</span>
+            </a>
+            <a href="Seller Profile.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
+                <span class="mobile-nav-label">Profile</span>
+            </a>
+            <a href="Seller Account Setting.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
+                <span class="mobile-nav-label">Settings</span>
+            </a>
+            <a href="Seller Order History.html" class="mobile-nav-item">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span class="mobile-nav-label">Orders</span>
+            </a>
+            <a href="#" class="mobile-nav-item active">
+                <span class="mobile-nav-icon"><i class="fas fa-list"></i></span>
+                <span class="mobile-nav-label">Products</span>
+            </a>
+        </div>
+    </nav>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                    <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+                    <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = 'Register as Seller.html';
+                return;
+            }
+
+            // Load user data
+            loadUserData(currentUser);
+            
+            // Load products (single source of truth)
+            loadProducts(currentUser);
+            
+            // Setup listeners
+            setupListeners();
+            
+            // Load theme
+            loadThemePreference();
+
+            // Listen for theme changes
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+                if (e.key === 'farmConnectProducts' || e.key === 'currentUser') {
+                    const user = JSON.parse(localStorage.getItem('currentUser'));
+                    if (user) loadProducts(user);
+                }
+            });
+        });
+
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        function loadUserData(user) {
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${user.farmName || user.name}!`;
+            
+            const avatar = document.getElementById('userAvatar');
+            if (user.profilePicture) {
+                avatar.innerHTML = `<img src="${user.profilePicture}" alt="Profile">`;
+            } else {
+                avatar.textContent = (user.name || user.farmName || 'S').charAt(0).toUpperCase();
+                avatar.style.backgroundColor = '#ff9800';
+                avatar.style.display = 'flex';
+                avatar.style.alignItems = 'center';
+                avatar.style.justifyContent = 'center';
+                avatar.style.fontWeight = 'bold';
+                avatar.style.color = 'white';
+                avatar.style.textDecoration = 'none';
+            }
+        }
+
+        function getAllProducts() {
+            return JSON.parse(localStorage.getItem('farmConnectProducts') || '[]');
+        }
+
+        function getSellerProducts(email) {
+            return getAllProducts().filter(p => p.sellerEmail === email);
+        }
+
+        function loadProducts(user) {
+            const products = getSellerProducts(user.email);
+            displayProducts(products);
+            updateStats(products);
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-products">
+                        <p><i class="fas fa-inbox"></i> No products found.</p>
+                        <a href="Register as Seller.html" class="btn"><i class="fas fa-plus"></i> Add Your First Product</a>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            products.forEach(product => {
+                const card = createProductCard(product);
+                grid.appendChild(card);
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+
+            let stockStatus = '';
+            let stockClass = '';
+            if (product.quantity === 0) {
+                stockStatus = 'Out of Stock';
+                stockClass = 'stock-out';
+            } else if (product.quantity <= (product.minStock || 5)) {
+                stockStatus = 'Low Stock';
+                stockClass = 'stock-low';
+            } else {
+                stockStatus = 'In Stock';
+                stockClass = '';
+            }
+
+            let statusBadge = '';
+            if (product.status === 'inactive' || product.quantity === 0) {
+                statusBadge = '<div class="product-status status-inactive">Inactive</div>';
+            } else if (product.quantity <= (product.minStock || 5)) {
+                statusBadge = '<div class="product-status status-low-stock">Low Stock</div>';
+            } else {
+                statusBadge = '<div class="product-status status-active">Active</div>';
+            }
+
+            const categoryIcons = {
+                'Vegetables': '<i class="fas fa-leaf"></i>',
+                'Fruits': '<i class="fas fa-apple-alt"></i>',
+                'Grains': '<i class="fas fa-wheat"></i>',
+                'Livestock': '<i class="fas fa-horse"></i>',
+                'Dairy': '<i class="fas fa-cheese"></i>'
+            };
+
+            let imageContent = product.imageUrl ?
+                `<img src="${product.imageUrl}" alt="${product.name}">` :
+                `<div class="placeholder-icon"><i class="fas fa-shopping-bag"></i></div>`;
+
+            card.innerHTML = `
+                <div class="product-image">
+                    ${imageContent}
+                    ${statusBadge}
+                </div>
+                <div class="product-details">
+                    <h3 class="product-title"><i class="fas fa-shopping-bag"></i> ${product.name}</h3>
+                    <div class="product-category">${categoryIcons[product.category] || '<i class="fas fa-folder"></i>'} ${product.category}</div>
+                    <p class="product-description">${product.description || ''}</p>
+                    <div class="product-meta">
+                        <div><i class="fas fa-weight-hanging"></i> Unit: ${product.unit || 'kg'}</div>
+                        <div><i class="fas fa-exclamation-triangle"></i> Min Stock: ${product.minStock || 5}</div>
+                    </div>
+                    <div class="product-price"><i class="fas fa-money-bill-wave"></i> ₱${Number(product.price).toFixed(2)}/${product.unit || 'kg'}</div>
+                    <div class="product-stock ${stockClass}"><i class="fas fa-box"></i> Stock: ${product.quantity} ${product.unit || 'kg'} • ${stockStatus}</div>
+                    <div class="product-actions">
+                        <a href="Register as Seller.html" class="btn btn-outline"><i class="fas fa-edit"></i> Edit</a>
+                        <button class="btn btn-warning" onclick="toggleProductStatus('${product.id}')">
+                            ${product.status === 'active' ? '<i class="fas fa-times"></i> Deactivate' : '<i class="fas fa-check"></i> Activate'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function updateStats(products) {
+            const total = products.length;
+            const active = products.filter(p => p.status === 'active' && p.quantity > 0).length;
+            const lowStock = products.filter(p => p.quantity > 0 && p.quantity <= (p.minStock || 5)).length;
+            const outOfStock = products.filter(p => p.quantity === 0).length;
+
+            document.getElementById('totalProducts').textContent = total;
+            document.getElementById('activeProducts').textContent = active;
+            document.getElementById('lowStockProducts').textContent = lowStock;
+            document.getElementById('outOfStockProducts').textContent = outOfStock;
+        }
+
+        function toggleProductStatus(productId) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+
+            let allProducts = getAllProducts();
+            const product = allProducts.find(p => p.id == productId);
+            
+            if (product) {
+                product.status = product.status === 'active' ? 'inactive' : 'active';
+                localStorage.setItem('farmConnectProducts', JSON.stringify(allProducts));
+                
+                loadProducts(currentUser);
+                showToast(`Product ${product.status === 'active' ? 'activated' : 'deactivated'} successfully!`);
+            }
+        }
+
+        function applyFilters() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) return;
+
+            const products = getSellerProducts(currentUser.email);
+            const searchTerm = document.getElementById('productSearch').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const stock = document.getElementById('stockFilter').value;
+
+            let filtered = products.filter(p => {
+                if (searchTerm && !p.name.toLowerCase().includes(searchTerm) && 
+                    !(p.description || '').toLowerCase().includes(searchTerm)) {
+                    return false;
+                }
+                if (category !== 'all' && p.category !== category) return false;
+                if (status !== 'all' && p.status !== status) return false;
+                if (stock !== 'all') {
+                    if (stock === 'in-stock' && (p.quantity === 0 || p.quantity <= (p.minStock || 5))) return false;
+                    if (stock === 'low-stock' && (p.quantity === 0 || p.quantity > (p.minStock || 5))) return false;
+                    if (stock === 'out-of-stock' && p.quantity > 0) return false;
+                }
+                return true;
+            });
+
+            displayProducts(filtered);
+            updateStats(filtered);
+        }
+
+        function setupListeners() {
+            document.getElementById('productSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') applyFilters();
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+            
+            text.textContent = message;
+            toast.className = 'toast';
+            icon.className = type === 'error' ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            if (type === 'error') toast.classList.add('error');
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Make functions globally accessible
+        window.applyFilters = applyFilters;
+        window.toggleProductStatus = toggleProductStatus;
+    </script>
+</body>
+</html>

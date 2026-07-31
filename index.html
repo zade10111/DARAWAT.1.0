@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARAWAT - Loading</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="Css/index.css">
+    
+</head>
+<body>
+
+    <!-- Animated Background Leaves (keep for texture) -->
+    <div class="bg-leaf">🌿</div>
+    <div class="bg-leaf">🍃</div>
+    <div class="bg-leaf">🌱</div>
+    <div class="bg-leaf">🌾</div>
+    <div class="bg-leaf">🌻</div>
+
+    <!-- Loading Container -->
+    <div class="loading-container">
+        <!-- Logo -->
+        <div class="logo">
+            <i class="fas fa-seedling logo-icon"></i>
+        </div>
+        <div class="logo-text">
+            DARA<span>WATPH</span>
+        </div>
+
+        <!-- Farm Emojis -->
+        <div class="farm-animation">
+            <span>🚜</span>
+            <span>🌾</span>
+            <span>🌽</span>
+            <span>🍎</span>
+        </div>
+
+        <!-- Tagline -->
+        <div class="tagline">
+            Connecting Farmers & Buyers
+        </div>
+
+        <!-- Spinning Dots -->
+        <div class="spinning-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+        <!-- Loading Bar -->
+        <div class="loading-bar-container">
+            <div class="loading-bar" id="loadingBar"></div>
+        </div>
+
+        <!-- Percentage -->
+        <div class="loading-percentage" id="loadingPercentage">0%</div>
+        <div class="loading-text" id="loadingText">Preparing FarmNetPH...</div>
+
+        <!-- Version -->
+        <div class="version">v5.0.0 • 🌱 Growing Together</div>
+    </div>
+
+    <script>
+        // ============================================================
+        // FARMNET LOADING SCREEN
+        // ============================================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingBar = document.getElementById('loadingBar');
+            const percentageText = document.getElementById('loadingPercentage');
+            const statusText = document.getElementById('loadingText');
+
+            // Loading messages
+            const messages = [
+                '🌱 Connecting to FarmNet...',
+                '🌾 Loading farmers & buyers...',
+                '🍅 Fresh produce incoming...',
+                '🚜 Preparing your dashboard...',
+                '🌿 Almost there...',
+                '✅ Welcome to FarmNet!'
+            ];
+
+            let progress = 0;
+            let messageIndex = 0;
+
+            // Simulate loading progress
+            const interval = setInterval(() => {
+                // Increment progress
+                progress += Math.random() * 4 + 1;
+
+                // Ensure we don't exceed 100%
+                if (progress > 100) {
+                    progress = 100;
+                }
+
+                // Update loading bar
+                loadingBar.style.width = progress + '%';
+
+                // Update percentage text
+                percentageText.textContent = Math.floor(progress) + '%';
+
+                // Update status message based on progress
+                const messageIndex = Math.floor((progress / 100) * messages.length);
+                const safeIndex = Math.min(messageIndex, messages.length - 1);
+                statusText.textContent = messages[safeIndex] || messages[0];
+
+                // Check if loading is complete
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    statusText.textContent = '🌾 Welcome to FarmNet!';
+                    percentageText.textContent = '100%';
+
+                    // Redirect to Welcome Screen after a short delay
+                    setTimeout(function() {
+                        window.location.href = 'Welcome%20Screen.html';
+                    }, 600);
+                }
+            }, 120);
+
+            // Fallback redirect if something goes wrong (15 second timeout)
+            setTimeout(function() {
+                if (progress < 100) {
+                    console.log('Loading timeout - redirecting...');
+                    window.location.href = 'Welcome%20Screen.html';
+                }
+            }, 15000);
+        });
+    </script>
+</body>
+</html>

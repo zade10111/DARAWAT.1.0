@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success Stories - DARAWAT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="Css/Success Stories.css">
+
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Welcome Screen.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Welcome Screen.html" class="nav-link">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="Register as Buyer.html" class="nav-link">
+                        <i class="fas fa-shopping-bag"></i> Shop
+                    </a>
+                    <a href="Seller Directory.html" class="nav-link">
+                        <i class="fas fa-store"></i> Sellers
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-star"></i> Stories
+                    </a>
+                    <a href="About Us.html" class="nav-link">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Guest!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">G</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-star"></i> Success Stories</h1>
+                <p>Real stories from farmers and buyers who are thriving on FarmNet</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalStories">0</div>
+                    <div class="stat-label">Total Stories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="farmerStories">0</div>
+                    <div class="stat-label">Farmer Stories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="buyerStories">0</div>
+                    <div class="stat-label">Buyer Stories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="partnerStories">0</div>
+                    <div class="stat-label">Partner Stories</div>
+                </div>
+            </div>
+
+            <!-- Filter -->
+            <div class="filter-section">
+                <span class="filter-label"><i class="fas fa-filter"></i> Filter:</span>
+                <select id="storyFilter" onchange="filterStories()">
+                    <option value="all">All Stories</option>
+                    <option value="farmer">Farmers</option>
+                    <option value="buyer">Buyers</option>
+                    <option value="partner">Partners</option>
+                </select>
+                <span class="filter-label"><i class="fas fa-sort"></i> Sort:</span>
+                <select id="sortFilter" onchange="filterStories()">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+
+            <!-- Stories Grid -->
+            <div class="stories-grid" id="storiesGrid">
+                <!-- Stories will be dynamically inserted -->
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="quick-links-section">
+                <div class="container">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; justify-content: center;">
+                        <h2 style="color: #2e7d32; font-size: 1.5rem; font-weight: 600;">📚 Explore DARAWAT</h2>
+                    </div>
+                    <div class="quick-links-grid">
+                        <a href="About Us.html" class="quick-link-item">
+                            <span class="icon">🌾</span>
+                            <h4>About Us</h4>
+                            <p>Learn about DARAWAT's mission</p>
+                        </a>
+                        <a href="How It Works.html" class="quick-link-item">
+                            <span class="icon">🚀</span>
+                            <h4>How It Works</h4>
+                            <p>Understanding the platform</p>
+                        </a>
+                        <a href="FAQ.html" class="quick-link-item">
+                            <span class="icon">❓</span>
+                            <h4>FAQ</h4>
+                            <p>Frequently asked questions</p>
+                        </a>
+                        <a href="Community Guidelines.html" class="quick-link-item">
+                            <span class="icon">🤝</span>
+                            <h4>Community Guidelines</h4>
+                            <p>Our code of conduct</p>
+                        </a>
+                        <a href="Help Center.html" class="quick-link-item">
+                            <span class="icon">❓</span>
+                            <h4>Help Center</h4>
+                            <p>Support and guides</p>
+                        </a>
+                        <a href="Contact us.html" class="quick-link-item">
+                            <span class="icon">📬</span>
+                            <h4>Contact Us</h4>
+                            <p>Reach our support team</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Share Your Story -->
+            <div class="share-story-section">
+                <h2><i class="fas fa-pen-fancy"></i> Share Your Story</h2>
+                <p>Have a success story to tell? We'd love to hear from you and feature your journey on FarmNet.</p>
+                <button class="btn btn-primary" onclick="openShareModal()">
+                    <i class="fas fa-plus"></i> Share Your Story
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Share Story Modal -->
+    <div class="modal" id="shareModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-pen-fancy"></i> Share Your Story</h2>
+                <button class="modal-close" onclick="closeShareModal()">&times;</button>
+            </div>
+            <form id="storyForm">
+                <div class="form-group">
+                    <label>Your Name <span style="color:#f44336;">*</span></label>
+                    <input type="text" id="storyAuthorName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email <span style="color:#f44336;">*</span></label>
+                    <input type="email" id="storyAuthorEmail" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label>Story Type <span style="color:#f44336;">*</span></label>
+                    <select id="storyType" required>
+                        <option value="">Select Type</option>
+                        <option value="farmer">Farmer</option>
+                        <option value="buyer">Buyer</option>
+                        <option value="partner">Partner</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Story Title <span style="color:#f44336;">*</span></label>
+                    <input type="text" id="storyTitle" placeholder="Give your story a title" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Story <span style="color:#f44336;">*</span></label>
+                    <textarea id="storyContent" placeholder="Share your FarmNet journey..." required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeShareModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Story
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Welcome Screen.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-home"></i></span>
+                <span>Home</span>
+            </a>
+            <a href="Register as Buyer.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-shopping-bag"></i></span>
+                <span>Shop</span>
+            </a>
+            <a href="Seller Directory.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
+                <span>Sellers</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-star"></i></span>
+                <span>Stories</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+                <a href="Success Stories.html">Success Stories</a>
+                <a href="Community Guidelines.html">Guidelines</a>
+                <a href="Help Center.html">Help Center</a>
+                <a href="Cookie Policy.html">Cookie Policy</a>
+                <a href="Accessibility.html">Accessibility</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <script>
+        // ============================================================
+        // SUCCESS STORIES - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const storiesGrid = document.getElementById('storiesGrid');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+
+        // State
+        let allStories = [];
+        let filteredStories = [];
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.name || user.farmName}!`;
+                const avatar = localStorage.getItem(`buyerAvatar_${user.email}`) || 
+                              localStorage.getItem(`sellerAvatar_${user.email}`);
+                if (avatar && (avatar.startsWith('http') || avatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${avatar}" alt="${user.name || user.farmName}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.name || user.farmName}">`;
+                } else {
+                    userAvatar.textContent = (user.name || user.farmName || 'G').charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Guest!';
+                userAvatar.textContent = 'G';
+            }
+        }
+
+        // ============================================================
+        // LOAD STORIES
+        // ============================================================
+        function loadStories() {
+            // Get stories from localStorage or use default sample stories
+            const stored = localStorage.getItem('farmConnectSuccessStories');
+            
+            if (stored) {
+                try {
+                    allStories = JSON.parse(stored);
+                } catch (e) {
+                    allStories = getSampleStories();
+                }
+            } else {
+                allStories = getSampleStories();
+                localStorage.setItem('farmConnectSuccessStories', JSON.stringify(allStories));
+            }
+
+            updateStats();
+            filterStories();
+        }
+
+        // ============================================================
+        // GET SAMPLE STORIES
+        // ============================================================
+        function getSampleStories() {
+            return [
+                {
+                    id: 1,
+                    type: 'farmer',
+                    title: 'From Small Farm to Thriving Business',
+                    content: 'FarmNet helped me connect with buyers who appreciate quality organic produce. In just 6 months, I\'ve doubled my sales and expanded my farm. The platform made it so easy to showcase my products and reach customers I never could before.',
+                    author: 'Maria Santos',
+                    role: 'Organic Farmer',
+                    location: 'Batangas',
+                    date: '2025-01-15',
+                    views: 234,
+                    likes: 45,
+                    avatar: 'M'
+                },
+                {
+                    id: 2,
+                    type: 'buyer',
+                    title: 'Fresh Produce Direct from the Farm',
+                    content: 'I used to buy vegetables from the market, but now I get them directly from farmers on FarmNet. The quality is amazing, and I love knowing exactly where my food comes from. I\'ve saved money and gotten fresher produce!',
+                    author: 'James Wilson',
+                    role: 'Restaurant Owner',
+                    location: 'Cebu City',
+                    date: '2025-02-20',
+                    views: 189,
+                    likes: 32,
+                    avatar: 'J'
+                },
+                {
+                    id: 3,
+                    type: 'farmer',
+                    title: 'Sustainable Farming Through Technology',
+                    content: 'FarmNet has been a game-changer for our cooperative. We now have a direct channel to sell our products, reducing waste and increasing profits. The platform is easy to use even for our older members who aren\'t tech-savvy.',
+                    author: 'Carlos Reyes',
+                    role: 'Cooperative Leader',
+                    location: 'Laguna',
+                    date: '2025-03-10',
+                    views: 312,
+                    likes: 67,
+                    avatar: 'C'
+                },
+                {
+                    id: 4,
+                    type: 'buyer',
+                    title: 'Building Relationships with Local Farmers',
+                    content: 'What I love most about FarmNet is the connection. I\'ve built relationships with farmers who now grow specific products just for me. It\'s not just a transaction - it\'s a partnership that benefits everyone.',
+                    author: 'Anna Tan',
+                    role: 'Home Cook',
+                    location: 'Manila',
+                    date: '2025-04-05',
+                    views: 156,
+                    likes: 28,
+                    avatar: 'A'
+                },
+                {
+                    id: 5,
+                    type: 'partner',
+                    title: 'Supporting Local Agriculture',
+                    content: 'As an LGU, we partnered with FarmNet to help our farmers reach more buyers. The results have been incredible - farmers are earning more, and our community is thriving. FarmNet is exactly what we needed.',
+                    author: 'Mayor Elena Cruz',
+                    role: 'LGU Partner',
+                    location: 'Quezon Province',
+                    date: '2025-05-01',
+                    views: 278,
+                    likes: 89,
+                    avatar: 'E'
+                },
+                {
+                    id: 6,
+                    type: 'farmer',
+                    title: 'From Farm to Table in 24 Hours',
+                    content: 'The speed of FarmNet is amazing. I can harvest in the morning, list my products, and have orders by afternoon. My produce is now reaching customers at peak freshness, and they love it!',
+                    author: 'Ramon Garcia',
+                    role: 'Vegetable Farmer',
+                    location: 'Pampanga',
+                    date: '2025-06-12',
+                    views: 201,
+                    likes: 54,
+                    avatar: 'R'
+                }
+            ];
+        }
+
+        // ============================================================
+        // UPDATE STATS
+        // ============================================================
+        function updateStats() {
+            document.getElementById('totalStories').textContent = allStories.length;
+            document.getElementById('farmerStories').textContent = allStories.filter(s => s.type === 'farmer').length;
+            document.getElementById('buyerStories').textContent = allStories.filter(s => s.type === 'buyer').length;
+            document.getElementById('partnerStories').textContent = allStories.filter(s => s.type === 'partner').length;
+        }
+
+        // ============================================================
+        // FILTER STORIES
+        // ============================================================
+        function filterStories() {
+            const typeFilter = document.getElementById('storyFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            filteredStories = allStories.filter(story => {
+                if (typeFilter === 'all') return true;
+                return story.type === typeFilter;
+            });
+
+            // Sort
+            filteredStories.sort((a, b) => {
+                switch(sortFilter) {
+                    case 'newest':
+                        return new Date(b.date) - new Date(a.date);
+                    case 'oldest':
+                        return new Date(a.date) - new Date(b.date);
+                    case 'popular':
+                        return b.views - a.views;
+                    default:
+                        return 0;
+                }
+            });
+
+            displayStories(filteredStories);
+        }
+
+        // ============================================================
+        // RESET FILTERS
+        // ============================================================
+        function resetFilters() {
+            document.getElementById('storyFilter').value = 'all';
+            document.getElementById('sortFilter').value = 'newest';
+            filterStories();
+            showToast('Filters reset!', 'info');
+        }
+
+        // ============================================================
+        // DISPLAY STORIES
+        // ============================================================
+        function displayStories(stories) {
+            if (stories.length === 0) {
+                storiesGrid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#666;">
+                        <i class="fas fa-book-open" style="font-size:48px; color:#bdc3c7; margin-bottom:15px; display:block;"></i>
+                        <p>No stories found matching your filters.</p>
+                        <button class="btn btn-outline" onclick="resetFilters()" style="margin-top:15px;">
+                            <i class="fas fa-undo"></i> Reset Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            storiesGrid.innerHTML = '';
+
+            stories.forEach(story => {
+                const card = document.createElement('div');
+                card.className = 'story-card';
+
+                const tagColors = {
+                    farmer: 'farmer',
+                    buyer: 'buyer',
+                    partner: 'partner'
+                };
+
+                const tagLabels = {
+                    farmer: '👨‍🌾 Farmer',
+                    buyer: '🛒 Buyer',
+                    partner: '🤝 Partner'
+                };
+
+                const formattedDate = new Date(story.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                const avatarContent = story.avatar ? 
+                    story.avatar : 
+                    story.author.charAt(0).toUpperCase();
+
+                card.innerHTML = `
+                    <div class="story-image">
+                        <div class="story-image-placeholder">
+                            ${story.type === 'farmer' ? '🌾' : 
+                              story.type === 'buyer' ? '🛒' : 
+                              '🤝'}
+                        </div>
+                        <span class="story-tag ${tagColors[story.type] || 'farmer'}">${tagLabels[story.type] || 'Story'}</span>
+                    </div>
+                    <div class="story-body">
+                        <h3 class="story-title">${story.title}</h3>
+                        <p class="story-text">${story.content}</p>
+                        <div class="story-author">
+                            <div class="story-author-avatar">${avatarContent}</div>
+                            <div class="story-author-info">
+                                <div class="author-name">${story.author}</div>
+                                <div class="author-role">${story.role} · ${story.location}</div>
+                            </div>
+                        </div>
+                        <div class="story-stats">
+                            <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+                            <span><i class="fas fa-eye"></i> ${story.views}</span>
+                            <span><i class="fas fa-heart"></i> ${story.likes}</span>
+                        </div>
+                    </div>
+                `;
+
+                storiesGrid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // SHARE STORY MODAL
+        // ============================================================
+        function openShareModal() {
+            document.getElementById('shareModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('storyForm').reset();
+        }
+
+        // ============================================================
+        // SUBMIT STORY
+        // ============================================================
+        function submitStory(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('storyAuthorName').value.trim();
+            const email = document.getElementById('storyAuthorEmail').value.trim();
+            const type = document.getElementById('storyType').value;
+            const title = document.getElementById('storyTitle').value.trim();
+            const content = document.getElementById('storyContent').value.trim();
+
+            if (!name || !email || !type || !title || !content) {
+                showToast('Please fill in all required fields.', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showToast('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            const newStory = {
+                id: Date.now(),
+                type: type,
+                title: title,
+                content: content,
+                author: name,
+                role: type === 'farmer' ? 'Farmer' : 
+                      type === 'buyer' ? 'Buyer' : 'Partner',
+                location: 'Philippines',
+                date: new Date().toISOString().split('T')[0],
+                views: 0,
+                likes: 0,
+                avatar: name.charAt(0).toUpperCase()
+            };
+
+            allStories.push(newStory);
+            localStorage.setItem('farmConnectSuccessStories', JSON.stringify(allStories));
+
+            closeShareModal();
+            updateStats();
+            filterStories();
+            showToast('🎉 Your story has been submitted! Thank you for sharing.', 'success');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            document.getElementById('storyForm').addEventListener('submit', submitStory);
+
+            document.getElementById('shareModal').addEventListener('click', function(e) {
+                if (e.target === this) closeShareModal();
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeShareModal();
+            });
+
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = user.role === 'seller' ? 'Seller Profile.html' : 'Buyer Profile.html';
+                } else {
+                    window.location.href = 'Register as Buyer.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectSuccessStories') {
+                    loadStories();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadStories();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('⭐ Success Stories loaded successfully!');
+        });
+    </script>
+</body>
+</html>

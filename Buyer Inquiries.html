@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Inquiries - DARAWAT</title>
+    <!-- ============================================================ -->
+    <!-- EXTERNAL LIBRARIES                                            -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ============================================================ -->
+    <!-- EXTERNAL CSS FILE - style-buyer-inquiries.css                -->
+    <!-- ============================================================ -->
+    <link rel="stylesheet" href="Css/Buyer Inquiries.css">
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- SECTION: HEADER                                               -->
+    <!-- ============================================================ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="Register as Seller.html" class="logo">
+                    <i class="fas fa-seedling"></i> DARAWAT
+                </a>
+                <nav class="main-nav">
+                    <a href="Register as Seller.html" class="nav-link">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="Seller Products.html" class="nav-link">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-question-circle"></i> Inquiries
+                    </a>
+                    <a href="Seller Messages.html" class="nav-link">
+                        <i class="fas fa-envelope"></i> Messages
+                    </a>
+                    <a href="Seller Profile.html" class="nav-link">
+                        <i class="fas fa-user"></i> Profile
+                    </a>
+                </nav>
+                <div class="user-info">
+                    <div id="welcomeMessage">Welcome, Seller!</div>
+                    <div class="user-avatar" id="userAvatar" title="View Profile">S</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: PAGE CONTENT                                         -->
+    <!-- ============================================================ -->
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1><i class="fas fa-question-circle"></i> Buyer Inquiries</h1>
+                    <p>Manage questions from buyers about your products</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-outline" onclick="refreshInquiries()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalInquiries">0</div>
+                    <div class="stat-label">Total Inquiries</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="pendingInquiries">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="respondedInquiries">0</div>
+                    <div class="stat-label">Responded</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="resolvedInquiries">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-section">
+                <span class="filter-label"><i class="fas fa-filter"></i> Filter:</span>
+                <select id="statusFilter" onchange="applyFilters()">
+                    <option value="all">All Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="responded">Responded</option>
+                    <option value="resolved">Resolved</option>
+                </select>
+                <select id="urgencyFilter" onchange="applyFilters()">
+                    <option value="all">All Urgency</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+                <input type="text" id="searchInput" placeholder="Search by buyer or product..." oninput="applyFilters()">
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+
+            <!-- Inquiries Grid -->
+            <div class="inquiries-grid" id="inquiriesGrid">
+                <!-- Inquiries will be dynamically inserted -->
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: MOBILE BOTTOM NAVIGATION                             -->
+    <!-- ============================================================ -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-buttons">
+            <a href="Register as Seller.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-th-large"></i></span>
+                <span>Dashboard</span>
+            </a>
+            <a href="Seller Products.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
+                <span>Products</span>
+            </a>
+            <a href="#" class="mobile-nav-btn active">
+                <span class="mobile-nav-icon"><i class="fas fa-question"></i></span>
+                <span>Inquiries</span>
+            </a>
+            <a href="Seller Messages.html" class="mobile-nav-btn">
+                <span class="mobile-nav-icon"><i class="fas fa-envelope"></i></span>
+                <span>Messages</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: FOOTER                                               -->
+    <!-- ============================================================ -->
+    <footer>
+        <div class="container">
+            <p><i class="fas fa-seedling"></i> DARAWAT &copy; 2026 - Connecting Farmers and Buyers</p>
+            <div class="footer-links">
+                <a href="About Us.html">About</a>
+                <a href="How It Works.html">How It Works</a>
+                <a href="Contact us.html">Contact</a>
+                <a href="Terms of Service.html">Terms</a>
+                <a href="Private policy.html">Privacy</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: TOAST NOTIFICATION                                   -->
+    <!-- ============================================================ -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span></span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: COMPLETE JAVASCRIPT                                  -->
+    <!-- ============================================================ -->
+    <script>
+        // ============================================================
+        // BUYER INQUIRIES - Full JavaScript
+        // ============================================================
+
+        // DOM Elements
+        const inquiriesGrid = document.getElementById('inquiriesGrid');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const userAvatar = document.getElementById('userAvatar');
+        const totalInquiriesEl = document.getElementById('totalInquiries');
+        const pendingInquiriesEl = document.getElementById('pendingInquiries');
+        const respondedInquiriesEl = document.getElementById('respondedInquiries');
+        const resolvedInquiriesEl = document.getElementById('resolvedInquiries');
+
+        // State
+        let allInquiries = [];
+        let filteredInquiries = [];
+
+        // ============================================================
+        // LOAD THEME PREFERENCE
+        // ============================================================
+        function loadThemePreference() {
+            const theme = localStorage.getItem('farmnetTheme') || 'light';
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+        }
+
+        // ============================================================
+        // GET CURRENT USER
+        // ============================================================
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('currentUser');
+                return userData ? JSON.parse(userData) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        // LOAD USER DATA
+        // ============================================================
+        function loadUserData() {
+            const user = getCurrentUser();
+            if (user) {
+                welcomeMessage.textContent = `Welcome, ${user.farmName || user.name}!`;
+                const sellerAvatar = localStorage.getItem(`sellerAvatar_${user.email}`);
+                if (sellerAvatar && (sellerAvatar.startsWith('http') || sellerAvatar.startsWith('data:'))) {
+                    userAvatar.innerHTML = `<img src="${sellerAvatar}" alt="${user.farmName || user.name}">`;
+                } else if (user.profilePicture) {
+                    userAvatar.innerHTML = `<img src="${user.profilePicture}" alt="${user.farmName || user.name}">`;
+                } else {
+                    userAvatar.textContent = (user.farmName || user.name || 'S').charAt(0).toUpperCase();
+                }
+            } else {
+                welcomeMessage.textContent = 'Welcome, Seller!';
+                userAvatar.textContent = 'S';
+            }
+        }
+
+        // ============================================================
+        // LOAD INQUIRIES
+        // ============================================================
+        function loadInquiries() {
+            const user = getCurrentUser();
+            if (!user) {
+                inquiriesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <h2>Please Login</h2>
+                        <p>Login to view buyer inquiries about your products.</p>
+                        <a href="Register as Seller.html" class="btn btn-primary" style="margin-top:15px;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get inquiries from localStorage
+            const inquiries = JSON.parse(localStorage.getItem('farmConnectInquiries') || '[]');
+            const messages = JSON.parse(localStorage.getItem('farmConnectMessages') || '[]');
+
+            // Filter inquiries for this seller
+            const sellerInquiries = inquiries.filter(i => i.sellerEmail === user.email);
+            
+            // Also get inquiries from messages that might not be in inquiries
+            const messageInquiries = messages.filter(m => 
+                m.sellerEmail === user.email && 
+                m.type === 'inquiry' &&
+                !sellerInquiries.some(i => i.id === m.id)
+            );
+
+            // Combine and deduplicate
+            const combined = [...sellerInquiries, ...messageInquiries];
+            const uniqueIds = new Set();
+            allInquiries = combined.filter(i => {
+                if (uniqueIds.has(i.id)) return false;
+                uniqueIds.add(i.id);
+                return true;
+            });
+
+            // Sort by date (newest first)
+            allInquiries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (allInquiries.length === 0) {
+                inquiriesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h2>No Inquiries Yet</h2>
+                        <p>When buyers ask about your products, their questions will appear here.</p>
+                        <a href="Seller Products.html" class="btn btn-primary" style="margin-top:15px;">
+                            <i class="fas fa-box"></i> Manage Products
+                        </a>
+                    </div>
+                `;
+                updateStats([]);
+                return;
+            }
+
+            updateStats(allInquiries);
+            applyFilters();
+        }
+
+        // ============================================================
+        // UPDATE STATS
+        // ============================================================
+        function updateStats(inquiries) {
+            totalInquiriesEl.textContent = inquiries.length;
+            pendingInquiriesEl.textContent = inquiries.filter(i => i.status === 'pending' || !i.status).length;
+            respondedInquiriesEl.textContent = inquiries.filter(i => i.status === 'responded').length;
+            resolvedInquiriesEl.textContent = inquiries.filter(i => i.status === 'resolved').length;
+        }
+
+        // ============================================================
+        // APPLY FILTERS
+        // ============================================================
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const urgencyFilter = document.getElementById('urgencyFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            filteredInquiries = allInquiries.filter(inquiry => {
+                // Status filter
+                if (statusFilter !== 'all') {
+                    const inquiryStatus = inquiry.status || 'pending';
+                    if (inquiryStatus !== statusFilter) return false;
+                }
+
+                // Urgency filter
+                if (urgencyFilter !== 'all') {
+                    const inquiryUrgency = inquiry.urgency || 'medium';
+                    if (inquiryUrgency !== urgencyFilter) return false;
+                }
+
+                // Search filter
+                if (searchTerm) {
+                    const buyerName = (inquiry.buyerName || '').toLowerCase();
+                    const productName = (inquiry.productName || '').toLowerCase();
+                    const message = (inquiry.message || '').toLowerCase();
+                    if (!buyerName.includes(searchTerm) && 
+                        !productName.includes(searchTerm) && 
+                        !message.includes(searchTerm)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            displayInquiries(filteredInquiries);
+        }
+
+        // ============================================================
+        // RESET FILTERS
+        // ============================================================
+        function resetFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('urgencyFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+            showToast('Filters reset!', 'info');
+        }
+
+        // ============================================================
+        // DISPLAY INQUIRIES
+        // ============================================================
+        function displayInquiries(inquiries) {
+            if (inquiries.length === 0) {
+                inquiriesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h2>No Matching Inquiries</h2>
+                        <p>Try adjusting your filters to see more results.</p>
+                        <button class="btn btn-outline" onclick="resetFilters()" style="margin-top:15px;">
+                            <i class="fas fa-undo"></i> Reset Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            inquiriesGrid.innerHTML = '';
+
+            inquiries.forEach(inquiry => {
+                const card = document.createElement('div');
+                card.className = 'inquiry-card';
+
+                const status = inquiry.status || 'pending';
+                const urgency = inquiry.urgency || 'medium';
+                const buyerInitial = (inquiry.buyerName || 'B').charAt(0).toUpperCase();
+                const productName = inquiry.productName || 'Product';
+                const quantity = inquiry.quantity || 'N/A';
+                const unit = inquiry.unit || 'kg';
+
+                // Status badge class
+                let statusClass = status;
+                if (status === 'pending') statusClass = 'pending';
+                else if (status === 'responded') statusClass = 'responded';
+                else if (status === 'resolved') statusClass = 'resolved';
+
+                // Urgency badge
+                let urgencyBadge = '';
+                if (urgency === 'urgent') {
+                    urgencyBadge = '<span class="status-badge urgent">🔴 Urgent</span>';
+                } else if (urgency === 'high') {
+                    urgencyBadge = '<span class="status-badge pending">⚠️ High</span>';
+                }
+
+                const formattedDate = new Date(inquiry.date).toLocaleString();
+
+                card.innerHTML = `
+                    <div class="inquiry-header">
+                        <div class="inquiry-buyer-info">
+                            <div class="inquiry-avatar">${buyerInitial}</div>
+                            <div>
+                                <div class="inquiry-buyer">${inquiry.buyerName || 'Anonymous Buyer'}</div>
+                                <div class="inquiry-buyer-email">${inquiry.buyerEmail || 'No email'}</div>
+                            </div>
+                        </div>
+                        <div class="inquiry-status">
+                            ${urgencyBadge}
+                            <span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                        </div>
+                    </div>
+
+                    <div class="inquiry-product">
+                        <i class="fas fa-box"></i> ${productName}
+                    </div>
+
+                    <div class="inquiry-details">
+                        <div class="inquiry-detail">
+                            <i class="fas fa-weight-hanging"></i> Quantity: ${quantity} ${unit}
+                        </div>
+                        <div class="inquiry-detail">
+                            <i class="fas fa-phone"></i> Contact: ${inquiry.contactMethod || 'Any'}
+                        </div>
+                        <div class="inquiry-detail">
+                            <i class="fas fa-clock"></i> ${formattedDate}
+                        </div>
+                    </div>
+
+                    <div class="inquiry-message">
+                        ${inquiry.message || 'No message provided.'}
+                    </div>
+
+                    <div class="inquiry-meta">
+                        <span>
+                            <i class="fas fa-hashtag"></i> Inquiry #${inquiry.id}
+                        </span>
+                        <div class="inquiry-actions">
+                            ${status === 'pending' || status === 'responded' ? `
+                                <button class="btn btn-success" onclick="updateInquiryStatus(${inquiry.id}, 'responded')">
+                                    <i class="fas fa-check"></i> Mark Responded
+                                </button>
+                                <button class="btn btn-primary" onclick="resolveInquiry(${inquiry.id})">
+                                    <i class="fas fa-check-double"></i> Resolve
+                                </button>
+                            ` : ''}
+                            ${status === 'resolved' ? `
+                                <button class="btn btn-outline" onclick="updateInquiryStatus(${inquiry.id}, 'pending')">
+                                    <i class="fas fa-undo"></i> Reopen
+                                </button>
+                            ` : ''}
+                            <a href="Seller Messages.html" class="btn btn-message">
+                                <i class="fas fa-comment"></i> Reply
+                            </a>
+                            <button class="btn btn-danger" onclick="deleteInquiry(${inquiry.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                inquiriesGrid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // UPDATE INQUIRY STATUS
+        // ============================================================
+        function updateInquiryStatus(inquiryId, newStatus) {
+            const inquiries = JSON.parse(localStorage.getItem('farmConnectInquiries') || '[]');
+            const index = inquiries.findIndex(i => i.id === inquiryId);
+            
+            if (index !== -1) {
+                inquiries[index].status = newStatus;
+                localStorage.setItem('farmConnectInquiries', JSON.stringify(inquiries));
+                
+                // Also update in messages
+                const messages = JSON.parse(localStorage.getItem('farmConnectMessages') || '[]');
+                const msgIndex = messages.findIndex(m => m.id === inquiryId);
+                if (msgIndex !== -1) {
+                    messages[msgIndex].status = newStatus;
+                    localStorage.setItem('farmConnectMessages', JSON.stringify(messages));
+                }
+                
+                showToast(`Inquiry marked as ${newStatus}!`, 'success');
+                loadInquiries();
+            } else {
+                showToast('Inquiry not found.', 'error');
+            }
+        }
+
+        // ============================================================
+        // RESOLVE INQUIRY
+        // ============================================================
+        function resolveInquiry(inquiryId) {
+            if (confirm('Mark this inquiry as resolved?')) {
+                updateInquiryStatus(inquiryId, 'resolved');
+            }
+        }
+
+        // ============================================================
+        // DELETE INQUIRY
+        // ============================================================
+        function deleteInquiry(inquiryId) {
+            if (!confirm('Delete this inquiry permanently?')) return;
+
+            const inquiries = JSON.parse(localStorage.getItem('farmConnectInquiries') || '[]');
+            const updated = inquiries.filter(i => i.id !== inquiryId);
+            localStorage.setItem('farmConnectInquiries', JSON.stringify(updated));
+
+            // Also remove from messages
+            const messages = JSON.parse(localStorage.getItem('farmConnectMessages') || '[]');
+            const updatedMessages = messages.filter(m => m.id !== inquiryId);
+            localStorage.setItem('farmConnectMessages', JSON.stringify(updatedMessages));
+
+            showToast('Inquiry deleted.', 'info');
+            loadInquiries();
+        }
+
+        // ============================================================
+        // REFRESH
+        // ============================================================
+        function refreshInquiries() {
+            loadInquiries();
+            showToast('Refreshed!', 'info');
+        }
+
+        // ============================================================
+        // TOAST NOTIFICATION
+        // ============================================================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = toast.querySelector('i');
+            const text = toast.querySelector('span');
+
+            text.textContent = message;
+            toast.className = 'toast';
+
+            if (type === 'error') {
+                toast.classList.add('error');
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            } else {
+                icon.className = 'fas fa-check-circle';
+            }
+
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        function setupEventListeners() {
+            userAvatar.addEventListener('click', function() {
+                const user = getCurrentUser();
+                if (user) {
+                    window.location.href = 'Seller Profile.html';
+                } else {
+                    window.location.href = 'Register as Seller.html';
+                }
+            });
+        }
+
+        // ============================================================
+        // REAL-TIME SYNC
+        // ============================================================
+        function setupRealTimeSync() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'farmConnectInquiries' || 
+                    e.key === 'farmConnectMessages') {
+                    loadInquiries();
+                }
+                if (e.key === 'farmnetTheme') {
+                    loadThemePreference();
+                }
+            });
+        }
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadThemePreference();
+            loadUserData();
+            loadInquiries();
+            setupEventListeners();
+            setupRealTimeSync();
+            console.log('❓ Buyer Inquiries loaded successfully!');
+        });
+    </script>
+</body>
+</html>
