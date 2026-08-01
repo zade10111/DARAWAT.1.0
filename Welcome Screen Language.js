@@ -1,0 +1,772 @@
+// ============================================================
+// DARAWAT - Language System
+// Complete Multi-Language Support with All Visayan Languages
+// ============================================================
+
+class LanguageSystem {
+    constructor() {
+        this.currentLanguage = 'en';
+        this.availableLanguages = ['en', 'fil', 'ceb', 'hil', 'war', 'bcl', 'kri'];
+        this.translations = {};
+        this.initialized = false;
+        
+        // Initialize
+        this.init();
+    }
+
+    init() {
+        // Load translations
+        this.loadTranslations();
+        
+        // Detect saved language preference
+        const savedLang = localStorage.getItem('darawat-language');
+        if (savedLang && this.availableLanguages.includes(savedLang)) {
+            this.currentLanguage = savedLang;
+        } else {
+            // Auto-detect browser language
+            const browserLang = navigator.language.split('-')[0];
+            if (this.availableLanguages.includes(browserLang)) {
+                this.currentLanguage = browserLang;
+            }
+        }
+        
+        // Apply translations
+        this.applyTranslations();
+        
+        // Setup language selector
+        this.setupLanguageSelector();
+        
+        // Mark as initialized
+        this.initialized = true;
+        
+        console.log(`DARAWAT Language System initialized: ${this.currentLanguage}`);
+    }
+
+    loadTranslations() {
+        // ============================================================
+        // ENGLISH TRANSLATIONS (Default)
+        // ============================================================
+        this.translations.en = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Welcome to DARAWAT',
+            'welcome_subtitle': 'Connecting farmers and buyers for a sustainable agricultural ecosystem',
+            
+            // Welcome Section
+            'join_title': 'Join Our Agricultural Community',
+            'join_description': 'DARAWAT bridges the gap between local farmers and buyers, creating a seamless marketplace for fresh produce and agricultural products. Choose your path below to get started.',
+            
+            // Cards
+            'buyer_title': 'Buy Fresh Produce',
+            'buyer_description': 'Browse products from local farmers and connect with sellers near you.',
+            'buyer_button': 'Shop Now',
+            'seller_title': 'Sell Your Products',
+            'seller_description': 'List your farm products and reach buyers directly on DARAWAT.',
+            'seller_button': 'Start Selling',
+            
+            // Features Section
+            'features_title': 'Why Choose DARAWAT?',
+            'feature1_title': 'Direct Connections',
+            'feature1_desc': 'Connect directly with farmers or buyers without intermediaries for better prices and stronger relationships.',
+            'feature2_title': 'Market Insights',
+            'feature2_desc': 'Access real-time market data and trends to make informed decisions about pricing and production.',
+            'feature3_title': 'Logistics Support',
+            'feature3_desc': 'Our platform helps coordinate transportation and delivery for seamless transactions from farm to market.',
+            'feature4_title': 'Secure Platform',
+            'feature4_desc': 'Enjoy a safe and secure platform with verified sellers and transparent transactions.',
+            
+            // Testimonials
+            'testimonials_title': 'What Our Community Says',
+            'testimonial1_text': '"DARAWAT has transformed my farming business. I now have direct access to buyers and get fair prices for my produce."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organic Farmer',
+            'testimonial2_text': '"As a restaurant owner, DARAWAT helps me source fresh, local ingredients directly from farmers. The quality is exceptional!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Restaurant Owner',
+            'testimonial3_text': '"The platform is easy to use, and the support team is always helpful. I\'ve expanded my customer base significantly since joining."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Fruit Grower',
+            
+            // Footer
+            'footer_description': 'Connecting farms to markets for a sustainable future.',
+            'footer_quick_links': 'Quick Links',
+            'footer_about': 'About Us',
+            'footer_how_it_works': 'How It Works',
+            'footer_faq': 'FAQ',
+            'footer_contact': 'Contact Us',
+            'footer_success_stories': 'Success Stories',
+            'footer_help_center': 'Help Center',
+            'footer_guidelines': 'Community Guidelines',
+            'footer_for_users': 'For Users',
+            'footer_buyer_dashboard': 'Buyer Dashboard',
+            'footer_seller_dashboard': 'Seller Dashboard',
+            'footer_all_sellers': 'All Sellers',
+            'footer_categories': 'Product Categories',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Contact Info',
+            'footer_address': 'Brgy. Kalinaw, Cebu City, Philippines',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Terms of Service',
+            'footer_privacy': 'Privacy Policy',
+            'footer_cookie': 'Cookie Policy',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. All rights reserved. | Connecting Farms to Markets',
+            
+            // Language Selector
+            'language_label': 'Language',
+            'language_english': 'English',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // FILIPINO TRANSLATIONS
+        // ============================================================
+        this.translations.fil = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Maligayang Pagdating sa DARAWAT',
+            'welcome_subtitle': 'Nag-uugnay sa mga magsasaka at mamimili para sa isang napapanatiling ekosistema ng agrikultura',
+            
+            // Welcome Section
+            'join_title': 'Sumali sa Aming Komunidad ng Agrikultura',
+            'join_description': 'Tinutulay ng DARAWAT ang agwat sa pagitan ng mga lokal na magsasaka at mamimili, na lumilikha ng isang tuluy-tuloy na pamilihan para sa sariwang ani at mga produktong agrikultural. Pumili ng iyong landas sa ibaba upang magsimula.',
+            
+            // Cards
+            'buyer_title': 'Bumili ng Sariwang Ani',
+            'buyer_description': 'Tingnan ang mga produkto mula sa mga lokal na magsasaka at kumonekta sa mga nagbebenta malapit sa iyo.',
+            'buyer_button': 'Mamili Na',
+            'seller_title': 'Ibenta ang Iyong mga Produkto',
+            'seller_description': 'Ilagay ang iyong mga produktong pang-farm at maabot ang mga mamimili nang direkta sa DARAWAT.',
+            'seller_button': 'Magsimulang Magbenta',
+            
+            // Features Section
+            'features_title': 'Bakit Pumili ng DARAWAT?',
+            'feature1_title': 'Direktang Koneksyon',
+            'feature1_desc': 'Kumonekta nang direkta sa mga magsasaka o mamimili nang walang tagapamagitan para sa mas magandang presyo at mas matibay na relasyon.',
+            'feature2_title': 'Mga Pananaw sa Merkado',
+            'feature2_desc': 'Ma-access ang real-time na data at uso ng merkado upang makagawa ng matalinong desisyon tungkol sa pagpepresyo at produksyon.',
+            'feature3_title': 'Suporta sa Logistik',
+            'feature3_desc': 'Tumutulong ang aming platform sa koordinasyon ng transportasyon at paghahatid para sa tuluy-tuloy na transaksyon mula sa bukid hanggang sa merkado.',
+            'feature4_title': 'Ligtas na Platform',
+            'feature4_desc': 'Mag-enjoy ng ligtas at secure na platform na may mga na-verify na nagbebenta at malinaw na transaksyon.',
+            
+            // Testimonials
+            'testimonials_title': 'Sabi ng Aming Komunidad',
+            'testimonial1_text': '"Binago ng DARAWAT ang aking negosyo sa pagsasaka. Mayroon na akong direktang access sa mga mamimili at nakakakuha ng patas na presyo para sa aking ani."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organikong Magsasaka',
+            'testimonial2_text': '"Bilang may-ari ng restawran, tinutulungan ako ng DARAWAT na makakuha ng sariwa at lokal na sangkap nang direkta mula sa mga magsasaka. Napakahusay ng kalidad!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'May-ari ng Restawran',
+            'testimonial3_text': '"Madaling gamitin ang platform, at laging tumutulong ang support team. Lumawak ang aking customer base nang malaki mula nang sumali ako."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Nagpapalago ng Prutas',
+            
+            // Footer
+            'footer_description': 'Nag-uugnay ng mga bukid sa mga pamilihan para sa isang napapanatiling kinabukasan.',
+            'footer_quick_links': 'Mabilis na Link',
+            'footer_about': 'Tungkol sa Amin',
+            'footer_how_it_works': 'Paano Ito Gumagana',
+            'footer_faq': 'Mga FAQ',
+            'footer_contact': 'Makipag-ugnayan',
+            'footer_success_stories': 'Mga Kwento ng Tagumpay',
+            'footer_help_center': 'Sentro ng Tulong',
+            'footer_guidelines': 'Mga Alituntunin ng Komunidad',
+            'footer_for_users': 'Para sa mga Gumagamit',
+            'footer_buyer_dashboard': 'Dashboard ng Mamimili',
+            'footer_seller_dashboard': 'Dashboard ng Nagbebenta',
+            'footer_all_sellers': 'Lahat ng Nagbebenta',
+            'footer_categories': 'Mga Kategorya ng Produkto',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Impormasyon sa Pakikipag-ugnayan',
+            'footer_address': 'Brgy. Kalinaw, Lungsod ng Cebu, Pilipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Mga Tuntunin ng Serbisyo',
+            'footer_privacy': 'Patakaran sa Privacy',
+            'footer_cookie': 'Patakaran sa Cookie',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. Lahat ng karapatan ay nakalaan. | Nag-uugnay ng mga Bukid sa mga Pamilihan',
+            
+            // Language Selector
+            'language_label': 'Wika',
+            'language_english': 'Ingles',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // CEBUANO TRANSLATIONS (Bisaya - Cebu)
+        // ============================================================
+        this.translations.ceb = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Maayong Pag-abot sa DARAWAT',
+            'welcome_subtitle': 'Nagkonekta sa mga mag-uuma ug mamalitay alang sa malungtarong ekosistema sa agrikultura',
+            
+            // Welcome Section
+            'join_title': 'Apil sa Among Komunidad sa Agrikultura',
+            'join_description': 'Gitulay sa DARAWAT ang kal-ang tali sa lokal nga mga mag-uuma ug mamalitay, naghimo og seamless nga merkado para sa presko nga produkto ug mga produktong agrikultural. Pilia ang imong dalan sa ubos aron magsugod.',
+            
+            // Cards
+            'buyer_title': 'Palit og Presko nga Produkto',
+            'buyer_description': 'Tan-awa ang mga produkto gikan sa lokal nga mga mag-uuma ug makonekta sa mga namaligya duol kanimo.',
+            'buyer_button': 'Mamalit Na',
+            'seller_title': 'Baligya ang Imong mga Produkto',
+            'seller_description': 'Ibutang ang imong mga produkto sa uma ug maabot ang mga mamalitay direkta sa DARAWAT.',
+            'seller_button': 'Magsugod og Baligya',
+            
+            // Features Section
+            'features_title': 'Nganong Pilia ang DARAWAT?',
+            'feature1_title': 'Direktang Koneksyon',
+            'feature1_desc': 'Makonekta direkta sa mga mag-uuma o mamalitay nga walay tigpataliwala para sa mas maayong presyo ug mas lig-on nga relasyon.',
+            'feature2_title': 'Mga Panan-aw sa Merkado',
+            'feature2_desc': 'Ma-access ang real-time nga datos ug uso sa merkado aron makahimo og maalamon nga desisyon bahin sa pagpresyo ug produksyon.',
+            'feature3_title': 'Suporta sa Logistik',
+            'feature3_desc': 'Makatabang ang among platform sa koordinasyon sa transportasyon ug paghatod para sa seamless nga transaksyon gikan sa uma ngadto sa merkado.',
+            'feature4_title': 'Ligtas nga Platform',
+            'feature4_desc': 'Malingaw sa luwas ug secure nga platform nga adunay na-verify nga mga namaligya ug transparent nga mga transaksyon.',
+            
+            // Testimonials
+            'testimonials_title': 'Unsa ang Giingon sa Among Komunidad',
+            'testimonial1_text': '"Gi-usab sa DARAWAT ang akong negosyo sa pag-uma. Naay na koy direktang access sa mga mamalitay ug makakuha og patas nga presyo para sa akong produkto."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organikong Mag-uuma',
+            'testimonial2_text': '"Ingon nga tag-iya sa restawran, gitabangan ko sa DARAWAT nga makakuha og presko ug lokal nga sangkap direkta gikan sa mga mag-uuma. Maayo kaayo ang kalidad!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Tag-iya sa Restawran',
+            'testimonial3_text': '"Sayon gamiton ang platform, ug kanunay makatabang ang support team. Milapad ang akong customer base sukad ni-join ko."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Nagpatubo og Prutas',
+            
+            // Footer
+            'footer_description': 'Nagkonekta sa mga uma sa mga merkado para sa malungtarong kaugmaon.',
+            'footer_quick_links': 'Paspas nga Link',
+            'footer_about': 'Mahitungod Kanamo',
+            'footer_how_it_works': 'Giunsa Kini Naglihok',
+            'footer_faq': 'Mga FAQ',
+            'footer_contact': 'Kontaka Kami',
+            'footer_success_stories': 'Mga Istorya sa Kalampusan',
+            'footer_help_center': 'Sentro sa Tabang',
+            'footer_guidelines': 'Mga Giya sa Komunidad',
+            'footer_for_users': 'Para sa mga Gumagamit',
+            'footer_buyer_dashboard': 'Dashboard sa Mamalitay',
+            'footer_seller_dashboard': 'Dashboard sa Namaligya',
+            'footer_all_sellers': 'Tanang Namaligya',
+            'footer_categories': 'Mga Kategorya sa Produkto',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Impormasyon sa Kontak',
+            'footer_address': 'Brgy. Kalinaw, Dakbayan sa Cebu, Pilipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Mga Termino sa Serbisyo',
+            'footer_privacy': 'Palisiya sa Privacy',
+            'footer_cookie': 'Palisiya sa Cookie',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. Tanang katungod gigahin. | Nagkonekta sa mga Uma sa mga Merkado',
+            
+            // Language Selector
+            'language_label': 'Pinulongan',
+            'language_english': 'Iningles',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // HILIGAYNON TRANSLATIONS (Ilonggo - Western Visayas)
+        // ============================================================
+        this.translations.hil = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Maayo nga Pag-abot sa DARAWAT',
+            'welcome_subtitle': 'Nagakonektar sang mga mangunguma kag mga mamakal para sa isa ka malungtaron nga ekosistema sang agrikultura',
+            
+            // Welcome Section
+            'join_title': 'Upod sa Amon Komunidad sang Agrikultura',
+            'join_description': 'Ginatabok sang DARAWAT ang distansya sa tunga sang lokal nga mga mangunguma kag mga mamakal, naghimo sang isa ka seamless nga merkado para sa presko nga produkto kag mga produktong agrikultural. Pilia ang imo dalan sa ubos para magsugod.',
+            
+            // Cards
+            'buyer_title': 'Bakal sang Presko nga Produkto',
+            'buyer_description': 'Tan-awa ang mga produkto gikan sa lokal nga mga mangunguma kag makonektar sa mga nagabaligya malapit sa imo.',
+            'buyer_button': 'Mamakal Na',
+            'seller_title': 'Baligya ang Imo mga Produkto',
+            'seller_description': 'Ibutang ang imo mga produkto sa uma kag maabot ang mga mamakal direkta sa DARAWAT.',
+            'seller_button': 'Magsugod sang Pagbaligya',
+            
+            // Features Section
+            'features_title': 'Ngaa Pilia ang DARAWAT?',
+            'feature1_title': 'Direktang Koneksyon',
+            'feature1_desc': 'Makonektar direkta sa mga mangunguma ukon mamakal nga wala sang tigpataliwala para sa mas maayo nga presyo kag mas lig-on nga relasyon.',
+            'feature2_title': 'Mga Panan-aw sa Merkado',
+            'feature2_desc': 'Ma-access ang real-time nga datos kag uso sang merkado para makahimo sang maalamon nga desisyon bahin sa pagpresyo kag produksyon.',
+            'feature3_title': 'Suporta sa Logistik',
+            'feature3_desc': 'Makatabang ang amon platform sa koordinasyon sang transportasyon kag paghatod para sa seamless nga transaksyon gikan sa uma pakadto sa merkado.',
+            'feature4_title': 'Ligtas nga Platform',
+            'feature4_desc': 'Malingaw sa luwas kag secure nga platform nga may na-verify nga mga nagabaligya kag transparent nga mga transaksyon.',
+            
+            // Testimonials
+            'testimonials_title': 'Ano ang Ginapamulong sang Amon Komunidad',
+            'testimonial1_text': '"Ginbag-o sang DARAWAT ang akon negosyo sa pag-uma. May direkta na ako nga access sa mga mamakal kag nakakuha sang patas nga presyo para sa akon produkto."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organikong Mangunguma',
+            'testimonial2_text': '"Bilang tag-iya sang restawran, gintabangan ako sang DARAWAT nga makakuha sang presko kag lokal nga sangkap direkta gikan sa mga mangunguma. Maayo gid ang kalidad!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Tag-iya sang Restawran',
+            'testimonial3_text': '"Sayon gamiton ang platform, kag pirme makatabang ang support team. Naglapad ang akon customer base sang nag-join ako."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Nagapatubo sang Prutas',
+            
+            // Footer
+            'footer_description': 'Nagakonektar sang mga uma sa mga merkado para sa malungtaron nga kaugmaon.',
+            'footer_quick_links': 'Paspas nga Link',
+            'footer_about': 'Kabahin sa Amon',
+            'footer_how_it_works': 'Paano Ini Nagalihok',
+            'footer_faq': 'Mga FAQ',
+            'footer_contact': 'Kontaka Kami',
+            'footer_success_stories': 'Mga Estorya sang Kalampusan',
+            'footer_help_center': 'Sentro sang Bulig',
+            'footer_guidelines': 'Mga Giya sang Komunidad',
+            'footer_for_users': 'Para sa mga Gumagamit',
+            'footer_buyer_dashboard': 'Dashboard sang Mamakal',
+            'footer_seller_dashboard': 'Dashboard sang Nagabaligya',
+            'footer_all_sellers': 'Tanang Nagabaligya',
+            'footer_categories': 'Mga Kategorya sang Produkto',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Impormasyon sa Kontak',
+            'footer_address': 'Brgy. Kalinaw, Dakbanwa sang Cebu, Pilipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Mga Termino sang Serbisyo',
+            'footer_privacy': 'Palisiya sa Privacy',
+            'footer_cookie': 'Palisiya sa Cookie',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. Tanan nga katungod ginapreserbar. | Nagakonektar sang mga Uma sa mga Merkado',
+            
+            // Language Selector
+            'language_label': 'Pulong',
+            'language_english': 'Ingles',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // WARAY TRANSLATIONS (Eastern Visayas)
+        // ============================================================
+        this.translations.war = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Maupay nga Pag-abot ha DARAWAT',
+            'welcome_subtitle': 'Nakakonektar hin mga mag-uuma ngan mamamalit para hin malungtaron nga ekosistema han agrikultura',
+            
+            // Welcome Section
+            'join_title': 'Api ha Amon Komunidad han Agrikultura',
+            'join_description': 'Gintatabok han DARAWAT an distansya ha butnga han lokal nga mga mag-uuma ngan mamamalit, naghihimo hin seamless nga merkado para ha presko nga produkto ngan mga produktong agrikultural. Pilia an imo dalan ha ubos para magsugod.',
+            
+            // Cards
+            'buyer_title': 'Pagpalit hin Presko nga Produkto',
+            'buyer_description': 'Tan-awa an mga produkto tikang ha lokal nga mga mag-uuma ngan makonektar ha mga nagbabaligya harani ha imo.',
+            'buyer_button': 'Mamalit Na',
+            'seller_title': 'Pagbaligya han Imo mga Produkto',
+            'seller_description': 'Ibutang an imo mga produkto ha uma ngan maabot an mga mamamalit direkta ha DARAWAT.',
+            'seller_button': 'Magsugod hin Pagbaligya',
+            
+            // Features Section
+            'features_title': 'Kay Ano Pilia an DARAWAT?',
+            'feature1_title': 'Direkta nga Koneksyon',
+            'feature1_desc': 'Makonektar direkta ha mga mag-uuma o mamamalit nga waray tigpataliwala para ha mas maupay nga presyo ngan mas lig-on nga relasyon.',
+            'feature2_title': 'Mga Panan-aw ha Merkado',
+            'feature2_desc': 'Ma-access an real-time nga datos ngan uso han merkado para makahimo hin maalamon nga desisyon mahitungod ha pagpresyo ngan produksyon.',
+            'feature3_title': 'Suporta ha Logistik',
+            'feature3_desc': 'Makatabang an amon platform ha koordinasyon han transportasyon ngan paghatod para ha seamless nga transaksyon tikang ha uma pakadto ha merkado.',
+            'feature4_title': 'Ligtas nga Platform',
+            'feature4_desc': 'Malingaw ha luwas ngan secure nga platform nga may na-verify nga mga nagbabaligya ngan transparent nga mga transaksyon.',
+            
+            // Testimonials
+            'testimonials_title': 'Ano an Ginsisiring han Amon Komunidad',
+            'testimonial1_text': '"Ginbag-o han DARAWAT an akon negosyo ha pag-uma. May direkta na ako nga access ha mga mamamalit ngan nakakuha hin patas nga presyo para ha akon produkto."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organiko nga Mag-uuma',
+            'testimonial2_text': '"Bilang tag-iya han restawran, gintabangan ako han DARAWAT nga makakuha hin presko ngan lokal nga sangkap direkta tikang ha mga mag-uuma. Maupay gud an kalidad!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Tag-iya han Restawran',
+            'testimonial3_text': '"Sayon gamiton an platform, ngan pirme nakatabang an support team. Naglapad an akon customer base tikang han nag-join ako."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Nagpapatubo hin Prutas',
+            
+            // Footer
+            'footer_description': 'Nakakonektar hin mga uma ha mga merkado para hin malungtaron nga kaugmaon.',
+            'footer_quick_links': 'Paspas nga Link',
+            'footer_about': 'Mahitungod ha Amon',
+            'footer_how_it_works': 'Paanu Ini Naglilihok',
+            'footer_faq': 'Mga FAQ',
+            'footer_contact': 'Kontaka Kami',
+            'footer_success_stories': 'Mga Estorya han Kalampusan',
+            'footer_help_center': 'Sentro han Bulig',
+            'footer_guidelines': 'Mga Giya han Komunidad',
+            'footer_for_users': 'Para ha mga Gumagamit',
+            'footer_buyer_dashboard': 'Dashboard han Mamamalit',
+            'footer_seller_dashboard': 'Dashboard han Nagbabaligya',
+            'footer_all_sellers': 'Tanan nga Nagbabaligya',
+            'footer_categories': 'Mga Kategorya han Produkto',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Impormasyon ha Kontak',
+            'footer_address': 'Brgy. Kalinaw, Syudad han Cebu, Pilipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Mga Termino han Serbisyo',
+            'footer_privacy': 'Palisiya ha Privacy',
+            'footer_cookie': 'Palisiya ha Cookie',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. Tanan nga katungod ginpreserbar. | Nakakonektar hin mga Uma ha mga Merkado',
+            
+            // Language Selector
+            'language_label': 'Pinulongan',
+            'language_english': 'Iningles',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // BICOLANO TRANSLATIONS (Bicol Region)
+        // ============================================================
+        this.translations.bcl = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Marhay na Pag-abot sa DARAWAT',
+            'welcome_subtitle': 'Nagkokonektar kan mga paraoma asin mamakal para sa sarong sustenableng ekosistema kan agrikultura',
+            
+            // Welcome Section
+            'join_title': 'Sumali sa Samuyang Komunidad kan Agrikultura',
+            'join_description': 'Sinasalbar kan DARAWAT an distansya sa pag-ultanan kan lokal na mga paraoma asin mamakal, naghihimo nin seamless na merkado para sa preskong produkto asin mga produktong agrikultural. Pili an saimong dalan sa ibaba tanganing magpoon.',
+            
+            // Cards
+            'buyer_title': 'Bakal nin Preskong Produkto',
+            'buyer_description': 'Hilingon an mga produkto hale sa lokal na mga paraoma asin makonektar sa mga nagbabakal harani sa saimo.',
+            'buyer_button': 'Mamakal Na',
+            'seller_title': 'Ibenta an Saimong mga Produkto',
+            'seller_description': 'Ibugtak an saimong mga produkto sa uma asin maabot an mga mamakal direkta sa DARAWAT.',
+            'seller_button': 'Magsugod nin Pagbakal',
+            
+            // Features Section
+            'features_title': 'Tano Pilia an DARAWAT?',
+            'feature1_title': 'Direktang Koneksyon',
+            'feature1_desc': 'Makonektar direkta sa mga paraoma o mamakal na mayo nin tigpataliwala para sa mas marhay na presyo asin mas lig-on na relasyon.',
+            'feature2_title': 'Mga Panan-aw sa Merkado',
+            'feature2_desc': 'Ma-access an real-time na datos asin uso kan merkado tanganing makahimo nin maalamon na desisyon manungod sa pagpresyo asin produksyon.',
+            'feature3_title': 'Suporta sa Logistik',
+            'feature3_desc': 'Nakatabang an samuyang platform sa koordinasyon kan transportasyon asin paghatod para sa seamless na transaksyon hale sa uma pasiring sa merkado.',
+            'feature4_title': 'Ligtas na Platform',
+            'feature4_desc': 'Malingaw sa luwas asin secure na platform na may na-verify na mga nagbabakal asin transparent na mga transaksyon.',
+            
+            // Testimonials
+            'testimonials_title': 'Ano an Sinasabi kan Samuyang Komunidad',
+            'testimonial1_text': '"Pigbago kan DARAWAT an sakong negosyo sa pag-uma. Igwa na ako nin direktang access sa mga mamakal asin nakakua nin patas na presyo para sa sakong produkto."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Organikong Paraoma',
+            'testimonial2_text': '"Bilang kagsadiri kan restawran, pigtabangan ako kan DARAWAT na makakua nin presko asin lokal na sangkap direkta hale sa mga paraoma. Marhayon an kalidad!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Kagsadiri kan Restawran',
+            'testimonial3_text': '"Madali gamiton an platform, asin pirmeng nakatabang an support team. Naglapad an sakong customer base poon kan nag-join ako."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Nagpapatubo nin Prutas',
+            
+            // Footer
+            'footer_description': 'Nagkokonektar kan mga uma sa mga merkado para sa sustenableng kaugmaon.',
+            'footer_quick_links': 'Mabilis na Link',
+            'footer_about': 'Manungod sa Samuya',
+            'footer_how_it_works': 'Paanu Ini Naglilihok',
+            'footer_faq': 'Mga FAQ',
+            'footer_contact': 'Kontaka Kami',
+            'footer_success_stories': 'Mga Istorya kan Tagumpay',
+            'footer_help_center': 'Sentro kan Tabang',
+            'footer_guidelines': 'Mga Giya kan Komunidad',
+            'footer_for_users': 'Para sa mga Gumagamit',
+            'footer_buyer_dashboard': 'Dashboard kan Mamakal',
+            'footer_seller_dashboard': 'Dashboard kan Nagbabakal',
+            'footer_all_sellers': 'Gabos na Nagbabakal',
+            'footer_categories': 'Mga Kategorya kan Produkto',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Impormasyon sa Kontak',
+            'footer_address': 'Brgy. Kalinaw, Syudad kan Cebu, Pilipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Mga Termino kan Serbisyo',
+            'footer_privacy': 'Palisiya sa Privacy',
+            'footer_cookie': 'Palisiya sa Cookie',
+            'footer_accessibility': 'Accessibility',
+            'footer_copyright': '© 2025 DARAWAT. Gabos na katungod iniingatan. | Nagkokonektar kan mga Uma sa mga Merkado',
+            
+            // Language Selector
+            'language_label': 'Tataramon',
+            'language_english': 'Ingles',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+
+        // ============================================================
+        // CHAVACANO TRANSLATIONS (Zamboanga)
+        // ============================================================
+        this.translations.kri = {
+            // Header
+            'logo_text': 'DARAWAT',
+            'welcome_title': 'Buenvenido na DARAWAT',
+            'welcome_subtitle': 'Conectando con los agricultores y compradores para un ecosistema agrícola sostenible',
+            
+            // Welcome Section
+            'join_title': 'Uni con el Comunidad de Agricultura',
+            'join_description': 'El DARAWAT ta conecta el gap entre los agricultores locales y compradores, creando un mercado sin problemas para productos frescos y productos agrícolas. Escoge tu camino abajo para empezar.',
+            
+            // Cards
+            'buyer_title': 'Comprá Productos Frescos',
+            'buyer_description': 'Mirá los productos de los agricultores locales y conectá con los vendedores cerca de ti.',
+            'buyer_button': 'Comprá Ahora',
+            'seller_title': 'Vendé Tus Productos',
+            'seller_description': 'Poné tus productos de granja y llegá a los compradores directamente en DARAWAT.',
+            'seller_button': 'Empezá a Vender',
+            
+            // Features Section
+            'features_title': 'Porqué Escogé DARAWAT?',
+            'feature1_title': 'Conexiones Directas',
+            'feature1_desc': 'Conectá directamente con agricultores o compradores sin intermediarios para mejores precios y relaciones más fuertes.',
+            'feature2_title': 'Perspectivas del Mercado',
+            'feature2_desc': 'Accedé a datos y tendencias del mercado en tiempo real para tomar decisiones informadas sobre precios y producción.',
+            'feature3_title': 'Apoyo Logístico',
+            'feature3_desc': 'Nuestro plataforma ayuda a coordinar el transporte y la entrega para transacciones sin problemas desde la granja hasta el mercado.',
+            'feature4_title': 'Plataforma Segura',
+            'feature4_desc': 'Disfrutá de una plataforma segura con vendedores verificados y transacciones transparentes.',
+            
+            // Testimonials
+            'testimonials_title': 'Lo que Dice Nuestro Comunidad',
+            'testimonial1_text': '"El DARAWAT ya transformó mi negocio de agricultura. Ahora tengo acceso directo a los compradores y obtengo precios justos para mis productos."',
+            'testimonial1_name': 'Maria Santos',
+            'testimonial1_role': 'Agricultor Orgánico',
+            'testimonial2_text': '"Como dueño de restaurante, DARAWAT me ayuda a conseguir ingredientes frescos y locales directamente de los agricultores. ¡La calidad es excepcional!"',
+            'testimonial2_name': 'James Wilson',
+            'testimonial2_role': 'Dueño de Restaurante',
+            'testimonial3_text': '"El plataforma es fácil de usar, y el equipo de apoyo siempre es útil. He expandido mi base de clientes significativamente desde que me uní."',
+            'testimonial3_name': 'Robert Chen',
+            'testimonial3_role': 'Cultivador de Frutas',
+            
+            // Footer
+            'footer_description': 'Conectando granjas a mercados para un futuro sostenible.',
+            'footer_quick_links': 'Enlaces Rápidos',
+            'footer_about': 'Sobre Nosotros',
+            'footer_how_it_works': 'Cómo Funciona',
+            'footer_faq': 'FAQ',
+            'footer_contact': 'Contáctanos',
+            'footer_success_stories': 'Historias de Éxito',
+            'footer_help_center': 'Centro de Ayuda',
+            'footer_guidelines': 'Normas de la Comunidad',
+            'footer_for_users': 'Para Usuarios',
+            'footer_buyer_dashboard': 'Panel del Comprador',
+            'footer_seller_dashboard': 'Panel del Vendedor',
+            'footer_all_sellers': 'Todos los Vendedores',
+            'footer_categories': 'Categorías de Productos',
+            'footer_farmai': 'FarmAI Assistant',
+            'footer_contact_info': 'Información de Contacto',
+            'footer_address': 'Brgy. Kalinaw, Ciudad de Cebú, Filipinas',
+            'footer_phone': '1-800-DARAWAT',
+            'footer_email': 'support@DARAWAT.ph',
+            'footer_terms': 'Términos de Servicio',
+            'footer_privacy': 'Política de Privacidad',
+            'footer_cookie': 'Política de Cookies',
+            'footer_accessibility': 'Accesibilidad',
+            'footer_copyright': '© 2025 DARAWAT. Todos los derechos reservados. | Conectando Granjas a Mercados',
+            
+            // Language Selector
+            'language_label': 'Idioma',
+            'language_english': 'Inglés',
+            'language_filipino': 'Filipino',
+            'language_cebuano': 'Cebuano',
+            'language_hiligaynon': 'Hiligaynon',
+            'language_waray': 'Waray',
+            'language_bicolano': 'Bicolano',
+            'language_kriol': 'Chavacano'
+        };
+    }
+
+    getTranslation(key) {
+        const lang = this.currentLanguage;
+        if (this.translations[lang] && this.translations[lang][key] !== undefined) {
+            return this.translations[lang][key];
+        }
+        if (this.translations.en && this.translations.en[key] !== undefined) {
+            return this.translations.en[key];
+        }
+        console.warn(`Translation missing for key: ${key}`);
+        return key;
+    }
+
+    applyTranslations() {
+        const elements = document.querySelectorAll('[data-translate]');
+        
+        elements.forEach(element => {
+            const key = element.getAttribute('data-translate');
+            const translation = this.getTranslation(key);
+            
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                if (element.type === 'submit' || element.type === 'button') {
+                    element.value = translation;
+                } else {
+                    element.placeholder = translation;
+                }
+            } else {
+                element.textContent = translation;
+            }
+        });
+        
+        this.updateLanguageSelector();
+    }
+
+    setupLanguageSelector() {
+        let selectorContainer = document.getElementById('language-selector-container');
+        
+        if (!selectorContainer) {
+            selectorContainer = document.createElement('div');
+            selectorContainer.id = 'language-selector-container';
+            selectorContainer.className = 'language-selector-container';
+            
+            // Add globe icon
+            const icon = document.createElement('span');
+            icon.className = 'language-icon';
+            icon.innerHTML = '<i class="fas fa-globe"></i>';
+            selectorContainer.appendChild(icon);
+            
+            // Create label
+            const label = document.createElement('label');
+            label.setAttribute('data-translate', 'language_label');
+            label.htmlFor = 'language-selector';
+            label.className = 'language-label';
+            selectorContainer.appendChild(label);
+            
+            // Create select
+            const select = document.createElement('select');
+            select.id = 'language-selector';
+            select.className = 'language-selector';
+            
+            const languages = [
+                { code: 'en', key: 'language_english' },
+                { code: 'fil', key: 'language_filipino' },
+                { code: 'ceb', key: 'language_cebuano' },
+                { code: 'hil', key: 'language_hiligaynon' },
+                { code: 'war', key: 'language_waray' },
+                { code: 'bcl', key: 'language_bicolano' },
+                { code: 'kri', key: 'language_kriol' }
+            ];
+            
+            languages.forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang.code;
+                option.setAttribute('data-translate', lang.key);
+                option.textContent = this.getTranslation(lang.key);
+                if (lang.code === this.currentLanguage) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            select.addEventListener('change', (e) => {
+                const newLang = e.target.value;
+                this.changeLanguage(newLang);
+            });
+            
+            selectorContainer.appendChild(select);
+            
+            // Append to body (fixed position at top right)
+            document.body.appendChild(selectorContainer);
+        }
+    }
+
+    updateLanguageSelector() {
+        const select = document.getElementById('language-selector');
+        if (select) {
+            select.value = this.currentLanguage;
+            
+            const options = select.querySelectorAll('option');
+            options.forEach(option => {
+                const key = option.getAttribute('data-translate');
+                if (key) {
+                    option.textContent = this.getTranslation(key);
+                }
+            });
+        }
+        
+        const label = document.querySelector('.language-label');
+        if (label) {
+            label.textContent = this.getTranslation('language_label');
+        }
+    }
+
+    changeLanguage(langCode) {
+        if (!this.availableLanguages.includes(langCode)) {
+            console.warn(`Language ${langCode} is not available`);
+            return;
+        }
+        
+        if (langCode === this.currentLanguage) {
+            return;
+        }
+        
+        this.currentLanguage = langCode;
+        localStorage.setItem('darawat-language', langCode);
+        this.applyTranslations();
+        
+        document.dispatchEvent(new CustomEvent('languageChanged', { 
+            detail: { language: langCode } 
+        }));
+        
+        console.log(`Language changed to: ${langCode}`);
+    }
+
+    getCurrentLanguage() {
+        return this.currentLanguage;
+    }
+
+    translate(key) {
+        return this.getTranslation(key);
+    }
+}
+
+// ============================================================
+// Initialize Language System
+// ============================================================
+let languageSystem;
+
+document.addEventListener('DOMContentLoaded', function() {
+    languageSystem = new LanguageSystem();
+    window.languageSystem = languageSystem;
+    console.log('DARAWAT Language System ready');
+});
+
+function translateText(key) {
+    if (languageSystem) {
+        return languageSystem.translate(key);
+    }
+    return key;
+}
