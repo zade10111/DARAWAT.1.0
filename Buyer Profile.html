@@ -11,7 +11,7 @@
     <!-- ============================================================ -->
     <!-- EXTERNAL CSS FILE - style-buyer-profile.css                  -->
     <!-- ============================================================ -->
-    <link rel="stylesheet" href="Buyer Profile.css">
+    <link rel="stylesheet" href="Css/Buyer Profile.css">
 </head>
 <body>
     <!-- ============================================================ -->
@@ -20,14 +20,14 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo"><i class="fas fa-seedling"></i>DARAWAT</div>
+                <div class="logo"><i class="fas fa-seedling"></i><span data-translate="logo_text">DARAWAT</span></div>
                 <div class="user-info">
-                    <div id="welcomeMessage">Welcome, Buyer!</div>
+                    <div id="welcomeMessage"><span data-translate="welcome_message">Welcome</span>, Buyer!</div>
                     <a href="Register as Buyer.html" class="user-avatar" id="userAvatar">
                         <!-- Avatar will be inserted here by JavaScript -->
                     </a>
                     <button class="logout-btn" id="logoutButton">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                        <i class="fas fa-sign-out-alt"></i> <span data-translate="logout_button">Logout</span>
                     </button>
                 </div>
             </div>
@@ -40,10 +40,10 @@
     <div class="dashboard-nav">
         <div class="container">
             <div class="nav-links">
-                <a href="Register as Buyer.html"><i class="fas fa-arrow-left"></i> Back</a>
-                <a href="#" class="active"><i class="fas fa-user"></i> My Profile</a>
-                <a href="Buyer Account Setting.html"><i class="fas fa-cog"></i> Account Settings</a>
-                <a href="Buyer Order History.html"><i class="fas fa-box"></i> Order History</a>
+                <a href="Register as Buyer.html"><i class="fas fa-arrow-left"></i> <span data-translate="nav_back">Back</span></a>
+                <a href="#" class="active"><i class="fas fa-user"></i> <span data-translate="nav_my_profile">My Profile</span></a>
+                <a href="Buyer Account Setting.html"><i class="fas fa-cog"></i> <span data-translate="nav_account_settings">Account Settings</span></a>
+                <a href="Buyer Order History.html"><i class="fas fa-box"></i> <span data-translate="nav_order_history">Order History</span></a>
             </div>
         </div>
     </div>
@@ -54,8 +54,8 @@
     <main class="dashboard">
         <div class="container">
             <div class="page-header">
-                <h1><i class="fas fa-user-circle"></i> My Profile</h1>
-                <p>Manage your account settings and preferences</p>
+                <h1><i class="fas fa-user-circle"></i> <span data-translate="page_title">My Profile</span></h1>
+                <p data-translate="page_subtitle">Manage your account settings and preferences</p>
             </div>
 
             <div class="profile-container">
@@ -64,47 +64,47 @@
                     <div class="profile-pic">
                         <img id="profilePicture" src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Profile Picture">
                         <div class="change-photo" onclick="openAvatarModal()">
-                            <i class="fas fa-camera"></i> Change Photo
+                            <i class="fas fa-camera"></i> <span data-translate="change_photo">Change Photo</span>
                         </div>
                     </div>
 
                     <div class="profile-stats">
                         <div class="stat-item">
                             <h3 id="ordersCount">0</h3>
-                            <p><i class="fas fa-shopping-bag"></i> Orders</p>
+                            <p><i class="fas fa-shopping-bag"></i> <span data-translate="orders_label">Orders</span></p>
                         </div>
                         <div class="stat-item">
                             <h3 id="farmersCount">0</h3>
-                            <p><i class="fas fa-tractor"></i> Farmers</p>
+                            <p><i class="fas fa-tractor"></i> <span data-translate="farmers_label">Farmers</span></p>
                         </div>
                         <div class="stat-item">
                             <h3 id="ratingValue">0</h3>
-                            <p><i class="fas fa-star"></i> Rating</p>
+                            <p><i class="fas fa-star"></i> <span data-translate="rating_label">Rating</span></p>
                         </div>
                     </div>
 
                     <ul class="profile-menu">
-                        <li><a href="#" class="active" onclick="showSection('personal-info', event)"><i class="fas fa-user-edit"></i> Personal Information</a></li>
-                        <li><a href="#" onclick="showSection('preferences', event)"><i class="fas fa-leaf"></i> Product Preferences</a></li>
-                        <li><a href="#" onclick="showSection('recent-orders', event)"><i class="fas fa-history"></i> Recent Orders</a></li>
-                        <li><a href="Saved Sellers.html" onclick="event.preventDefault(); window.location.href='Saved Sellers.html';"><i class="fas fa-heart"></i> Saved Sellers</a></li>
+                        <li><a href="#" class="active" onclick="showSection('personal-info', event)"><i class="fas fa-user-edit"></i> <span data-translate="menu_personal_info">Personal Information</span></a></li>
+                        <li><a href="#" onclick="showSection('preferences', event)"><i class="fas fa-leaf"></i> <span data-translate="menu_preferences">Product Preferences</span></a></li>
+                        <li><a href="#" onclick="showSection('recent-orders', event)"><i class="fas fa-history"></i> <span data-translate="menu_recent_orders">Recent Orders</span></a></li>
+                        <li><a href="Saved Sellers.html" onclick="event.preventDefault(); window.location.href='Saved Sellers.html';"><i class="fas fa-heart"></i> <span data-translate="menu_saved_sellers">Saved Sellers</span></a></li>
                     </ul>
 
                     <!-- Profile Action Buttons -->
                     <div style="margin-top: 15px;">
                         <a href="Seller Directory.html" class="profile-action-btn primary">
-                            <i class="fas fa-store"></i> Browse Sellers
+                            <i class="fas fa-store"></i> <span data-translate="browse_sellers">Browse Sellers</span>
                         </a>
                         <a href="Saved Sellers.html" class="profile-action-btn saved-sellers">
-                            <i class="fas fa-heart"></i> My Saved Sellers
+                            <i class="fas fa-heart"></i> <span data-translate="my_saved_sellers">My Saved Sellers</span>
                         </a>
                         <a href="Product Categories.html" class="profile-action-btn secondary">
-                            <i class="fas fa-tags"></i> Browse Categories
+                            <i class="fas fa-tags"></i> <span data-translate="browse_categories">Browse Categories</span>
                         </a>
                     </div>
 
                     <button class="sell-products-btn" onclick="goToSellerRegistration()">
-                        <i class="fas fa-store"></i> Sell Products
+                        <i class="fas fa-store"></i> <span data-translate="sell_products">Sell Products</span>
                     </button>
                 </div>
 
@@ -112,89 +112,89 @@
                 <div class="profile-content">
                     <!-- Personal Information Section -->
                     <div id="personal-info-section" class="profile-section">
-                        <h2 class="section-title"><i class="fas fa-user-edit"></i> Personal Information</h2>
+                        <h2 class="section-title"><i class="fas fa-user-edit"></i> <span data-translate="personal_info_title">Personal Information</span></h2>
 
                         <form id="profileForm">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="firstName"><i class="fas fa-user"></i> First Name</label>
-                                    <input type="text" id="firstName" placeholder="Enter your first name">
+                                    <label for="firstName"><i class="fas fa-user"></i> <span data-translate="first_name_label">First Name</span></label>
+                                    <input type="text" id="firstName" data-translate-placeholder="first_name_placeholder" placeholder="Enter your first name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="lastName"><i class="fas fa-user"></i> Last Name</label>
-                                    <input type="text" id="lastName" placeholder="Enter your last name">
+                                    <label for="lastName"><i class="fas fa-user"></i> <span data-translate="last_name_label">Last Name</span></label>
+                                    <input type="text" id="lastName" data-translate-placeholder="last_name_placeholder" placeholder="Enter your last name">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
-                                <input type="email" id="email" placeholder="Enter your email">
+                                <label for="email"><i class="fas fa-envelope"></i> <span data-translate="email_label">Email Address</span></label>
+                                <input type="email" id="email" data-translate-placeholder="email_placeholder" placeholder="Enter your email">
                             </div>
 
                             <div class="form-group">
-                                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
-                                <input type="tel" id="phone" placeholder="Enter your phone number">
+                                <label for="phone"><i class="fas fa-phone"></i> <span data-translate="phone_label">Phone Number</span></label>
+                                <input type="tel" id="phone" data-translate-placeholder="phone_placeholder" placeholder="Enter your phone number">
                             </div>
 
                             <div class="form-group">
-                                <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
-                                <textarea id="address" rows="3" placeholder="Enter your address"></textarea>
+                                <label for="address"><i class="fas fa-map-marker-alt"></i> <span data-translate="address_label">Address</span></label>
+                                <textarea id="address" rows="3" data-translate-placeholder="address_placeholder" placeholder="Enter your address"></textarea>
                             </div>
 
                             <div class="form-group">
-                                <label for="bio"><i class="fas fa-pencil-alt"></i> Bio</label>
-                                <textarea id="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                                <label for="bio"><i class="fas fa-pencil-alt"></i> <span data-translate="bio_label">Bio</span></label>
+                                <textarea id="bio" rows="4" data-translate-placeholder="bio_placeholder" placeholder="Tell us about yourself..."></textarea>
                             </div>
 
-                            <button type="submit" class="btn"><i class="fas fa-save"></i> Save Changes</button>
-                            <button type="button" class="btn btn-outline" onclick="resetForm()"><i class="fas fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn"><i class="fas fa-save"></i> <span data-translate="save_changes">Save Changes</span></button>
+                            <button type="button" class="btn btn-outline" onclick="resetForm()"><i class="fas fa-times"></i> <span data-translate="cancel">Cancel</span></button>
                         </form>
                     </div>
 
                     <!-- Product Preferences Section -->
                     <div id="preferences-section" class="profile-section" style="display: none;">
-                        <h2 class="section-title"><i class="fas fa-leaf"></i> Product Preferences</h2>
-                        <p>Select the types of products you're most interested in</p>
+                        <h2 class="section-title"><i class="fas fa-leaf"></i> <span data-translate="preferences_title">Product Preferences</span></h2>
+                        <p data-translate="preferences_subtitle">Select the types of products you're most interested in</p>
 
                         <div class="preferences-grid">
                             <div class="preference-card" data-category="Vegetables">
                                 <div class="preference-icon">🥦</div>
-                                <h3>Vegetables</h3>
+                                <h3 data-translate="pref_vegetables">Vegetables</h3>
                             </div>
                             <div class="preference-card" data-category="Fruits">
                                 <div class="preference-icon">🍎</div>
-                                <h3>Fruits</h3>
+                                <h3 data-translate="pref_fruits">Fruits</h3>
                             </div>
                             <div class="preference-card" data-category="Grains">
                                 <div class="preference-icon">🌾</div>
-                                <h3>Grains</h3>
+                                <h3 data-translate="pref_grains">Grains</h3>
                             </div>
                             <div class="preference-card" data-category="Dairy">
                                 <div class="preference-icon">🥛</div>
-                                <h3>Dairy</h3>
+                                <h3 data-translate="pref_dairy">Dairy</h3>
                             </div>
                             <div class="preference-card" data-category="Livestock">
                                 <div class="preference-icon">🐔</div>
-                                <h3>Livestock</h3>
+                                <h3 data-translate="pref_livestock">Livestock</h3>
                             </div>
                             <div class="preference-card" data-category="Other">
                                 <div class="preference-icon">🥚</div>
-                                <h3>Other</h3>
+                                <h3 data-translate="pref_other">Other</h3>
                             </div>
                         </div>
 
-                        <button class="btn" onclick="savePreferences()"><i class="fas fa-save"></i> Update Preferences</button>
+                        <button class="btn" onclick="savePreferences()"><i class="fas fa-save"></i> <span data-translate="update_preferences">Update Preferences</span></button>
                     </div>
 
                     <!-- Recent Orders Section -->
                     <div id="recent-orders-section" class="profile-section" style="display: none;">
-                        <h2 class="section-title"><i class="fas fa-history"></i> Recent Orders</h2>
+                        <h2 class="section-title"><i class="fas fa-history"></i> <span data-translate="recent_orders_title">Recent Orders</span></h2>
 
                         <div id="recent-orders-container">
                             <!-- Orders will be dynamically generated here -->
                         </div>
 
-                        <a href="Buyer Order History.html" class="btn btn-outline" style="margin-top: 1rem;"><i class="fas fa-list"></i> View All Orders</a>
+                        <a href="Buyer Order History.html" class="btn btn-outline" style="margin-top: 1rem;"><i class="fas fa-list"></i> <span data-translate="view_all_orders">View All Orders</span></a>
                     </div>
                 </div>
             </div>
@@ -208,23 +208,23 @@
         <div class="mobile-nav-items">
             <a href="Register as Buyer.html" class="mobile-nav-item">
                 <span class="mobile-nav-icon"><i class="fas fa-arrow-left"></i></span>
-                <span class="mobile-nav-label">Back</span>
+                <span class="mobile-nav-label" data-translate="nav_back">Back</span>
             </a>
             <a href="#" class="mobile-nav-item active">
                 <span class="mobile-nav-icon"><i class="fas fa-user"></i></span>
-                <span class="mobile-nav-label">Profile</span>
+                <span class="mobile-nav-label" data-translate="nav_my_profile">Profile</span>
             </a>
             <a href="Buyer Account Setting.html" class="mobile-nav-item">
                 <span class="mobile-nav-icon"><i class="fas fa-cog"></i></span>
-                <span class="mobile-nav-label">Settings</span>
+                <span class="mobile-nav-label" data-translate="nav_account_settings">Settings</span>
             </a>
             <a href="Buyer Order History.html" class="mobile-nav-item">
                 <span class="mobile-nav-icon"><i class="fas fa-box"></i></span>
-                <span class="mobile-nav-label">Orders</span>
+                <span class="mobile-nav-label" data-translate="nav_order_history">Orders</span>
             </a>
             <a href="Seller Directory.html" class="mobile-nav-item">
                 <span class="mobile-nav-icon"><i class="fas fa-store"></i></span>
-                <span class="mobile-nav-label">Sellers</span>
+                <span class="mobile-nav-label" data-translate="browse_sellers">Sellers</span>
             </a>
         </div>
     </nav>
@@ -235,12 +235,12 @@
     <footer>
         <div class="container">
             <div class="footer-content">
-                <p><i class="fas fa-copyright"></i> DARAWAT 2026 - Connecting Farmers and Buyers</p>
+                <p><i class="fas fa-copyright"></i> <span data-translate="footer_copyright">DARAWAT 2026 - Connecting Farmers and Buyers</span></p>
                 <div class="footer-links">
-                    <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
-                    <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
-                    <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
-                    <a href="Help Center.html"><i class="fas fa-question-circle"></i> Help</a>
+                    <a href="#"><i class="fas fa-shield-alt"></i> <span data-translate="footer_privacy">Privacy Policy</span></a>
+                    <a href="#"><i class="fas fa-file-contract"></i> <span data-translate="footer_terms">Terms of Service</span></a>
+                    <a href="#"><i class="fas fa-envelope"></i> <span data-translate="footer_contact">Contact Us</span></a>
+                    <a href="Help Center.html"><i class="fas fa-question-circle"></i> <span data-translate="footer_help">Help</span></a>
                 </div>
             </div>
         </div>
@@ -252,7 +252,7 @@
     <div id="avatarModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-image"></i> Choose Your Profile Picture</h3>
+                <h3 class="modal-title"><i class="fas fa-image"></i> <span data-translate="avatar_modal_title">Choose Your Profile Picture</span></h3>
                 <button class="close-modal" onclick="closeAvatarModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="avatar-options" id="avatarOptionsContainer">
@@ -264,21 +264,36 @@
                 <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Avatar 6" class="avatar-option" data-url="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
                 <div class="upload-option" onclick="triggerFileUpload()">
                     <span class="upload-icon"><i class="fas fa-folder-open"></i></span>
-                    <span style="font-size: 0.7rem;">Upload</span>
+                    <span style="font-size: 0.7rem;" data-translate="avatar_upload">Upload</span>
                 </div>
             </div>
             <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(this)">
             <div class="modal-actions">
-                <button class="btn btn-outline" onclick="closeAvatarModal()"><i class="fas fa-times"></i> Cancel</button>
-                <button class="btn" onclick="saveAvatar()"><i class="fas fa-check"></i> Save Avatar</button>
+                <button class="btn btn-outline" onclick="closeAvatarModal()"><i class="fas fa-times"></i> <span data-translate="avatar_cancel">Cancel</span></button>
+                <button class="btn" onclick="saveAvatar()"><i class="fas fa-check"></i> <span data-translate="avatar_save">Save Avatar</span></button>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
+    <!-- SECTION: LANGUAGE SYSTEM - NO SELECTOR                       -->
+    <!-- ============================================================ -->
+    <script src="LANGUAGE JS FILES/Buyer Profile Language.js"></script>
+
+    <!-- ============================================================ -->
     <!-- SECTION: COMPLETE JAVASCRIPT                                  -->
     <!-- ============================================================ -->
     <script>
+        // ============================================================
+        // GET TRANSLATION HELPER FUNCTION
+        // ============================================================
+        function getTranslation(key) {
+            if (window.buyerProfileLanguageSystem) {
+                return window.buyerProfileLanguageSystem.getTranslation(key);
+            }
+            return key;
+        }
+
         // ============================================================
         // SESSION PERSISTENCE FIX - AUTO-LOGIN WITH SAVED CREDENTIALS
         // ============================================================
@@ -380,12 +395,12 @@
             
             if (user) {
                 // User was auto-logged in, update the welcome message
-                document.getElementById('welcomeMessage').textContent = `Welcome, ${user.name}!`;
+                document.getElementById('welcomeMessage').textContent = getTranslation('welcome_message') + ', ' + user.name + '!';
                 return true;
             }
             
             // If still no user, redirect to login
-            alert('Please log in to access your profile.');
+            alert(getTranslation('login_required'));
             window.location.href = 'Register as Buyer.html';
             return false;
         }
@@ -421,13 +436,13 @@
         function loadUserData() {
             const currentUser = getCurrentUser();
             if (currentUser) {
-                document.getElementById('welcomeMessage').textContent = `Welcome, ${currentUser.name}!`;
+                document.getElementById('welcomeMessage').textContent = getTranslation('welcome_message') + ', ' + currentUser.name + '!';
 
                 loadBuyerAvatar(currentUser);
 
                 const names = currentUser.name ? currentUser.name.split(' ') : ['', ''];
                 document.getElementById('firstName').value = names[0] || '';
-                document.getElementById('lastName').value = names[1] || '';
+                document.getElementById('lastName').value = names.slice(1).join(' ') || '';
                 document.getElementById('email').value = currentUser.email || '';
                 document.getElementById('phone').value = currentUser.phone || '';
                 document.getElementById('address').value = currentUser.address || '';
@@ -526,7 +541,7 @@
             if (!checkAuthentication()) return;
 
             const userData = {
-                name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`,
+                name: `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`.trim(),
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 address: document.getElementById('address').value,
@@ -544,9 +559,9 @@
                 localStorage.setItem('farmConnectUsers', JSON.stringify(users));
             }
 
-            document.getElementById('welcomeMessage').textContent = `Welcome, ${userData.name}!`;
+            document.getElementById('welcomeMessage').textContent = getTranslation('welcome_message') + ', ' + userData.name + '!';
 
-            alert('Profile updated successfully!');
+            alert(getTranslation('profile_updated'));
             window.dispatchEvent(new Event('storage'));
         }
 
@@ -572,14 +587,14 @@
                 localStorage.setItem('farmConnectUsers', JSON.stringify(users));
             }
 
-            alert('Preferences updated successfully!');
+            alert(getTranslation('preferences_updated'));
         }
 
         // ============================================================
         // RESET FORM
         // ============================================================
         function resetForm() {
-            if (confirm('Are you sure you want to discard changes?')) {
+            if (confirm(getTranslation('discard_changes'))) {
                 loadUserData();
             }
         }
@@ -604,7 +619,7 @@
                 uploadDiv.onclick = function() { triggerFileUpload(); };
                 uploadDiv.innerHTML = `
                     <span class="upload-icon"><i class="fas fa-folder-open"></i></span>
-                    <span style="font-size: 0.7rem;">Upload</span>
+                    <span style="font-size: 0.7rem;" data-translate="avatar_upload">Upload</span>
                 `;
                 container.appendChild(uploadDiv);
             }
@@ -667,7 +682,7 @@
 
         function saveAvatar() {
             if (!selectedAvatarUrl) {
-                alert('Please select an avatar or upload an image.');
+                alert(getTranslation('avatar_select'));
                 return;
             }
 
@@ -679,7 +694,7 @@
             localStorage.setItem(`buyerAvatar_${currentUser.email}`, selectedAvatarUrl);
 
             closeAvatarModal();
-            alert('Buyer profile picture updated successfully!');
+            alert(getTranslation('avatar_updated'));
             window.dispatchEvent(new Event('storage'));
         }
 
@@ -731,8 +746,8 @@
                 ordersContainer.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon"><i class="fas fa-box-open"></i></div>
-                        <p>You haven't placed any orders yet.</p>
-                        <p>Start shopping to see your order history here!</p>
+                        <p data-translate="no_orders">You haven't placed any orders yet.</p>
+                        <p data-translate="no_orders_sub">Start shopping to see your order history here!</p>
                     </div>
                 `;
                 return;
@@ -742,12 +757,12 @@
                 <div class="order-card">
                     <div class="order-info">
                         <h3><i class="fas fa-shopping-bag"></i> ${order.productName || (order.products && order.products[0]?.productName) || 'Product'}</h3>
-                        <p><i class="fas fa-hashtag"></i> Order #${order.id}</p>
-                        <p><i class="fas fa-calendar-alt"></i> Placed on: ${new Date(order.date).toLocaleDateString()}</p>
-                        <p><i class="fas fa-weight-hanging"></i> Quantity: ${order.quantity || (order.products && order.products[0]?.quantity) || 1}</p>
-                        <p><i class="fas fa-money-bill-wave"></i> Total: ${order.total || order.price}</p>
+                        <p><i class="fas fa-hashtag"></i> <span data-translate="order_number">Order #</span>${order.id}</p>
+                        <p><i class="fas fa-calendar-alt"></i> <span data-translate="order_placed">Placed on</span>: ${new Date(order.date).toLocaleDateString()}</p>
+                        <p><i class="fas fa-weight-hanging"></i> <span data-translate="quantity_label">Quantity</span>: ${order.quantity || (order.products && order.products[0]?.quantity) || 1}</p>
+                        <p><i class="fas fa-money-bill-wave"></i> <span data-translate="total_label">Total</span>: ${order.total || order.price}</p>
                     </div>
-                    <div class="order-status ${getStatusClass(order.status)}">${order.status || 'Processing'}</div>
+                    <div class="order-status ${getStatusClass(order.status)}">${getOrderStatusText(order.status)}</div>
                 </div>
             `).join('');
         }
@@ -757,6 +772,14 @@
                 case 'Delivered': return 'status-delivered';
                 case 'Shipped': return 'status-shipped';
                 default: return 'status-pending';
+            }
+        }
+
+        function getOrderStatusText(status) {
+            switch(status) {
+                case 'Delivered': return getTranslation('status_delivered');
+                case 'Shipped': return getTranslation('status_shipped');
+                default: return getTranslation('status_processing');
             }
         }
 
@@ -776,7 +799,7 @@
             });
 
             document.getElementById('logoutButton').addEventListener('click', function() {
-                if (confirm('Are you sure you want to log out?')) {
+                if (confirm(getTranslation('logout_confirm'))) {
                     localStorage.removeItem('currentUser');
                     localStorage.removeItem('farmConnectSavedCredentials');
                     window.location.href = 'Welcome Screen.html';
